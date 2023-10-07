@@ -19,7 +19,9 @@ const login=async(req,res=response)=>{
      if(!passValida) return res.status(400).json({msg:"Contraseña incorrecta."});   
     
      const token=await generarJWT(usuario.id);
-     return res.render("layout",{usuario,token})
+     const roles=await usuario.getRols();
+     console.log(roles[0].nombreRol);
+     return res.render("layout",{usuario,token,roles})
     }
     catch(err){
         return res.json({msg:"error "+err})

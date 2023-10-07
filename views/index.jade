@@ -12,10 +12,10 @@ html
       label(for="contrasena") Contraseña:
       input(type="password", id="contrasena", name="contrasena", placeholder="Ingresa tu contraseña", required)
       br
-      input(type="submit", id="ini")
       br
-      br
-      select(id="opciones")
+      select(id="opciones" name="nombreRol")
         option(value="paciente") paciente
         option(value="tecnico") tecnico
         option(value="Bioquimico") bioquimico
+      input(type="submit", id="ini")
+      br
