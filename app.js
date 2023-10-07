@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('', require('./routes/home'));
 app.use('/users', require('./routes/users'));
 app.use('/personas', require('./routes/personas'));

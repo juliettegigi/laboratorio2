@@ -21,10 +21,10 @@ const login=async(req,res=response)=>{
               }
             ]
           });
-      if(!usuario)return res.status(400).json({msg:"Usuario no pertenece a la DB."})
+      if(!usuario)return res.render("index",{email:"Usuario o rol incorrecto.",pass:""})
       
      const passValida=bcryptjs.compareSync(contrasena,usuario.contrasena);
-     if(!passValida) return res.status(400).json({msg:"Contraseña incorrecta."});   
+     if(!passValida) return res.render("index",{email:"",pass:"Contraseña incorrecta."});   
     
      const token=await generarJWT(usuario.id);
      const roles=await usuario.getRols();
