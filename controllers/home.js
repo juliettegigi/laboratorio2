@@ -1,5 +1,5 @@
 const{response}=require('express');
-const {Usuario}=require("../models");
+const {Usuario,Rol}=require("../models");
 
 const bcryptjs=require('bcryptjs');
 const { generarJWT } = require('./funciones/jwt');
@@ -8,11 +8,19 @@ const { generarJWT } = require('./funciones/jwt');
 
 
 const login=async(req,res=response)=>{
- const{email,contrasena}=req.body;
+ const{email,contrasena,nombreRol}=req.body;
     //verificar si el email existe
     try{
 
-      const usuario=await Usuario.findOne({where:{email}})
+        const usuario = await Usuario.findOne({
+            where: { email },
+            include: [
+              {
+                model: Rol,
+                where: { nombreRol } 
+              }
+            ]
+          });
       if(!usuario)return res.status(400).json({msg:"Usuario no pertenece a la DB."})
       
      const passValida=bcryptjs.compareSync(contrasena,usuario.contrasena);
