@@ -6,13 +6,13 @@ html
     h1 Inicio de Sesión
     form(action="/login", method="POST" name="formu")
       label(for="usuario") Usuario
-      input(type="text", id="usuario", name="email", placeholder="Ingresa tu usuario o correo electrónico", required)
+      input(type="text", id="usuario", name="email", placeholder="Ingresa tu usuario o correo electrónico", required,value=(typeof emailValue !== 'undefined') ? emailValue : '')
       if(email)
         br
         p(id="errorEmail") #{email}
       br
       label(for="contrasena") Contraseña:
-      input(type="password", id="contrasena", name="contrasena", placeholder="Ingresa tu contraseña", required)
+      input(type="password", id="contrasena", name="contrasena", placeholder="Ingresa tu contraseña", required, value=value=(typeof passValue !== 'undefined') ? passValue : '')
       if(pass)
         br
         p(id="errorPass") #{pass}
