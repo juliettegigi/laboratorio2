@@ -2,6 +2,7 @@ require('dotenv').config();
 var createError = require('http-errors');
 var express = require('express');
 const mysql =require( 'mysql2');
+const methodOverride =require( 'method-override');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -17,9 +18,10 @@ app.set('view engine', 'jade');
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(methodOverride('_method'));
+app.use(cookieParser());
 
-
-app.use('', require('./routes/home'));
+app.use('', require('./routes/login'));
 app.use('/users', require('./routes/users'));
 app.use('/personas', require('./routes/personas'));
 // catch 404 and forward to error handler

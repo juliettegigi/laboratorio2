@@ -4,7 +4,7 @@ html
     title Formulario de Inicio de Sesión
   body
     h1 Inicio de Sesión
-    form(action="/login", method="POST" name="formu")
+    form(action="/", method="post" name="formu")
       label(for="usuario") Usuario
       input(type="text", id="usuario", name="email", placeholder="Ingresa tu usuario o correo electrónico", required,value=(typeof emailValue !== 'undefined') ? emailValue : '')
       if(email)
@@ -24,4 +24,6 @@ html
         option(value="Bioquimico") bioquimico
       input(type="submit")
       br
+    script.
+      var token = "#{token}";
     script(src="./javascripts/index.js")  
