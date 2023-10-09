@@ -1,7 +1,8 @@
 const{response}=require('express');
-const {Usuario,Rol}=require("../models");
-
+const Sequelize = require('sequelize');
 const bcryptjs=require('bcryptjs');
+
+const {Usuario,Rol}=require("../models");
 const { generarJWT } = require('./funciones/jwt');
 
 
@@ -18,7 +19,7 @@ const login=async(req,res=response)=>{
        try{
    
            const usuario = await Usuario.findOne({
-               where: { email },
+               where: {  [Sequelize.Op.or]: [ { email }, { nombreUsuario: email } ] },
                include: [
                  {
                    model: Rol,
@@ -36,6 +37,7 @@ const login=async(req,res=response)=>{
         return res.render("index",{token,passValue:contrasena,emailValue:email})
        }
        catch(error){
+        console.log(error);
            return res.status(500).render("error",{error})
        }
      
