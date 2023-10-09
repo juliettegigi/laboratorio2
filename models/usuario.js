@@ -11,14 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Usuario.belongsToMany(models.Rol, {through:"UsuarioRol"})
-      Usuario.belongsTo(models.Persona);
       Usuario.hasMany(models.UsuarioRol);
     }
   }
   Usuario.init({
-    nombreUsuario:DataTypes.STRING,
+    nombre: DataTypes.STRING,
+    apellido: DataTypes.STRING,
+    documento:{type:DataTypes.STRING,
+               unique:true
+               },
+    fechaNacimiento :DataTypes.DATEONLY,
+    genero:DataTypes.ENUM('Masculino','Femenino','Otro'),
+    telefono:DataTypes.STRING,
+    direccion:DataTypes.STRING, 
+    nombreUsuario:DataTypes.STRING,//
     email: DataTypes.STRING,
-    contrasena: DataTypes.STRING,
+    contrasena: DataTypes.STRING
+    
   },
     {
     sequelize,

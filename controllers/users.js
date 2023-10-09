@@ -1,26 +1,25 @@
 const bcryptjs=require('bcryptjs');
 
-const {Usuario,Rol,Persona}=require('../models');
+const {Usuario,Rol}=require('../models');
 
    
 
 const userPost=async(req,res)=>{
     try{
-    const {documento,nombreUsuario,email,contrasena,nombreRol}=req.body;
-    const persona=await Persona.findOne({where:{documento}});
-    if(!persona)
-       return res.json({msg:"persona no registrada"})
+    
+    const {nombre,apellido, documento, fechaNacimiento, genero, telefono, direccion,email}=req.body;
+    const usuario=await Usuario.create({nombre,apellido, documento, fechaNacimiento, genero, telefono, direccion,nombreUsuario:documento,email,contrasena:documento}); 
+    console.log("qqqqqqqqqqqqqqqqqqqqqq");
+    res.status(201).json({msg:"POST. persona creada correctamente\n",usuario})
   
-    const usuario=await Usuario.create({nombreUsuario,email,contrasena});
+   // const usuario=await Usuario.create({nombreUsuario,email,contrasena});
     const rol=await Rol.findOne({where:{nombreRol}});
-    await persona.setUsuario(usuario);
     await usuario.setRols(rol);
     await rol.setUsuarios(usuario);
-    //encriptar la pass
+
     const salt=bcryptjs.genSaltSync();
     usuario.contrasena=bcryptjs.hashSync(contrasena,salt);
-    await usuario.save();
-    
+    await usuario.save();  
     
     
     res.status(201).json({msg:"POST. Usuario creado correctamente\n",usuario})
@@ -41,3 +40,5 @@ const userPost=async(req,res)=>{
 module.exports={
    userPost
 }
+
+

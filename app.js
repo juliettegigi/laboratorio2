@@ -23,7 +23,6 @@ app.use(cookieParser());
 
 app.use('', require('./routes/login'));
 app.use('/users', require('./routes/users'));
-app.use('/personas', require('./routes/personas'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
