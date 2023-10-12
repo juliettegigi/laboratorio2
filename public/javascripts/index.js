@@ -1,15 +1,14 @@
-async () => {
+(async () => {
   document.addEventListener("DOMContentLoaded", async () => {
-    
     if (token) {
       localStorage.setItem('token', token);
 
       try {
         const rta=await fetch("http://localhost:3000/users/inicio", {
-          headers: { "authorization": "Bearer "+token },// header
+          headers: { "token": token },
           redirect: "follow"
         });
-        if( rta.redirected ){     
+        if( rta.redirected ){
           window.location=rta.url;//redirecciono
         }
       } catch (err) {
@@ -29,4 +28,4 @@ async () => {
       }
     });
   });
-};
+})();

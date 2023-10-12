@@ -7,18 +7,22 @@ const router=Router();
 
 router.post('/',personaPost);
 
+
+
 router.get('/home',[
-    check("authorization","No token").notEmpty(),
+    check("token","No token").notEmpty(),
     validarJWT,
     validarCampos
 ],async(req,res)=>{
-    console.log("esttoy en personaHome");
-     res.render("inicioPaciente")
-                      
+    const [{dataValues}]=await req.usuario.getRols();
+    switch(dataValues.nombre){
+        case "Paciente": res.render("inicioPaciente")
+                         break;
+        /* agregar los otros casos */                                  
+
+    }
    
 })
-
-
 
 
 module.exports=router;

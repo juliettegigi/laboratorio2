@@ -22,22 +22,14 @@ router.get('/home',[
    
 })
 
-router.get('/inicio',[
-    check("authorization","No token").notEmpty(),
-    validarJWT,
-    validarCampos
-]
-,async(req,res)=>{
-    console.log("Por rediireccionar a personas/home");
-    const token = req.header("token"); 
-    res.cookie('authorization', token);
-    const [{dataValues}]=await req.usuario.getRols();
-    switch(dataValues.nombre){
-        case "Paciente": res.redirect("/pacientes/home")
-                         break;
 
-}}
-)
+
+router.get('/inicio'
+,(req,res)=>{
+    const token = req.header("token"); 
+    res.cookie('token', token);
+    res.redirect("/pacientes/home")
+})
 
 
 module.exports=router;
