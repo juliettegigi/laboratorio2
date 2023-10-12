@@ -8,12 +8,12 @@ const router=Router();
 router.post('/',userPost);
 
 router.get('/home',[
-    check("token","No token").notEmpty(),
+    check("authorization","No token").notEmpty(),
     validarJWT,
     validarCampos
 ],async(req,res)=>{
     const [{dataValues}]=await req.usuario.getRols();
-    switch(dataValues.nombreRol){
+    switch(dataValues.nombre){
         case "Paciente": res.render("inicioPaciente")
                          break;
         /* agregar los otros casos */                                  
@@ -22,12 +22,22 @@ router.get('/home',[
    
 })
 
-router.get('/inicio'
-,(req,res)=>{
+router.get('/inicio',[
+    check("authorization","No token").notEmpty(),
+    validarJWT,
+    validarCampos
+]
+,async(req,res)=>{
+    console.log("Por rediireccionar a personas/home");
     const token = req.header("token"); 
-    res.cookie('token', token);
-    res.redirect("/users/home")
-})
+    res.cookie('authorization', token);
+    const [{dataValues}]=await req.usuario.getRols();
+    switch(dataValues.nombre){
+        case "Paciente": res.redirect("/pacientes/home")
+                         break;
+
+}}
+)
 
 
 module.exports=router;

@@ -15,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Usuario.init({
+    
+    contrasena: DataTypes.STRING,
+    email: DataTypes.STRING,
     nombre: DataTypes.STRING,
     apellido: DataTypes.STRING,
     documento:{type:DataTypes.STRING,
@@ -24,9 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     genero:DataTypes.ENUM('Masculino','Femenino','Otro'),
     telefono:DataTypes.STRING,
     direccion:DataTypes.STRING, 
-    nombreUsuario:DataTypes.STRING,//
-    email: DataTypes.STRING,
-    contrasena: DataTypes.STRING
+   
     
   },
     {

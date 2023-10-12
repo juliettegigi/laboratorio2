@@ -15,12 +15,12 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Rol.init({
-    nombreRol: DataTypes.ENUM('Tecnico', 'Paciente', 'Bioquimico','Administrativo'),
+    nombre: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Rol',
     tableName:'roles',
-    paranoid:true
+    timestamps:false//TODO: comentarlo para probal el rollback
   });
   return Rol;
 };
