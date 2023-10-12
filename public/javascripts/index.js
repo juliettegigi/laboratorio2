@@ -1,7 +1,7 @@
 (async () => {
   document.addEventListener("DOMContentLoaded", async () => {
     if (token) {
-      localStorage.setItem('token', token);
+      sessionStorage.setItem('token', token);
 
       try {
         const rta=await fetch("http://localhost:3000/users/inicio", {
