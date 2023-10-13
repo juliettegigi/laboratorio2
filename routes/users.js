@@ -1,5 +1,5 @@
 const{Router}=require('express');
-const {userPost, buscar}=require('../controllers/users');
+const { userPost}=require('../controllers/users');
 const { check } = require('express-validator');
 const{validarCampos,tieneRole,validarJWT} = require('../middlewares');
 
@@ -16,6 +16,6 @@ router.get('/inicio'
 })
 
 
-router.get('/:termino',buscar);
+
 
 module.exports=router;

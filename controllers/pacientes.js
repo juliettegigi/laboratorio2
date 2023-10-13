@@ -28,14 +28,14 @@ try
                }
       });
 
-    res.json({
+    return res.json({
         cantidad:pacientes.length,
         pacientes
     });
 }
 catch(err){
     console.log(err);
-    res.json({
+    return res.json({
         err
     });
 }
@@ -54,28 +54,44 @@ console.log("req.params,termino= ",req.params.termino);
   
 }
 
+const actualizar=async(req,res)=>{
+    const {dni}=req.params;
+    const{documento,genero,email,nombre,apellido,fechaNacimiento,telefono,direccion,embarazo}=req.body;// acá tengo el nuevo objeto, con las propiedades que quieren modificar
+   
+    let cantidad=0;
+ //ahora necesito buscar al usuario al que le quieren hacer el update, lo busco pòr id, q me lo mandan en la url
+ try{
+ const usuario = await Usuario.findOne({
+    where: { documento: dni }
+  });
+  console.log("--------------------------------------------------");
+  console.log({usuario});
+
+  if (usuario) {
+    // Realiza las actualizaciones necesarias en el objeto 'usuario'
+      cantidad=await usuario.update({
+      // Campos que deseas actualizar
+      documento,genero,email,nombre,apellido,fechaNacimiento,telefono,direccion,embarazo
+    });
+    if(cantidad!=0){
+        console.log(usuario.nombre,"acaa............................................")
+         return res.json({mensaje: "SE an actualizado "+cantidad+" campos"});
+    }
+    return res.json({mensaje: "No se actualizo ningun campo "});
+  }
 
 
+} catch (e) {
+    return res.json({
+        msg:  "No tenemos Registro Del Usuario con Dni "+dni
 
+    
+     }) 
+
+   };
+
+}
 
 module.exports={
-   buscar
+   buscar,actualizar
 }
-
-
-/*
-
-{
-    "nombre":"nombre10",
-    "apellido":"apellido10", 
-    "documento":"documento10",
-    "fechaNacimiento":"2023-11-11",
-    "genero":"Otro",
-    "telefono":"telefono10",
-    "direccion":"direccion10",
-    "email":"email10@gmail.com",
-    "rol":"Bioquimico"
-}
-
-
-*/

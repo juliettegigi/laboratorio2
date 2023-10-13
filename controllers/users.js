@@ -9,11 +9,11 @@ const userPost = async (req, res) => {
     const t = await Usuario.sequelize.transaction({ isolationLevel: Sequelize.Transaction.ISOLATION_LEVEL_READ_COMMITTED });
   
     try {
-      const { nombre, apellido, documento, fechaNacimiento, genero, telefono, direccion, email, matricula, rol } = req.body;
+      const { nombre, apellido, documento, fechaNacimiento, genero, telefono, direccion, email, matricula,embarazo, rol } = req.body;
       const contrasena = documento;
   
       // Crear el usuario
-      const usuario = await Usuario.create({contrasena,email,nombre,apellido,documento,fechaNacimiento,genero,telefono,direccion,matricula,}, { transaction: t });
+      const usuario = await Usuario.create({contrasena,email,nombre,apellido,documento,fechaNacimiento,genero,telefono,direccion,matricula,embarazo}, { transaction: t });
   
      
       const r = await Rol.findOne({ where: { nombre: rol } });

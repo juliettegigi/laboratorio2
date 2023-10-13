@@ -28,6 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     telefono:DataTypes.STRING,
     direccion:DataTypes.STRING, 
     matricula:DataTypes.STRING,
+    embarazo:DataTypes.BOOLEAN,
    
     
   },

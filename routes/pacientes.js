@@ -1,14 +1,13 @@
 const{Router}=require('express');
 const { check } = require('express-validator');
 const{validarCampos,tieneRole,validarJWT} = require('../middlewares');
-const { personaPost } = require('../controllers/pacientes');
+const { buscar,actualizar } = require('../controllers/pacientes');
 
 const router=Router();
 
-router.post('/',personaPost);
 
-
-
+router.put('/:dni',actualizar);
+router.get('/:termino',buscar);
 router.get('/',
     validarJWT,
     async(req,res)=>{
