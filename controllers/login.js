@@ -1,7 +1,6 @@
 const{response}=require('express');
 const Sequelize = require('sequelize');
 const bcryptjs=require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
 const {Usuario,Rol}=require("../models")
 const { generarJWT } = require('./funciones/jwt');
@@ -48,5 +47,7 @@ const login=async(req,res=response)=>{
    
 
 module.exports={login} 
+
+
 
 
