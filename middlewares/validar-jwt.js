@@ -6,14 +6,12 @@ const {Usuario} = require('../models');
 
 const validarJWT = async( req = request, res = response, next ) => {
 
-    const token = req.cookies.token;
-       
+   
+   const token = req.query.token;
 
     try {
         
         const { id } = jwt.verify( token, process.env.SECRETORPRIVATEKEY );
-
-        // leer el usuario que corresponde al id
        const usuario = await Usuario.findByPk(id);
 
         if( !usuario ) {
