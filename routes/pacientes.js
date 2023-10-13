@@ -9,20 +9,15 @@ router.post('/',personaPost);
 
 
 
-router.get('/home',[
-    check("token","No token").notEmpty(),
+router.get('/',
     validarJWT,
-    validarCampos
-],async(req,res)=>{
-    const [{dataValues}]=await req.usuario.getRols();
-    switch(dataValues.nombre){
-        case "Paciente": res.render("inicioPaciente")
-                         break;
-        /* agregar los otros casos */                                  
+    async(req,res)=>{
 
+    //res.render('inicioPaciente', { token: token });                                 
+    res.render('inicioPaciente');
     }
    
-})
+)
 
 
 module.exports=router;
