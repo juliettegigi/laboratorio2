@@ -16,7 +16,6 @@ try
 
     
     const regex = new RegExp( termino, 'i' );
-    console.log({regex});
     // se forma una expresion regular con el termino, 
     //para que me busque todo lo que contenga al "termino"  ej: termino=fer ==> me buscaria "fernanda","fernando","fernandez",etc
     //'i' es insensible a si está en mayus o no 
@@ -28,10 +27,11 @@ try
                }
       });
 
-    return res.json({
+    /* return res.json({
         cantidad:pacientes.length,
         pacientes
-    });
+    }); */
+    res.render('inicioAdmin',{pacientes})
 }
 catch(err){
     console.log(err);
@@ -53,6 +53,9 @@ console.log("req.params,termino= ",req.params.termino);
    buscarPacientes(termino, res);
   
 }
+
+
+////////////////////////////////////////////
 
 const actualizar=async(req,res)=>{
     const {dni}=req.params;

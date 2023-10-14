@@ -11,13 +11,13 @@ const userPost = async (req, res) => {
     try {
       const { nombre, apellido, documento, fechaNacimiento, genero, telefono, direccion, email, matricula,embarazo, rol } = req.body;
       const contrasena = documento;
-  
       // Crear el usuario
       const usuario = await Usuario.create({contrasena,email,nombre,apellido,documento,fechaNacimiento,genero,telefono,direccion,matricula,embarazo}, { transaction: t });
   
      
+     
       const r = await Rol.findOne({ where: { nombre: rol } });
-
+      console.log(nombre);
       if (!r) {
         await t.rollback();
         return res.status(400).json({ msg: "Error: El rol no existe." });
