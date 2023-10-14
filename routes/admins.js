@@ -7,7 +7,7 @@ const router=Router();
 router.get('/',
     validarJWT,
     async(req,res)=>{                                
-    res.render('inicioAdmin',{pacientes:[]});
+       return res.render('inicioAdmin');
     }
    
 )

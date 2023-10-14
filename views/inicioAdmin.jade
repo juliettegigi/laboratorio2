@@ -18,9 +18,21 @@ html
             button(class="btn btn-outline-success" type="submit") Search  
         .tab-content#myTabContent
           .tab-pane.fade.show.active#home-tab-pane(role="tabpanel", aria-labelledby="home-tab", tabindex="0")
-            ul 
-                each paciente in pacientes
-                    li= JSON.stringify(paciente)
+            if pacientes && pacientes.length > 0
+                ul
+                    each paciente in pacientes
+                        li= JSON.stringify(paciente)
+            else
+                p Paciente no registrado.
           .tab-pane.fade#profile-tab-pane(role="tabpanel", aria-labelledby="profile-tab", tabindex="0") ...
           .tab-pane.fade#contact-tab-pane(role="tabpanel", aria-labelledby="contact-tab", tabindex="0") ...
           .tab-pane.fade#disabled-tab-pane(role="tabpanel", aria-labelledby="disabled-tab", tabindex="0") ...
+          script.
+            const searchInput = document.getElementById("searchInput");
+        
+            searchInput.addEventListener("input", () => {
+              const searchTerm = searchInput.value;
+              
+              // Actualizar la acción del formulario con el término de búsqueda
+              formu.action = "/pacientes/" + searchTerm;
+            });
