@@ -1,5 +1,6 @@
 require('dotenv').config();
 var createError = require('http-errors');
+const session = require('express-session');
 var express = require('express');
 const mysql =require( 'mysql2');
 const methodOverride =require( 'method-override');
@@ -20,6 +21,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 app.use(cookieParser());
+app.use(
+  session({
+    secret: 'PrrTutuPrrTutu',
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
 
 app.use('', require('./routes/login'));
 app.use('/users', require('./routes/users'));

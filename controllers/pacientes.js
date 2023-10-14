@@ -10,7 +10,7 @@ const {Usuario,Rol,UsuarioRol}=require('../models');
 
 const buscarPacientes = async( termino = '', res = response ) => {
 try
-{
+{    
     // término puede ser: documento , apellido o email 
     //IE, me pueden buscar por documento, apellido, email
 
@@ -31,7 +31,7 @@ try
         cantidad:pacientes.length,
         pacientes
     }); */
-    res.render('inicioAdmin',{pacientes})
+    res.render('inicioAdmin',{ok:true,pacientes})
 }
 catch(err){
     console.log(err);
@@ -48,6 +48,8 @@ catch(err){
 const buscar=(req,res=response)=>{
 
 //localhost:3000/buscar/documento||email||apellido
+if(!req.params.termino)
+  res.render('inicioAdmin',{ok:false,pacientes:null})
 console.log("req.params,termino= ",req.params.termino);
    const{termino}=req.params;
    buscarPacientes(termino, res);

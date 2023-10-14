@@ -7,7 +7,7 @@ const {Usuario} = require('../models');
 const validarJWT = async( req = request, res = response, next ) => {
 
    
-   const token = req.query.token;
+   const token = req.session.token;
 
     try {
         
@@ -21,6 +21,7 @@ const validarJWT = async( req = request, res = response, next ) => {
         }
         
         req.usuario = usuario;
+        req.token=token;
         next();
 
     } catch (error) {

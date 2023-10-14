@@ -33,10 +33,10 @@ const login=async(req,res=response)=>{
         if(!passValida) return res.render("index",{email:"",pass:"Contraseña incorrecta.",passValue:contrasena,emailValue:email});   
        
         const token=await generarJWT(usuario.id);
-
+        req.session.token = token;
         switch(nombreRol){
-          case "Paciente": res.redirect(`/pacientes?token=${token}`);
-          case "Administrativo":res.redirect(`/admins?token=${token}`);
+          case "Paciente": res.redirect(`/pacientes`);
+          case "Administrativo":res.redirect(`/admins`);
         }
        
        }

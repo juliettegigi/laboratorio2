@@ -7,7 +7,7 @@ const router=Router();
 
 
 router.put('/:dni',actualizar);
-router.get('/:termino',buscar);
+router.get('/:termino',validarJWT,buscar);
 router.get('/',
     validarJWT,
     async(req,res)=>{

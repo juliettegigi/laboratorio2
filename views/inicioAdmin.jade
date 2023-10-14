@@ -13,29 +13,32 @@ html
             button.nav-link#contact-tab(data-bs-toggle="tab", data-bs-target="#contact-tab-pane", type="button", role="tab", aria-controls="contact-tab-pane", aria-selected="false") Contact
           li.nav-item(role="presentation")
             button.nav-link#disabled-tab(data-bs-toggle="tab", data-bs-target="#disabled-tab-pane", type="button", role="tab", aria-controls="disabled-tab-pane", aria-selected="false", disabled) Ingresar paciente
-          form(action="/pacientes/docu", method="get" name="formu" class="d-flex" role="search")
+          form(action="/pacientes/", method="get" name="formu" class="d-flex" role="search")
             input(id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search")
             button(class="btn btn-outline-success" type="submit") Search  
         .tab-content#myTabContent
           .tab-pane.fade.show.active#home-tab-pane(role="tabpanel", aria-labelledby="home-tab", tabindex="0")
-            if pacientes && pacientes.length > 0
+            if ok && pacientes.length > 0
                 ul
                     each paciente in pacientes
                         li= JSON.stringify(paciente)
             else
-                p Paciente no registrado.
+                if ok
+                    p Paciente no registrado.
+                else 
+                    p     
           .tab-pane.fade#profile-tab-pane(role="tabpanel", aria-labelledby="profile-tab", tabindex="0") ...
           .tab-pane.fade#contact-tab-pane(role="tabpanel", aria-labelledby="contact-tab", tabindex="0") ...
           .tab-pane.fade#disabled-tab-pane(role="tabpanel", aria-labelledby="disabled-tab", tabindex="0") ...
           script.
             const searchInput = document.getElementById("searchInput");
-        
             searchInput.addEventListener("input", () => {
               const searchTerm = searchInput.value;
               formu.action = "/pacientes/" + searchTerm;
             });
             
-            var pacient = "#{pacientes}";
+            const pacient = "#{pacientes}";
+            const ok="#{ok}"
             const disabled = document.getElementById("disabled-tab");
-            if(pacient!==null && pacient.length===0){console.log("entro")
+            if(ok && pacient.length===0){console.log("entro")
               disabled.removeAttribute("disabled");}
