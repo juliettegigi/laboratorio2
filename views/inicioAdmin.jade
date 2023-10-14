@@ -14,7 +14,7 @@ html
           li.nav-item(role="presentation")
             button.nav-link#disabled-tab(data-bs-toggle="tab", data-bs-target="#disabled-tab-pane", type="button", role="tab", aria-controls="disabled-tab-pane", aria-selected="false", disabled) Ingresar paciente
           form(action="/pacientes/", method="get" name="formu" class="d-flex" role="search")
-            input(id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search")
+            input(id="searchInput" class="form-control me-2" type="search" placeholder="Search" aria-label="Search" required)
             button(class="btn btn-outline-success" type="submit") Search  
         .tab-content#myTabContent
           .tab-pane.fade.show.active#home-tab-pane(role="tabpanel", aria-labelledby="home-tab", tabindex="0")
@@ -33,7 +33,7 @@ html
                     p Paciente no registrado.
                 else 
                     p     
-          .tab-pane.fade#profile-tab-pane(role="tabpanel", aria-labelledby="profile-tab", tabindex="0") ...
+          .tab-pane.fade#profile-tab-pane(role="tabpanel", aria-labelledby="profile-tab", tabindex="0") //Abajo de esto ponés todo lo que va en editar/actualizar paciente
           .tab-pane.fade#contact-tab-pane(role="tabpanel", aria-labelledby="contact-tab", tabindex="0") ...
           .tab-pane.fade#disabled-tab-pane(role="tabpanel", aria-labelledby="disabled-tab", tabindex="0") ...
           script.
