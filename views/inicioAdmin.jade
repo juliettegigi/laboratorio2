@@ -22,6 +22,12 @@ html
                 ul
                     each paciente in pacientes
                         li= JSON.stringify(paciente)
+                form(action="/pacientes/:termino", method="get" name="siNo")
+                  p ¿Se encuentra el paciente que busca?
+                  label(for="si") Sí
+                  input(type="radio", name="respuesta", value="si", id="si")
+                  label(for="no") No
+                  input(type="radio", name="respuesta", value="no", id="no")
             else
                 if ok
                     p Paciente no registrado.
@@ -31,6 +37,8 @@ html
           .tab-pane.fade#contact-tab-pane(role="tabpanel", aria-labelledby="contact-tab", tabindex="0") ...
           .tab-pane.fade#disabled-tab-pane(role="tabpanel", aria-labelledby="disabled-tab", tabindex="0") ...
           script.
+            const noRadio = document.getElementById("no");
+            const siRadio = document.getElementById("si");
             const searchInput = document.getElementById("searchInput");
             searchInput.addEventListener("input", () => {
               const searchTerm = searchInput.value;
@@ -42,3 +50,17 @@ html
             const disabled = document.getElementById("disabled-tab");
             if(ok && pacient.length===0){console.log("entro")
               disabled.removeAttribute("disabled");}
+            
+            if(siRadio){
+             siRadio.addEventListener("click", () => {
+               if (siRadio.checked) {
+                 disabled.setAttribute("disabled", "disabled");
+               }
+             });
+             noRadio.addEventListener("click", () => {
+                 if (noRadio.checked) {
+                   disabled.removeAttribute("disabled");
+                 }
+               });
+             
+             }  
