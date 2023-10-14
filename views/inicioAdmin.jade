@@ -32,7 +32,10 @@ html
         
             searchInput.addEventListener("input", () => {
               const searchTerm = searchInput.value;
-              
-              // Actualizar la acción del formulario con el término de búsqueda
               formu.action = "/pacientes/" + searchTerm;
             });
+            
+            var pacient = "#{pacientes}";
+            const disabled = document.getElementById("disabled-tab");
+            if(pacient!==null && pacient.length===0){console.log("entro")
+              disabled.removeAttribute("disabled");}
