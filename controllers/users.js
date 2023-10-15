@@ -6,6 +6,7 @@ const {Usuario,Rol}=require('../models');
    
 
 const userPost = async (req, res) => {
+  console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     const t = await Usuario.sequelize.transaction({ isolationLevel: Sequelize.Transaction.ISOLATION_LEVEL_READ_COMMITTED });
   
     try {
