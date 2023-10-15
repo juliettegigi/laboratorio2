@@ -10,9 +10,11 @@ const userPost = async (req, res) => {
     const t = await Usuario.sequelize.transaction({ isolationLevel: Sequelize.Transaction.ISOLATION_LEVEL_READ_COMMITTED });
   
     try {
+      req.body.embarazo=Number(req.body.embarazo);
       const { nombre, apellido, documento, fechaNacimiento, genero, telefono, direccion, email, matricula,embarazo, rol } = req.body;
       const contrasena = documento;
-      // Crear el usuario
+
+      console.log({embarazo});
       const usuario = await Usuario.create({contrasena,email,nombre,apellido,documento,fechaNacimiento,genero,telefono,direccion,matricula,embarazo}, { transaction: t });
   
      
@@ -33,7 +35,8 @@ const userPost = async (req, res) => {
       await t.commit();
   
       //return res.status(201).json({ msg: "POST. Usuario creado correctamente\n", usuario });
-      res.render("/inicioAdmin",{ok:false,pacientes:null})
+      console.log("que onda?");
+      res.render("inicioAdmin",{ok:false,pacientes:null})
     } catch (err) {
       await t.rollback();
       return res.status(500).json({ msg: "error " + err });
