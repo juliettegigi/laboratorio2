@@ -34,8 +34,8 @@ html
                     th Apellido
                     th Email
                 tbody
-                  each paciente in pacientes
-                    tr
+                  each paciente, index in pacientes
+                    tr.fila(id=`fila-${index}`)
                       td= paciente.documento
                       td= paciente.apellido
                       td= paciente.email
@@ -59,11 +59,12 @@ html
                     label(for="fechaNacimientoE") Fecha de Nacimiento:
                     input(type="date", name="fechaNacimientoE", id="fechaNacimientoE", class="form-control", required)
                 .form-group
-                  label(for="genero") Género:
-                  select(name="genero", id="genero", class="form-control", required)
+                  label(for="generoE") Género:
+                  select(name="generoE", id="generoE", class="form-control", required)
                       option(value="") -- Seleccione una opción --
                       option(value="masculino") Masculino
                       option(value="femenino") Femenino
+                      option(value="Otro") Otro
                 .form-group
                     label(for="embarazadaESi") Sí
                     input(type="radio", name="embarazada",value="si", id="embarazadaESi")
@@ -108,6 +109,7 @@ html
                       option(value="") -- Seleccione una opción --
                       option(value="masculino") Masculino
                       option(value="femenino") Femenino
+                      option(value="Otro") Otro
                   .invalid-feedback Este campo es obligatorio.
               .form-group
                   label(for="embarazada") ¿Está embarazada?
@@ -134,10 +136,12 @@ html
                   input(type="text", name="rol", id="rol", class="form-control", required, readonly, value="Paciente")
               .text-center
                   button(type="submit", class="btn btn-primary") Enviar
-    script. 
-       const pacient = "#{pacientes}";
+    script.
+       let pacienteEditar=null; 
+       const pacient = !{JSON.stringify(pacientes)};;
        let ok="#{ok}";
        ok=(ok==="true")
+       const tabEditar = document.getElementById('profile-tab');
        const noRadio = document.getElementById("no");
        const siRadio = document.getElementById("si");
        const searchInput = document.getElementById("searchInput");
@@ -168,9 +172,41 @@ html
          }
          form2.classList.add('was-validated');
        },false)
-       const miModal = new bootstrap.Modal(document.getElementById('miModal'));
-       miModal.show(); 
+       const filas = document.querySelectorAll('.fila');
+       if(filas){
+          filas.forEach( (fila)=> { fila.addEventListener('click', (e)=> {console.log(pacient)
+                                                                         const [,index] = e.target.parentElement.id.split('-');
+                                                                        pacienteEditar=pacient[Number(index)];
+                                                                        console.log({pacienteEditar})
+                                                                        console.log({index})
+                                                                        document.getElementById("nombreE").value = pacienteEditar.nombre;
+                                                                        document.getElementById("apellidoE").value = pacienteEditar.apellido;
+                                                                        document.getElementById("documentoE").value = pacienteEditar.documento;
+                                                                        document.getElementById("fechaNacimientoE").value = pacienteEditar.fechaNacimiento;
+                                                                        const campoGenero=document.getElementById("generoE");
+                                                                        for (let i = 0; i < campoGenero.options.length; i++) {
+                                                                            if (campoGenero.options[i].value === pacienteEditar.genero) {
+                                                                              campoGenero.selectedIndex = i;
+                                                                              break;
+                                                                            }
+                                                                        }
+                                                                        document.getElementById("telefonoE").value = pacienteEditar.telefono;
+                                                                        document.getElementById("direccionE").value = pacienteEditar.direccion;
+                                                                        document.getElementById("emailE").value = pacienteEditar.email;
+                                                                        if (pacienteEditar.embarazada === "si") 
+                                                                                 document.getElementById("embarazadaESi").checked = true;
+                                                                        else 
+                                                                              document.getElementById("embarazadaENo").checked = true;
+                                                                               
+                                                                        tabEditar.click();
+                                                                       }
+                                                         )
+                                  }
+                      )
+        }
+        const modal=("#{modal}"==="true")
+        if(modal){
+        const miModal = new bootstrap.Modal(document.getElementById('miModal'));
+        miModal.show();}
 
 
-             
-             

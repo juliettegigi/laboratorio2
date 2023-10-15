@@ -1,4 +1,5 @@
 const { Op} = require('sequelize');
+const bcryptjs=require('bcryptjs');
 
 const {Usuario,Rol,UsuarioRol}=require('../models');
 
@@ -10,7 +11,7 @@ const {Usuario,Rol,UsuarioRol}=require('../models');
 
 const buscarPacientes = async( termino = '', res = response ) => {
 try
-{    console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+{   
     // término puede ser: documento , apellido o email 
     //IE, me pueden buscar por documento, apellido, email
 
@@ -24,7 +25,8 @@ try
         where: { [Op.or]: [ { documento: { [Op.regexp]: termino } },
                             { email: { [Op.regexp]: termino } },
                             { apellido: { [Op.regexp]: termino } }]
-               }
+               },
+        attributes: { exclude: ['contrasena'] }       
       });
 
     /* return res.json({
