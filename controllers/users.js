@@ -6,7 +6,7 @@ const {Usuario,Rol}=require('../models');
    
 
 const userPost = async (req, res) => {
-  console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+
     const t = await Usuario.sequelize.transaction({ isolationLevel: Sequelize.Transaction.ISOLATION_LEVEL_READ_COMMITTED });
   
     try {
@@ -32,7 +32,8 @@ const userPost = async (req, res) => {
       await usuario.save({ transaction: t });  
       await t.commit();
   
-      return res.status(201).json({ msg: "POST. Usuario creado correctamente\n", usuario });
+      //return res.status(201).json({ msg: "POST. Usuario creado correctamente\n", usuario });
+      res.render("/inicioAdmin",{ok:false,pacientes:null})
     } catch (err) {
       await t.rollback();
       return res.status(500).json({ msg: "error " + err });
