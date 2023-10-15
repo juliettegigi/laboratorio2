@@ -8,7 +8,7 @@ router.get('/',
     validarJWT,
     async(req,res)=>{ 
                                   
-       return res.render('inicioAdmin',{ok:false,pacientes:null});
+       return res.render('inicioAdmin',{ok:false,pacientes:null,modal:false});
     }
    
 )
