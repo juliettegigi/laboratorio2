@@ -4,8 +4,6 @@ html
           script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous")
           title Alfgo 
     body
-        -
-          console.log('Valor de modal:', modal)
         if modal
           include modal.pug
         ul.nav.nav-tabs#myTab(role="tablist")
@@ -23,57 +21,66 @@ html
         .tab-content#myTabContent
           .tab-pane.fade.show.active#home-tab-pane(role="tabpanel", aria-labelledby="home-tab", tabindex="0")
             if ok && pacientes.length > 0
-                ul
-                    each paciente in pacientes
-                        li= JSON.stringify(paciente)
-                form(action="/pacientes/:termino", method="get" name="siNo")
+              form(action="/pacientes/:termino", method="get" name="siNo")
                   p ¿Se encuentra el paciente que busca?
                   label(for="si") Sí
                   input(type="radio", name="respuesta", value="si", id="si")
                   label(for="no") No
                   input(type="radio", name="respuesta", value="no", id="no")
+              table.table.table-striped
+                thead
+                  tr
+                    th Documento
+                    th Apellido
+                    th Email
+                tbody
+                  each paciente in pacientes
+                    tr
+                      td= paciente.documento
+                      td= paciente.apellido
+                      td= paciente.email
             else
                 if ok
                     p Paciente no registrado.
                 else 
                     p     
           .tab-pane.fade#profile-tab-pane(role="tabpanel", aria-labelledby="profile-tab", tabindex="0")
-            form(action="/users", method="post" ,name="formulario")
+            form(action="/users", method="post" ,name="formE")
                 .form-group
-                label(for="nombre") Nombre:
-                input(type="text", name="nombre", id="nombre", class="form-control", required)
+                    label(for="nombreE") Nombre:
+                    input(type="text", name="nombreE", id="nombreE", class="form-control", required)
                 .form-group
-                label(for="apellido") Apellido:
-                input(type="text", name="apellido", id="apellido", class="form-control", required)
+                    label(for="apellidoE") Apellido:
+                    input(type="text", name="apellidoE", id="apellidoE", class="form-control", required)
                 .form-group
-                label(for="documento") Documento:
-                input(type="text", name="documento", id="documento", class="form-control", required)
+                    label(for="documentoE") Documento:
+                    input(type="text", name="documentoE", id="documentoE", class="form-control", required)
                 .form-group
-                label(for="fechaNacimiento") Fecha de Nacimiento:
-                input(type="date", name="fechaNacimiento", id="fechaNacimiento", class="form-control", required)
-                <label for="genero">Género:</label>
-                <select name="genero" id="genero" class="form-control" required>
-                <option value="masculino">Masculino</option>
-                <option value="femenino">Femenino</option>
-                </select>
+                    label(for="fechaNacimientoE") Fecha de Nacimiento:
+                    input(type="date", name="fechaNacimientoE", id="fechaNacimientoE", class="form-control", required)
                 .form-group
-                label(for="embarazada") ¿Está embarazada?
-                div(id="embarazadaDiv")
-                label(for="embarazadaSi") Sí
-                input(type="radio", name="embarazada",value="si", id="embarazadaSi")
-                label(for="embarazadaNo") No
-                input(type="radio", name="embarazada",value="no", id="embarazadaNo")
+                  label(for="genero") Género:
+                  select(name="genero", id="genero", class="form-control", required)
+                      option(value="") -- Seleccione una opción --
+                      option(value="masculino") Masculino
+                      option(value="femenino") Femenino
                 .form-group
-                label(for="telefono") Teléfono:
-                input(type="tel", name="telefono", id="telefono", class="form-control", required)
+                    label(for="embarazadaESi") Sí
+                    input(type="radio", name="embarazada",value="si", id="embarazadaESi")
+                    label(for="embarazadaENo") No
+                    input(type="radio", name="embarazadaE",value="no", id="embarazadaENo")
                 .form-group
-                label(for="direccion") Dirección:
-                input(type="text", name="direccion", id="direccion", class="form-control", required)
+                    label(for="telefonoE") Teléfono:
+                    input(type="tel", name="telefonoE", id="telefonoE", class="form-control", required)
                 .form-group
-                label(for="email") Email:
-                input(type="email", name="email", id="email", class="form-control", required)
-                label(for="rol") Rol:
-                input(type="text", name="rol", id="rol", class="form-control", required, readonly, value="Paciente")
+                    label(for="direccionE") Dirección:
+                    input(type="text", name="direccionE", id="direccionE", class="form-control", required)
+                .form-group
+                    label(for="emailE") Email:
+                    input(type="emailE", name="emailE", id="emailE", class="form-control", required)
+                .form-group
+                    label(for="rolE") Rol:
+                    input(type="text", name="rolE", id="rolE", class="form-control", required, readonly, value="Paciente")
                 .text-center
                 button(type="submit", class="btn btn-primary") Enviar
           .tab-pane.fade#contact-tab-pane(role="tabpanel", aria-labelledby="contact-tab", tabindex="0") //contacto
