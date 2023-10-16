@@ -34,12 +34,10 @@ const userPost = async (req, res) => {
       await usuario.save({ transaction: t });  
       await t.commit();
   
-      //return res.status(201).json({ msg: "POST. Usuario creado correctamente\n", usuario });
-      console.log("que onda?");
       res.render("inicioAdmin",{ok:false,pacientes:null,modal:"El paciente ha sido registrado"})
     } catch (err) {
       await t.rollback();
-      return res.status(500).json({ msg: "error " + err });
+      return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al registrar a un paciente."})
     }
   };
 
