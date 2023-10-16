@@ -95,7 +95,7 @@ const actualizar=async(req,res)=>{
       documento,genero,email,nombre,apellido,fechaNacimiento,telefono,direccion,embarazo
     });
     if(cantidad!=0){
-        return res.render("inicioAdmin",{pacientes:null,modale:true})
+        return res.render("inicioAdmin",{pacientes:null,modal:"El paciente ha sido Actualizado"})
     }
        
   }

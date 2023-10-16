@@ -36,7 +36,7 @@ const userPost = async (req, res) => {
   
       //return res.status(201).json({ msg: "POST. Usuario creado correctamente\n", usuario });
       console.log("que onda?");
-      res.render("inicioAdmin",{ok:false,pacientes:null,modal:true})
+      res.render("inicioAdmin",{ok:false,pacientes:null,modal:"El paciente ha sido registrado"})
     } catch (err) {
       await t.rollback();
       return res.status(500).json({ msg: "error " + err });
