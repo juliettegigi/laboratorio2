@@ -2,20 +2,32 @@ form(action=`${ruta}` method="post" name=`${nombreForm}` novalidate)
     .form-group
         input(type="hidden" name="dni" value=`${getPacienteEditar?getPacienteEditar():"documento3"}`)
         label(for="nombre"+`${nombreForm=="formE"?"E":""}`) Nombre:
-        input(type="text", name="nombre", id="nombre"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="text", name="nombre", id="nombre"+`${nombreForm=="formE"?"E":""}`, class="form-control", required, oninput="this.value = this.value.toUpperCase()")
         div.invalid-feedback Este campo es obligatorio.
+        if Object.keys(errors).length > 0
+            if errors.nombre
+                div= errors.nombre 
     .form-group
         label(for="apellido"+`${nombreForm=="formE"?"E":""}`) Apellido:
-        input(type="text", name="apellido", id="apellido"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="text", name="apellido", id="apellido"+`${nombreForm=="formE"?"E":""}`, class="form-control", required, oninput="this.value = this.value.toUpperCase()")
         div.invalid-feedback Este campo es obligatorio.
+        if Object.keys(errors).length > 0
+            if errors.apellido
+                div= errors.nombre
     .form-group
         label(for="documento"+`${nombreForm=="formE"?"E":""}`) Documento:
         input(type="text", name="documento", id="documento"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
+        if Object.keys(errors).length > 0
+            if errors.documento
+                div= errors.nombre
     .form-group
         label(for="fechaNacimiento"+`${nombreForm=="formE"?"E":""}`) Fecha de Nacimiento:
         input(type="date", name="fechaNacimiento", id="fechaNacimiento"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
+        if Object.keys(errors).length > 0
+            if errors.fechaNacimiento
+                div= errors.nombre
     .form-group
       label(for="genero"+`${nombreForm=="formE"?"E":""}`) Género:
       select(name="genero", id="genero"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
@@ -38,12 +50,15 @@ form(action=`${ruta}` method="post" name=`${nombreForm}` novalidate)
         div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="direccion"+`${nombreForm=="formE"?"E":""}`) Dirección:
-        input(type="text", name="direccion", id="direccion"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="text", name="direccion", id="direccion"+`${nombreForm=="formE"?"E":""}`, class="form-control", required, oninput="this.value = this.value.toUpperCase()")
         div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="email"+`${nombreForm=="formE"?"E":""}`) Email:
         input(type="email"+`${nombreForm=="formE"?"E":""}`, name="email", id="email"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
+        if Object.keys(errors).length > 0
+            if errors.email
+                div= errors.nombre
     .form-group
         label(for="rol"+`${nombreForm=="formE"?"E":""}`) Rol:
         input(type="text", name="rol", id="rol"+`${nombreForm=="formE"?"E":""}`, class="form-control", required, readonly, value="Paciente")

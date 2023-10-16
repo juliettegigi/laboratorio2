@@ -39,7 +39,7 @@ try
         cantidad:pacientes.length,
         pacientes
     }); */
-    return res.render('inicioAdmin',{ok:true,pacientes,modal:"false"})
+    return res.render('inicioAdmin',{ok:true,pacientes,modal:"false",errors:[]})
 }
 catch(err){
   return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al buscar paciente."})
@@ -53,7 +53,7 @@ catch(err){
 const buscar=(req,res=response)=>{
 
 //localhost:3000/buscar/documento||email||apellido
-if(!req.params.termino) return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al buscar paciente."})
+if(!req.params.termino) return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al buscar paciente.",errors:[]})
 
 const{termino}=req.params;
 buscarPacientes(termino, res);
@@ -79,14 +79,14 @@ const actualizar=async(req,res)=>{
       documento,genero,email,nombre,apellido,fechaNacimiento,telefono,direccion,embarazo
     });
     if(cantidad!=0){
-        return res.render("inicioAdmin",{pacientes:null,modal:"El paciente ha sido Actualizado"})
+        return res.render("inicioAdmin",{pacientes:null,modal:"El paciente ha sido Actualizado",errors:[]})
     }
        
   }
 
 
 } catch (e) {
-    return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al actualizar paciente."})
+    return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al actualizar paciente.",errors:[]})
 
    };
 

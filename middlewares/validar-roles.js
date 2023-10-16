@@ -1,24 +1,25 @@
-const{response,request}=require('express');
-const { check } = require('express-validator');
-const {Usuario,Rol} = require('../models');
 
 
-const tieneRole=(rolP)=>{
-    return async(req,res,next)=>{
-        
-     const [{dataValues}]=await req.usuario.getRols();
-     if(dataValues.nombreRol!=="Paciente")
-        return res.status(401).render("error",{error:`El usuario no tiene el rol ${dataValues} necesario para acceder a la petición.`})   
-     next();
-      
-        
-        }
-    
+
+const esAdminRol=async(req,res,next)=>{
+   const roles = await req.usuario.getRols();
+   let t=true;
+   for(let rol of roles){
+         if(rol.nombre==='Administrativo'){
+            t=false;
+            break;
+         }
+            
+   }
+if(t) return res.status(401).json({
+          msg:`${nombre} no es un administrador, sólo los administradores pueden eliminar.`
+       })   
+next();
 }
 
 
 
 
 module.exports={
-   tieneRole
+   esAdminRol
 }

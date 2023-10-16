@@ -14,4 +14,24 @@ const validarCampos=(req,res,next)=>{
     next() ;
 }
 
-module.exports={validarCampos};
+
+
+const validarCampos2=(req,res,next)=>{
+    console.log("entro");
+    const result=validationResult(req);
+   
+    
+    const objeto={}
+    for(obj of result.errors){
+          objeto[obj.path]=obj.msg;
+    }
+      console.log(objeto);
+    if(!result.isEmpty()){
+
+       return res.render("inicioAdmin",{ok:false,pacientes:null,modal:false,errors:objeto})
+    }
+    next() ;  
+}
+
+
+module.exports={validarCampos,validarCampos2};

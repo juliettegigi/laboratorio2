@@ -15,7 +15,7 @@ const validarJWT = async( req = request, res = response, next ) => {
        const usuario = await Usuario.findByPk(id);
 
         if( !usuario ) {
-            return res.status(401).json({
+            return res.status(401).send({
                 msg: 'Token no válido - usuario no existe DB'
             })
         }
@@ -25,7 +25,7 @@ const validarJWT = async( req = request, res = response, next ) => {
         next();
 
     } catch (error) {
-
+        console.log({error});
         return  res.render("error",{error})
     }
 
