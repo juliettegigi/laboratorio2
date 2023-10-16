@@ -83,7 +83,6 @@ const actualizar=async(req,res)=>{
    let embarazo=embarazoE;
    console.log(dni,"++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     let cantidad=0;
- //ahora necesito buscar al usuario al que le quieren hacer el update, lo busco pòr id, q me lo mandan en la url
  try{
  const usuario = await Usuario.findOne({
     where: { documento: dni }
@@ -92,15 +91,11 @@ const actualizar=async(req,res)=>{
   console.log({usuario});
 
   if (usuario) {
-    // Realiza las actualizaciones necesarias en el objeto 'usuario'
       cantidad=await usuario.update({
-      // Campos que deseas actualizar
       documento,genero,email,nombre,apellido,fechaNacimiento,telefono,direccion,embarazo
     });
     if(cantidad!=0){
-        console.log(usuario.nombre,"acaa............................................")
-        return res.render("inicioAdmin",{modale:true})
-         //return res.json({mensaje: "SE an actualizado "+cantidad+" campos"});
+        return res.render("inicioAdmin",{pacientes:null,modale:true})
     }
        
   }

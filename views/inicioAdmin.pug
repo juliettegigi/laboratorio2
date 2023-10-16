@@ -45,107 +45,19 @@ html
                 else 
                     p     
           .tab-pane.fade#profile-tab-pane(role="tabpanel", aria-labelledby="profile-tab", tabindex="0")
-            form.form(action="/pacientes?_method=put", method="post" ,name="formE" novalidate)
-                .form-group
-                    label(for="nombreE") Nombre:
-                    input(type="text", name="nombreE", id="nombreE", class="form-control", required)
-                    div.invalid-feedback Este campo es obligatorio.
-                .form-group
-                    label(for="apellidoE") Apellido:  
-                    input(type="text", name="apellidoE", id="apellidoE", class="form-control", required)
-                    div.invalid-feedback Este campo es obligatorio.
-                .form-group
-                    label(for="documentoE") Documento:
-                    input(type="text", name="documentoE", id="documentoE", class="form-control", required)
-                    div.invalid-feedback Este campo es obligatorio.
-                .form-group
-                    label(for="fechaNacimientoE") Fecha de Nacimiento:
-                    input(type="date", name="fechaNacimientoE", id="fechaNacimientoE", class="form-control",  required, max=`${new Date().toISOString().split('T')[0]}`)
-                    div.invalid-feedback Este campo es obligatorio y debe ser una fecha válida.
-                .form-group
-                  label(for="generoE") Género:
-                  select(name="generoE", id="generoE", class="form-control", required)
-                      option(value="") -- Seleccione una opción --
-                      option(value="Masculino") Masculino
-                      option(value="Femenino") Femenino
-                      option(value="Otro") Otro
-                .form-group
-                    label(for="embarazadaESi") Sí
-                    input(type="radio", name="embarazada",value="si", id="embarazadaESi")
-                    label(for="embarazadaENo") No
-                    input(type="radio", name="embarazadaE",value="no", id="embarazadaENo")
-                .form-group
-                    label(for="telefonoE") Teléfono:
-                    input(type="tel", name="telefonoE", id="telefonoE", class="form-control", required)
-                    div.invalid-feedback Este campo es obligatorio.
-                .form-group
-                    label(for="direccionE") Dirección:
-                    input(type="text", name="direccionE", id="direccionE", class="form-control", required)
-                    div.invalid-feedback Este campo es obligatorio.
-                .form-group
-                    label(for="emailE") Email:
-                    input(type="emailE", name="emailE", id="emailE", class="form-control", required)
-                    div.invalid-feedback Este campo es obligatorio.
-                .form-group
-                    label(for="rolE") Rol:
-                    input(type="text", name="rolE", id="rolE", class="form-control", required, readonly, value="Paciente")
-                .text-center
-                    button(type="submit", class="btn btn-primary") Enviar
+            -let ruta = "/pacientes?_method=put"
+            -let nombreForm = "formE"
+            include form.pug
           .tab-pane.fade#contact-tab-pane(role="tabpanel", aria-labelledby="contact-tab", tabindex="0") //contacto
-          .tab-pane.fade#disabled-tab-pane(role="tabpanel", aria-labelledby="disabled-tab", tabindex="0") 
-           form(action="/users", method="post" name="form2" novalidate)
-              .form-group
-                  label(for="nombre") Nombre:
-                  input(type="text", name="nombre", id="nombre", class="form-control", required)
-                  div.invalid-feedback Este campo es obligatorio.
-              .form-group
-                  label(for="apellido") Apellido:
-                  input(type="text", name="apellido", id="apellido", class="form-control", required)
-                  div.invalid-feedback Este campo es obligatorio.
-              .form-group
-                  label(for="documento") Documento:
-                  input(type="text", name="documento", id="documento", class="form-control", required)
-                  div.invalid-feedback Este campo es obligatorio.
-              .form-group
-                  label(for="fechaNacimiento") Fecha de Nacimiento:
-                  input(type="date", name="fechaNacimiento", id="fechaNacimiento", class="form-control", required)
-                  div.invalid-feedback Este campo es obligatorio.
-              .form-group
-                  label(for="genero") Género:
-                  select(name="genero", id="genero", class="form-control", required)
-                      option(value="") -- Seleccione una opción --
-                      option(value="Masculino") Masculino
-                      option(value="Femenino") Femenino
-                      option(value="Otro") Otro
-                  .invalid-feedback Este campo es obligatorio.
-              .form-group
-                  label(for="embarazada") ¿Está embarazada?
-                  #embarazadaDiv
-                      label(for="embarazadaSi") Sí
-                      input(type="radio", name="embarazada", value="1", id="embarazadaSi")
-                      label(for="embarazadaNo") No
-                      input(type="radio", name="embarazada", value="0", id="embarazadaNo", required)
-                      .invalid-feedback Este campo es obligatorio.
-              .form-group
-                  label(for="telefono") Teléfono:
-                  input(type="tel", name="telefono", id="telefono", class="form-control", required)
-                  .invalid-feedback Este campo es obligatorio.
-              .form-group
-                  label(for="direccion") Dirección:
-                  input(type="text", name="direccion", id="direccion", class="form-control", required)
-                  .invalid-feedback Este campo es obligatorio.
-              .form-group
-                  label(for="email") Email:
-                  input(type="email", name="email", id="email", class="form-control", required)
-                  .invalid-feedback Este campo es obligatorio.
-              .form-group
-                  label(for="rol") Rol:
-                  input(type="text", name="rol", id="rol", class="form-control", required, readonly, value="Paciente")
-              .text-center
-                  button(type="submit", class="btn btn-primary") Enviar
+          .tab-pane.fade#disabled-tab-pane(role="tabpanel", aria-labelledby="disabled-tab", tabindex="0")
+            -ruta="/users"
+            -nombreForm = "form2"
+            -const validar=true
+            include form.pug  
     script.
-       let pacienteEditar=null; 
-       const pacient = !{JSON.stringify(pacientes)};;
+      document.addEventListener("DOMContentLoaded", function() {
+       let pacienteEditar=null;
+       var pacient = !{pacientes !== null ? JSON.stringify(pacientes) : 'null'};
        let ok="#{ok}";
        ok=(ok==="true")
        const tabEditar = document.getElementById('profile-tab');
@@ -157,7 +69,7 @@ html
               formu.action = "/pacientes/" + searchTerm;
             });
        const disabled = document.getElementById("disabled-tab");
-       if(ok && pacient.length===0){
+       if(ok && pacient==='null'){
               disabled.removeAttribute("disabled");}
        if(siRadio){
              siRadio.addEventListener("click", () => {
@@ -173,12 +85,10 @@ html
                
              
             }
-       form2.addEventListener('submit',(e)=>{
-         if(!form2.checkValidity()){
-          e.preventDefault();
-         }
-         form2.classList.add('was-validated');
-       },false)
+       if(form2) form2.addEventListener('submit',(e)=>{
+                        if(!form2.checkValidity())e.preventDefault();
+                        form2.classList.add('was-validated');
+                      },false)
 
        formE.addEventListener('submit',(e)=>{
          if(!formE.checkValidity()){
@@ -193,7 +103,7 @@ html
        //------------------------------------------
        const filas = document.querySelectorAll('.fila');
        if(filas){
-          filas.forEach( (fila)=> { fila.addEventListener('click', (e)=> {console.log(pacient)
+          filas.forEach( (fila)=> { fila.addEventListener('click', (e)=> {
                                                                          const [,index] = e.target.parentElement.id.split('-');
                                                                         pacienteEditar=pacient[Number(index)];
                                                                         console.log({pacienteEditar})
@@ -226,13 +136,7 @@ html
         const modal=("#{modal}"==="true")
         if(modal){
         const miModal = new bootstrap.Modal(document.getElementById('miModal'));
-        miModal.show();}
-
-        const modale=("#{modale}"==="true")
-       
-        if(modale){
-           console.log(modale+"-------------");
-        const miModale = new bootstrap.Modal(document.getElementById('miModale'));
-        miModale.show();}
-
+        miModal.show();
+        }
+      })
 
