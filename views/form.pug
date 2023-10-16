@@ -2,23 +2,23 @@ form(action=`${ruta}` method="post" name=`${nombreForm}` novalidate)
     .form-group
         input(type="hidden" name="dni" value=`${getPacienteEditar?getPacienteEditar():"documento3"}`)
         label(for="nombre"+`${nombreForm=="formE"?"E":""}`) Nombre:
-        input(type="text", name="nombre"+`${nombreForm=="formE"?"E":""}`, id="nombre"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="text", name="nombre", id="nombre"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="apellido"+`${nombreForm=="formE"?"E":""}`) Apellido:
-        input(type="text", name="apellido"+`${nombreForm=="formE"?"E":""}`, id="apellido"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="text", name="apellido", id="apellido"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="documento"+`${nombreForm=="formE"?"E":""}`) Documento:
-        input(type="text", name="documento"+`${nombreForm=="formE"?"E":""}`, id="documento"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="text", name="documento", id="documento"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="fechaNacimiento"+`${nombreForm=="formE"?"E":""}`) Fecha de Nacimiento:
-        input(type="date", name="fechaNacimiento"+`${nombreForm=="formE"?"E":""}`, id="fechaNacimiento"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="date", name="fechaNacimiento", id="fechaNacimiento"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
     .form-group
       label(for="genero"+`${nombreForm=="formE"?"E":""}`) Género:
-      select(name="genero"+`${nombreForm=="formE"?"E":""}`, id="genero"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+      select(name="genero", id="genero"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
           option(value="") -- Seleccione una opción --
           option(value="Masculino") Masculino
           option(value="Femenino") Femenino
@@ -28,24 +28,24 @@ form(action=`${ruta}` method="post" name=`${nombreForm}` novalidate)
         label(for="embarazada") ¿Está embarazada?
             div(id="embarazadaDiv")
                 label(for="embarazada"+`${nombreForm=="formE"?"E":""}`+"Si") Sí
-                input(type="radio", name="embarazada",value="si", id="embarazada"+`${nombreForm=="formE"?"E":""}`+"Si")
+                input(type="radio", name="embarazo",value="true", id="embarazada"+`${nombreForm=="formE"?"E":""}`+"Si")
                 label(for="embarazada"+`${nombreForm=="formE"?"E":""}`+"No") No
-                input(type="radio", name="embarazada"+`${nombreForm=="formE"?"E":""}`,value="no", id="embarazada"+`${nombreForm=="formE"?"E":""}`+"No")
+                input(type="radio", name="embarazo",value="false", id="embarazada"+`${nombreForm=="formE"?"E":""}`+"No")
                 div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="telefono"+`${nombreForm=="formE"?"E":""}`) Teléfono:
-        input(type="tel", name="telefono"+`${nombreForm=="formE"?"E":""}`, id="telefono"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="tel", name="telefono", id="telefono"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="direccion"+`${nombreForm=="formE"?"E":""}`) Dirección:
-        input(type="text", name="direccion"+`${nombreForm=="formE"?"E":""}`, id="direccion"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="text", name="direccion", id="direccion"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="email"+`${nombreForm=="formE"?"E":""}`) Email:
-        input(type="email"+`${nombreForm=="formE"?"E":""}`, name="emailE", id="email"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
+        input(type="email"+`${nombreForm=="formE"?"E":""}`, name="email", id="email"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
         div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="rol"+`${nombreForm=="formE"?"E":""}`) Rol:
-        input(type="text", name="rol"+`${nombreForm=="formE"?"E":""}`, id="rol"+`${nombreForm=="formE"?"E":""}`, class="form-control", required, readonly, value="Paciente")
+        input(type="text", name="rol", id="rol"+`${nombreForm=="formE"?"E":""}`, class="form-control", required, readonly, value="Paciente")
     .text-center
     button(type="submit", class="btn btn-primary") Enviar
