@@ -66,21 +66,12 @@ buscarPacientes(termino, res);
 const actualizar=async(req,res)=>{
     
     
-    const{documentoE,generoE,emailE,nombreE,apellidoE,fechaNacimientoE,telefonoE,direccionE,embarazoE}=req.body;// acá tengo el nuevo objeto, con las propiedades que quieren modificar
-   let dni=req.body.documentoE;
-   let documento=documentoE;
-   let genero=generoE;
-   let email=emailE;
-   let nombre=nombreE;
-   let apellido=apellidoE;
-   let fechaNacimiento=fechaNacimientoE;
-   let telefono=telefonoE;
-   let direccion=direccionE;
-   let embarazo=embarazoE;
+    const{documento,genero,email,nombre,apellido,fechaNacimiento,telefono,direccion,embarazo}=req.body;// acá tengo el nuevo objeto, con las propiedades que quieren modificar
+   
     let cantidad=0;
  try{
  const usuario = await Usuario.findOne({
-    where: { documento: dni }
+    where: { documento }
   });
 
   if (usuario) {
