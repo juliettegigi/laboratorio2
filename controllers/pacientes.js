@@ -22,7 +22,7 @@ try
     //IE, me pueden buscar por documento, apellido, email
 
     
-    const regex = new RegExp( termino, 'i' );
+    //const regex = new RegExp( termino, 'i' );
     // se forma una expresion regular con el termino, 
     //para que me busque todo lo que contenga al "termino"  ej: termino=fer ==> me buscaria "fernanda","fernando","fernandez",etc
     //'i' es insensible a si está en mayus o no 
@@ -39,7 +39,7 @@ try
         cantidad:pacientes.length,
         pacientes
     }); */
-    res.render('inicioAdmin',{ok:true,pacientes})
+    return res.render('inicioAdmin',{ok:true,pacientes,modal:"false"})
 }
 catch(err){
     console.log(err);
@@ -56,11 +56,10 @@ catch(err){
 const buscar=(req,res=response)=>{
 
 //localhost:3000/buscar/documento||email||apellido
-if(!req.params.termino)
-  res.render('inicioAdmin',{ok:false,pacientes:null})
-console.log("req.params,termino= ",req.params.termino);
-   const{termino}=req.params;
-   buscarPacientes(termino, res);
+if(!req.params.termino) return res.render('inicioAdmin',{ok:false,pacientes:null})
+
+const{termino}=req.params;
+buscarPacientes(termino, res);
   
 }
 
@@ -81,14 +80,11 @@ const actualizar=async(req,res)=>{
    let telefono=telefonoE;
    let direccion=direccionE;
    let embarazo=embarazoE;
-   console.log(dni,"++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     let cantidad=0;
  try{
  const usuario = await Usuario.findOne({
     where: { documento: dni }
   });
-  console.log("--------------------------------------------------");
-  console.log({usuario});
 
   if (usuario) {
       cantidad=await usuario.update({

@@ -106,8 +106,6 @@ html
           filas.forEach( (fila)=> { fila.addEventListener('click', (e)=> {
                                                                          const [,index] = e.target.parentElement.id.split('-');
                                                                         pacienteEditar=pacient[Number(index)];
-                                                                        console.log({pacienteEditar})
-                                                                        console.log({index})
                                                                         document.getElementById("nombreE").value = pacienteEditar.nombre;
                                                                         document.getElementById("apellidoE").value = pacienteEditar.apellido;
                                                                         document.getElementById("documentoE").value = pacienteEditar.documento;
