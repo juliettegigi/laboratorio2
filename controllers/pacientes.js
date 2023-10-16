@@ -42,10 +42,7 @@ try
     return res.render('inicioAdmin',{ok:true,pacientes,modal:"false"})
 }
 catch(err){
-    console.log(err);
-    return res.json({
-        err
-    });
+  return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al buscar paciente."})
 }
 }
 
@@ -56,7 +53,7 @@ catch(err){
 const buscar=(req,res=response)=>{
 
 //localhost:3000/buscar/documento||email||apellido
-if(!req.params.termino) return res.render('inicioAdmin',{ok:false,pacientes:null})
+if(!req.params.termino) return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al buscar paciente."})
 
 const{termino}=req.params;
 buscarPacientes(termino, res);
@@ -98,11 +95,7 @@ const actualizar=async(req,res)=>{
 
 
 } catch (e) {
-    return res.json({
-        msg:  "No tenemos Registro Del Usuario con Dni "+dni
-
-    
-     }) 
+    return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al actualizar paciente."})
 
    };
 
