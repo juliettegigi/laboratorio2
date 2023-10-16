@@ -25,11 +25,13 @@ form(action=`${ruta}` method="post" name=`${nombreForm}` novalidate)
           option(value="Otro") Otro
       div.invalid-feedback Este campo es obligatorio.
     .form-group
-        label(for="embarazada"+`${nombreForm=="formE"?"E":""}`+"Si") Sí
-        input(type="radio", name="embarazada",value="si", id="embarazada"+`${nombreForm=="formE"?"E":""}`+"Si")
-        label(for="embarazada"+`${nombreForm=="formE"?"E":""}`+"No") No
-        input(type="radio", name="embarazada"+`${nombreForm=="formE"?"E":""}`,value="no", id="embarazada"+`${nombreForm=="formE"?"E":""}`+"No")
-        div.invalid-feedback Este campo es obligatorio.
+        label(for="embarazada") ¿Está embarazada?
+            div(id="embarazadaDiv")
+                label(for="embarazada"+`${nombreForm=="formE"?"E":""}`+"Si") Sí
+                input(type="radio", name="embarazada",value="si", id="embarazada"+`${nombreForm=="formE"?"E":""}`+"Si")
+                label(for="embarazada"+`${nombreForm=="formE"?"E":""}`+"No") No
+                input(type="radio", name="embarazada"+`${nombreForm=="formE"?"E":""}`,value="no", id="embarazada"+`${nombreForm=="formE"?"E":""}`+"No")
+                div.invalid-feedback Este campo es obligatorio.
     .form-group
         label(for="telefono"+`${nombreForm=="formE"?"E":""}`) Teléfono:
         input(type="tel", name="telefono"+`${nombreForm=="formE"?"E":""}`, id="telefono"+`${nombreForm=="formE"?"E":""}`, class="form-control", required)
