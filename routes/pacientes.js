@@ -6,7 +6,8 @@ const { buscar,actualizar } = require('../controllers/pacientes');
 const router=Router();
 
 
-router.put('/:dni',actualizar);
+//router.put('/:dni',actualizar);
+router.put('/',actualizar);
 router.get('/:termino',validarJWT,buscar);
 router.get('/',
     validarJWT,

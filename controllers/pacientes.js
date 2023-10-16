@@ -1,6 +1,12 @@
 const { Op} = require('sequelize');
 const bcryptjs=require('bcryptjs');
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
 
+// ...
+
+app.use(bodyParser.urlencoded({ extended: false }));
 const {Usuario,Rol,UsuarioRol}=require('../models');
 
    
@@ -62,9 +68,20 @@ console.log("req.params,termino= ",req.params.termino);
 ////////////////////////////////////////////
 
 const actualizar=async(req,res)=>{
-    const {dni}=req.params;
-    const{documento,genero,email,nombre,apellido,fechaNacimiento,telefono,direccion,embarazo}=req.body;// acá tengo el nuevo objeto, con las propiedades que quieren modificar
-   
+    
+    
+    const{documentoE,generoE,emailE,nombreE,apellidoE,fechaNacimientoE,telefonoE,direccionE,embarazoE}=req.body;// acá tengo el nuevo objeto, con las propiedades que quieren modificar
+   let dni=req.body.documentoE;
+   let documento=documentoE;
+   let genero=generoE;
+   let email=emailE;
+   let nombre=nombreE;
+   let apellido=apellidoE;
+   let fechaNacimiento=fechaNacimientoE;
+   let telefono=telefonoE;
+   let direccion=direccionE;
+   let embarazo=embarazoE;
+   console.log(dni,"++++++++++++++++++++++++++++++++++++++++++++++++++++++");
     let cantidad=0;
  //ahora necesito buscar al usuario al que le quieren hacer el update, lo busco pòr id, q me lo mandan en la url
  try{
@@ -82,9 +99,10 @@ const actualizar=async(req,res)=>{
     });
     if(cantidad!=0){
         console.log(usuario.nombre,"acaa............................................")
-         return res.json({mensaje: "SE an actualizado "+cantidad+" campos"});
+        return res.render("inicioAdmin",{modale:true})
+         //return res.json({mensaje: "SE an actualizado "+cantidad+" campos"});
     }
-    return res.json({mensaje: "No se actualizo ningun campo "});
+       
   }
 
 

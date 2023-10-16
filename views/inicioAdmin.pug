@@ -45,25 +45,29 @@ html
                 else 
                     p     
           .tab-pane.fade#profile-tab-pane(role="tabpanel", aria-labelledby="profile-tab", tabindex="0")
-            form(action="/users", method="post" ,name="formE")
+            form.form(action="/pacientes?_method=put", method="post" ,name="formE" novalidate)
                 .form-group
                     label(for="nombreE") Nombre:
                     input(type="text", name="nombreE", id="nombreE", class="form-control", required)
+                    div.invalid-feedback Este campo es obligatorio.
                 .form-group
-                    label(for="apellidoE") Apellido:
+                    label(for="apellidoE") Apellido:  
                     input(type="text", name="apellidoE", id="apellidoE", class="form-control", required)
+                    div.invalid-feedback Este campo es obligatorio.
                 .form-group
                     label(for="documentoE") Documento:
                     input(type="text", name="documentoE", id="documentoE", class="form-control", required)
+                    div.invalid-feedback Este campo es obligatorio.
                 .form-group
                     label(for="fechaNacimientoE") Fecha de Nacimiento:
-                    input(type="date", name="fechaNacimientoE", id="fechaNacimientoE", class="form-control", required)
+                    input(type="date", name="fechaNacimientoE", id="fechaNacimientoE", class="form-control",  required, max=`${new Date().toISOString().split('T')[0]}`)
+                    div.invalid-feedback Este campo es obligatorio y debe ser una fecha válida.
                 .form-group
                   label(for="generoE") Género:
                   select(name="generoE", id="generoE", class="form-control", required)
                       option(value="") -- Seleccione una opción --
-                      option(value="masculino") Masculino
-                      option(value="femenino") Femenino
+                      option(value="Masculino") Masculino
+                      option(value="Femenino") Femenino
                       option(value="Otro") Otro
                 .form-group
                     label(for="embarazadaESi") Sí
@@ -73,17 +77,20 @@ html
                 .form-group
                     label(for="telefonoE") Teléfono:
                     input(type="tel", name="telefonoE", id="telefonoE", class="form-control", required)
+                    div.invalid-feedback Este campo es obligatorio.
                 .form-group
                     label(for="direccionE") Dirección:
                     input(type="text", name="direccionE", id="direccionE", class="form-control", required)
+                    div.invalid-feedback Este campo es obligatorio.
                 .form-group
                     label(for="emailE") Email:
                     input(type="emailE", name="emailE", id="emailE", class="form-control", required)
+                    div.invalid-feedback Este campo es obligatorio.
                 .form-group
                     label(for="rolE") Rol:
                     input(type="text", name="rolE", id="rolE", class="form-control", required, readonly, value="Paciente")
                 .text-center
-                button(type="submit", class="btn btn-primary") Enviar
+                    button(type="submit", class="btn btn-primary") Enviar
           .tab-pane.fade#contact-tab-pane(role="tabpanel", aria-labelledby="contact-tab", tabindex="0") //contacto
           .tab-pane.fade#disabled-tab-pane(role="tabpanel", aria-labelledby="disabled-tab", tabindex="0") 
            form(action="/users", method="post" name="form2" novalidate)
@@ -107,8 +114,8 @@ html
                   label(for="genero") Género:
                   select(name="genero", id="genero", class="form-control", required)
                       option(value="") -- Seleccione una opción --
-                      option(value="masculino") Masculino
-                      option(value="femenino") Femenino
+                      option(value="Masculino") Masculino
+                      option(value="Femenino") Femenino
                       option(value="Otro") Otro
                   .invalid-feedback Este campo es obligatorio.
               .form-group
@@ -172,6 +179,18 @@ html
          }
          form2.classList.add('was-validated');
        },false)
+
+       formE.addEventListener('submit',(e)=>{
+         if(!formE.checkValidity()){
+          e.preventDefault();
+         }
+         formE.classList.add('was-validated');
+       },false)
+
+       //  aca verifica que sea una fecha menor   ------------------------
+     
+    
+       //------------------------------------------
        const filas = document.querySelectorAll('.fila');
        if(filas){
           filas.forEach( (fila)=> { fila.addEventListener('click', (e)=> {console.log(pacient)
@@ -208,5 +227,12 @@ html
         if(modal){
         const miModal = new bootstrap.Modal(document.getElementById('miModal'));
         miModal.show();}
+
+        const modale=("#{modale}"==="true")
+       
+        if(modale){
+           console.log(modale+"-------------");
+        const miModale = new bootstrap.Modal(document.getElementById('miModale'));
+        miModale.show();}
 
 
