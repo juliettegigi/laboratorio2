@@ -34,7 +34,8 @@ const userPost = async (req, res) => {
       res.render("inicioAdmin",{ok:false,pacientes:null,modal:"El paciente ha sido registrado",errors:{}})
     } catch (err) {
       await t.rollback();
-      return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al registrar a un paciente."})
+      console.log(err);
+      return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al registrar a un paciente.",errors:{}})
     }
   };
 

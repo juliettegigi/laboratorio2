@@ -10,12 +10,13 @@ router.get('/',
 
         if(req.session.errorsInsertar){
         const errors = req.session.errorsInsertar;
-        console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",errors);
         req.session.errorsInsertar = null; // Limpia los errores después de mostrarlos
-        return res.render("inicioAdmin", { ok: false, pacientes: null, modal: false, errors });
+        const valoresForm=req.session.valoresForm;
+        req.session.errorsInsertar=null;
+        return res.render("inicioAdmin", { ok: false, pacientes: null, modal: false, errors,valoresForm });
           }
-          
-       return res.render('inicioAdmin',{ok:false,pacientes:null,modal:false,errors:[]});
+
+       return res.render('inicioAdmin',{ok:false,pacientes:null,modal:false,errors:[],valoresForm:{}});
     }
    
 )

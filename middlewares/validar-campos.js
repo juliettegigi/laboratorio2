@@ -28,6 +28,9 @@ const validarCampos2=(req,res,next)=>{
       console.log(objeto);
       if (!result.isEmpty()) {
         req.session.errorsInsertar = objeto;
+        const {nombre,apellido,documento,genero,telefono,direccion,email,embarazo}=req.body;
+
+        req.session.valoresForm={nombre,apellido,documento,genero,telefono,direccion,email,embarazo};
         return res.redirect('/admins');
       }
     next() ;  

@@ -6,7 +6,7 @@ const {Usuario} = require('../models');
 
 const validarJWT = async( req = request, res = response, next ) => {
 
-   
+   console.log("FECHANACIMIENTO : ",req.body.fechaNacimiento);
    const token = req.session.token;
 
     try {
