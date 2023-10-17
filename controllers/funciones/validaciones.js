@@ -5,7 +5,7 @@ const emailExiste= async(email="" )=>{
         where: { email }
       });
     if(existeEmail){
-        console.log("holoooooooo");
+        
         throw new Error(`El correo ${email} ya existe en la DB`);
     }
     
