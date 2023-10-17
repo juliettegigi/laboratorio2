@@ -30,8 +30,8 @@ const userPost = async (req, res) => {
       usuario.contrasena=bcryptjs.hashSync(contrasena,salt);
       await usuario.save({ transaction: t });  
       await t.commit();
-  
-      res.render("inicioAdmin",{ok:false,pacientes:null,modal:"El paciente ha sido registrado"})
+       
+      res.render("inicioAdmin",{ok:false,pacientes:null,modal:"El paciente ha sido registrado",errors:{}})
     } catch (err) {
       await t.rollback();
       return res.render('inicioAdmin',{ok:false,pacientes:null,modal:"Error al registrar a un paciente."})

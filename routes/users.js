@@ -11,7 +11,7 @@ router.post('/',[
     check('nombre','introduzca caracteres válidos , por favor').matches(/^[A-ZÁ-ÚÄ-ÜÑ]+( [A-ZÁ-ÚÄ-ÜÑ]+)*$/),
     check('apellido','Introduzca caracteres válidos , por favor').matches(/^[A-ZÁ-ÚÄ-ÜÑ]+( [A-ZÁ-ÚÄ-ÜÑ]+)*$/).notEmpty(),
     check('documento','Sólo permitimos documentos de 7-9 dígitos.').notEmpty().matches(/^\d{7,9}$/),
-    check('fechaNacimiento').notEmpty().isDate(),
+    //check('fechaNacimiento').notEmpty().isDate(),
     check('genero').notEmpty().isIn(['Otro', 'Femenino', 'Masculino']),
     check('telefono'),
     check('direccion').isString().notEmpty(),

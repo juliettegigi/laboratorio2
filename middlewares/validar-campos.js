@@ -26,10 +26,10 @@ const validarCampos2=(req,res,next)=>{
           objeto[obj.path]=obj.msg;
     }
       console.log(objeto);
-    if(!result.isEmpty()){
-
-       return res.render("inicioAdmin",{ok:false,pacientes:null,modal:false,errors:objeto})
-    }
+      if (!result.isEmpty()) {
+        req.session.errorsInsertar = objeto;
+        return res.redirect('/admins');
+      }
     next() ;  
 }
 
