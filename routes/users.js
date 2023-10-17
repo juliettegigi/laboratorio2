@@ -2,6 +2,7 @@ const{Router}=require('express');
 const { userPost}=require('../controllers/users');
 const { check } = require('express-validator');
 const{validarCampos2,validarJWT, esAdminRol} = require('../middlewares');
+const { emailExiste } = require('../controllers/funciones/validaciones');
 
 const router=Router();
 
@@ -16,6 +17,7 @@ router.post('/',[
     check('telefono'),
     check('direccion').isString().notEmpty(),
     check('email',"El correo no es válido").isEmail(),
+    check('email').custom(emailExiste),
     check('embarazo').isBoolean(),
     check('rol').notEmpty().isIn(['Paciente', 'Administrativo', 'Tecnico','Bioquimico']),
     validarCampos2

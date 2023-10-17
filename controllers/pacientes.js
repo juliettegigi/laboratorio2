@@ -18,14 +18,7 @@ const {Usuario,Rol,UsuarioRol}=require('../models');
 const buscarPacientes = async( termino = '', res = response ) => {
 try
 {   
-    // término puede ser: documento , apellido o email 
-    //IE, me pueden buscar por documento, apellido, email
-
     
-    //const regex = new RegExp( termino, 'i' );
-    // se forma una expresion regular con el termino, 
-    //para que me busque todo lo que contenga al "termino"  ej: termino=fer ==> me buscaria "fernanda","fernando","fernandez",etc
-    //'i' es insensible a si está en mayus o no 
     const pacientes = await Usuario.findAll({
         include: [ { model: Rol, through: UsuarioRol, where: { nombre: 'Paciente' }}],
         where: { [Op.or]: [ { documento: { [Op.regexp]: termino } },
@@ -35,10 +28,7 @@ try
         attributes: { exclude: ['contrasena'] }       
       });
 
-    /* return res.json({
-        cantidad:pacientes.length,
-        pacientes
-    }); */
+    
     return res.render('inicioAdmin',{ok:true,pacientes,modal:"false",errors:{}})
 }
 catch(err){
