@@ -61,6 +61,7 @@ html
       document.addEventListener("DOMContentLoaded", function() {
        let pacienteEditar=null;
        var pacient = !{pacientes !== null ? JSON.stringify(pacientes) : 'null'};
+       console.log("·ssssss ",pacient);
        let ok="#{ok}";
        ok=(ok==="true")
        const tabEditar = document.getElementById('profile-tab');
@@ -72,7 +73,7 @@ html
               formu.action = "/pacientes/" + searchTerm;
             });
        const disabled = document.getElementById("disabled-tab");
-       if(ok && pacient==='null'){
+       if(ok && (pacient==='null' || pacient.length===0)){
               disabled.removeAttribute("disabled");}
        if(siRadio){
              siRadio.addEventListener("click", () => {
