@@ -36,6 +36,7 @@ app.use('/admins',require('./routes/admins'));
 app.use('/administradorDB',require('./routes/administradorDB'));
 app.use('/examenes',require('./routes/examenes'));
 
+app.use('/orden',require('./routes/orden'));
 
 //app.use('/orden',require('./routes/orden')); OTRA RUTA PARA CREAR ORDEN
 
