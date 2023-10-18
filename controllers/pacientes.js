@@ -1,12 +1,6 @@
 const { Op} = require('sequelize');
-const bcryptjs=require('bcryptjs');
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
 
-// ...
 
-app.use(bodyParser.urlencoded({ extended: false }));
 const {Usuario,Rol,UsuarioRol}=require('../models');
 
    
@@ -17,8 +11,7 @@ const {Usuario,Rol,UsuarioRol}=require('../models');
 
 const buscarPacientes = async( termino = '', res = response ) => {
 try
-{   
-    
+{      
     const pacientes = await Usuario.findAll({
         include: [ { model: Rol, through: UsuarioRol, where: { nombre: 'Paciente' }}],
         where: { [Op.or]: [ { documento: { [Op.regexp]: termino } },

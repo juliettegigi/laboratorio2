@@ -31,6 +31,7 @@ const validarCampos2=(req,res,next)=>{
         const {nombre,apellido,documento,genero,telefono,direccion,email,embarazo}=req.body;
 
         req.session.valoresForm={nombre,apellido,documento,genero,telefono,direccion,email,embarazo};
+        console.log("calores del dormulario  ",req.session.valoresForm);
         return res.redirect('/admins');
       }
     next() ;  
