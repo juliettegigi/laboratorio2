@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Usuario.init({
-    
     contrasena: DataTypes.STRING,
     email: DataTypes.STRING,
     nombre: DataTypes.STRING,
@@ -29,8 +28,6 @@ module.exports = (sequelize, DataTypes) => {
     direccion:DataTypes.STRING, 
     matricula:DataTypes.STRING,
     embarazo:DataTypes.BOOLEAN,
-   
-    
   },
     {
     sequelize,

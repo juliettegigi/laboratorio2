@@ -14,6 +14,8 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Resultado.init({
+    ordenId: DataTypes.INTEGER,
+    determinacionId: DataTypes.INTEGER,
     valor: DataTypes.STRING
   }, {
     sequelize,

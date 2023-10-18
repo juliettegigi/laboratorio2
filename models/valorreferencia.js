@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ValorReferencia.init({
+    determinacionId: DataTypes.INTEGER,
     edadMin: DataTypes.INTEGER,
     edadMax:DataTypes.INTEGER,
     sexo:DataTypes.CHAR,

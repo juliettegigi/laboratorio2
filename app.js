@@ -8,7 +8,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-
 var app = express();
 
 // view engine setup
@@ -35,6 +34,9 @@ app.use('/users', require('./routes/users'));
 app.use('/pacientes',require('./routes/pacientes'));
 app.use('/admins',require('./routes/admins'));
 app.use('/administradorDB',require('./routes/administradorDB'));
+
+//app.use('/orden',require('./routes/orden')); OTRA RUTA PARA CREAR ORDEN
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

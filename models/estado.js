@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Estado.init({
+  
     nombre: DataTypes.STRING
   }, {
     sequelize,

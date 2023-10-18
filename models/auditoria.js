@@ -10,10 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      Auditoria.belongsTo(models.Usuario) // define association here
     }
   }
   Auditoria.init({
+    usuarioId:DataTypes.INTEGER,
     fechaHora: DataTypes.DATE,
     tablaAfectada: DataTypes.STRING,
     operacion: DataTypes.STRING,

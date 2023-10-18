@@ -36,6 +36,8 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   OrdenTrabajo.init({
+    usuarioId: DataTypes.INTEGER,
+    estadoId: DataTypes.INTEGER,
     medico: DataTypes.STRING,
     diagnostico: DataTypes.STRING
   }, {

@@ -25,8 +25,10 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Examen.init({
+    tipoMuestraId:DataTypes.INTEGER,
     nombre: DataTypes.STRING,
-    detalle: DataTypes.TEXT
+    detalle: DataTypes.TEXT,
+    tipoExamenId:DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Examen',
