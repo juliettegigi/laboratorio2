@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     nombre: DataTypes.STRING,
     unidadMedida:DataTypes.STRING,
     valorMin: DataTypes.DECIMAL(10,2),
-    valorMax: DataTypes(10,2),
+    valorMax: DataTypes.DECIMAL(10,2),
   }, {
     sequelize,
     modelName: 'Determinacion',
