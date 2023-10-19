@@ -6,16 +6,9 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Muestra extends Model {
     static associate(models) {
-      // Definir las asociaciones aquí
 
-      // Una muestra pertenece a una orden de trabajo
-      Muestra.belongsTo(models.OrdenTrabajo, {
-        foreignKey: 'ordenId',
-        as: 'orden', // El alias para la asociación
-      });
-
-      // Una muestra puede estar asociada a un tipo de muestra
-      Muestra.hasOne(models.tipoMuestra);
+      Muestra.belongsTo(models.OrdenTrabajo);
+      Muestra.belongsTo(models.tipoMuestra);
   }
 }
 

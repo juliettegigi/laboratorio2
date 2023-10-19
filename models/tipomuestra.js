@@ -6,10 +6,8 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class TipoMuestra extends Model {
     static associate(models) {
-      // Definir las asociaciones aquí
-
-      // Un tipo de muestra puede estar asociado a muchos exámenes a través de la tabla de unión "muestras"
-      TipoMuestra.belongsTo(models.Muestra)
+      TipoMuestra.hasMany(models.Muestra)
+      TipoMuestra.hasMany(models.Examen)
     }
   }
 

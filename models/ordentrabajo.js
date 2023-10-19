@@ -10,6 +10,7 @@ module.exports = (sequelize, DataTypes) => {
       OrdenTrabajo.hasMany(models.ExamenOrden);
       OrdenTrabajo.hasOne(models.Estado);
       OrdenTrabajo.hasOne(models.Usuario)
+      OrdenTrabajo.hasMany(models.Muestra)
     }
   }
 

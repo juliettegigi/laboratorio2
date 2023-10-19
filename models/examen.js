@@ -7,8 +7,8 @@ module.exports = (sequelize, DataTypes) => {
   class Examen extends Model {
     static associate(models) {
       
-      Examen.hasOne(models.TipoMuestra)
-      Examen.hasOne(models.TipoExamen)
+      Examen.belongsTo(models.TipoMuestra)
+      Examen.belongsTo(models.TipoExamen)
       Examen.belongsToMany(models.OrdenTrabajo, {through: 'ExamenOrden'})
       Examen.hasMany(models.ExamenOrden)
     }
