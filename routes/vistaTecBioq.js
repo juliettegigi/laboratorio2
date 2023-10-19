@@ -1,6 +1,6 @@
 const{Router}=require('express');
 const router=Router();
 
-router.get('/determinacion',(req,res)=>{res.render("tecnicoBioq/formDeterminacion")})
+router.get('/inicio',(req,res)=>{res.render("tecnicoBioq/inicio")})
 
 module.exports=router
