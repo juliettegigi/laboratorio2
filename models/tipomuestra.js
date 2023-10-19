@@ -9,11 +9,7 @@ module.exports = (sequelize, DataTypes) => {
       // Definir las asociaciones aquí
 
       // Un tipo de muestra puede estar asociado a muchos exámenes a través de la tabla de unión "muestras"
-      TipoMuestra.belongsToMany(models.Examen, {
-        through: 'muestras', // Nombre de la tabla de unión
-        foreignKey: 'tipoMuestraId',
-        as: 'examenes', // El alias para la asociación
-      });
+      TipoMuestra.belongsTo(models.Muestra)
     }
   }
 
