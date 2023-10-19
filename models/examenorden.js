@@ -4,35 +4,22 @@ module.exports = (sequelize, DataTypes) => {
   class ExamenOrden extends Model {
     static associate(models) {
       // Definir las asociaciones aquí
-      ExamenOrden.belongsTo(models.OrdenTrabajo, {
-        foreignKey: 'ordenId',
-        as: 'orden',
-      });
-
-      ExamenOrden.belongsTo(models.Examen, {
-        foreignKey: 'examenId',
-        as: 'examen',
-      });
+      ExamenOrden.belongsTo(models.OrdenTrabajo);
+      ExamenOrden.belongsTo(models.Examen)
     }
   }
 
   ExamenOrden.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-      ordenId: DataTypes.INTEGER,
-      examenId: DataTypes.INTEGER
+      OrdenTrabajoId: DataTypes.INTEGER,
+      ExamenId: DataTypes.INTEGER
     },
     {
       sequelize,
       modelName: 'ExamenOrden',
       tableName: 'examenordenes',
       paranoid: true,
-      timestamps: true,
-      underscored: true,
+      timestamps: true
     }
   );
   

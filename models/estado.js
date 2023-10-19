@@ -6,15 +6,10 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Estado extends Model {
     static associate(models) {
-      // Definir las asociaciones aquí
-
-      // Un estado puede estar asociado a muchas órdenes de trabajo
-      Estado.hasMany(models.OrdenTrabajo, {
-        foreignKey: 'estadoId',
-        as: 'ordenesTrabajo', // El alias para la asociación
-      });
-    }
+      
+      Estado.belongsTo(models.OrdenTrabajo)
   }
+}
 
   Estado.init({
   

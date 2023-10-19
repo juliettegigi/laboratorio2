@@ -1,9 +1,9 @@
 const{Router}=require('express');
-const {ordenlogin}=require('../controllers/orden');
+const {ordenPost}=require('../controllers/orden');
 
 const router=Router();
 
-router.post('/',ordenlogin);
+router.post('/',ordenPost);
 
 module.exports=router;
 

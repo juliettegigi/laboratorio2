@@ -36,8 +36,8 @@ app.use('/admins',require('./routes/admins'));
 app.use('/administradorDB',require('./routes/administradorDB'));// crea un usuario con su respectivo rol
 app.use('/examenes',require('./routes/examenes'));//devuelve Examenes
 app.use('/orden',require('./routes/orden'));// crea una orden
-app.use('/muestra',require('./routes/muestra'));// une orden con muestra
-
+//app.use('/muestra',require('./routes/muestra'));// une orden con muestra
+app.use('/examenordenes',require('./routes/examenordenes'));// une orden con muestra
 
 
 // catch 404 and forward to error handler

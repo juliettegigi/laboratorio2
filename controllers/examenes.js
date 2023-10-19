@@ -14,12 +14,19 @@ try {console.log("HOlas");
 
 }
 
+}
 
 
+const examenPost= async(req,res)=>{
+    try{ 
+    
+        const {nombre,detalle,muestraId,examenId}=req.body;
 
-
-
-
+    await Examen.create({nombre,detalle,muestraId,examenId});
+    return res.json({msg:"Examen insertado en la DB."})}
+  catch{
+      return res.json({msg:"Error al insertar un examen en la DB"})
+  }  
 }
 
 
@@ -29,6 +36,11 @@ try {console.log("HOlas");
 
 
 
+
+
+
+
+
 module.exports={
-   examenesver
+   examenesver,examenPost
   }

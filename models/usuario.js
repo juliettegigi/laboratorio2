@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Usuario.belongsToMany(models.Rol, {through:"UsuarioRol"})
       Usuario.hasMany(models.UsuarioRol);
+      Usuario.belongsTo(models.OrdenTrabajo);
     }
   }
   Usuario.init({
