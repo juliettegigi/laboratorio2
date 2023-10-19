@@ -1,10 +1,10 @@
 const { Sequelize} = require('sequelize');
-const {Examen}=require('../models');
+const {Examen,OrdenTrabajo}=require('../models');
 
 
 
 
-const examenesver= async (req,res) => {
+const examenesGet= async (req,res) => {
 try {console.log("HOlas");
       const ex= await Examen.findAll();
       console.log(ex);
@@ -14,6 +14,35 @@ try {console.log("HOlas");
 
 }
 
+}
+
+const tieneOrden=async(req,res)=>{
+    try{
+        console.log("holiiii")
+        const{id}=req.params;
+        const examen=await Examen.findByPk(id, 
+            {include: [
+                { model:OrdenTrabajo },
+            ]
+           }); 
+
+        
+
+        if(examen){
+            if (examen.OrdenTrabajos.length===0) 
+              return res.json({ msg:"El examen no tiene orden relacionada.",examen});
+            else return res.json({ msg:"El examen tiene orden relacionada.",examen});
+        }
+        else{ 
+           
+            return res.json({msg:'no hay examen con ese id'});
+        }
+
+    }
+    catch(error){
+        console.log(error);
+        res.json({msg:"Error en controllers/examenes/tieneOrden",error})
+    }
 }
 
 
@@ -42,5 +71,5 @@ const examenPost= async(req,res)=>{
 
 
 module.exports={
-   examenesver,examenPost
+   examenesGet,examenPost,tieneOrden
   }
