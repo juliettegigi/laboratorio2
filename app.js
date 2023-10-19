@@ -33,12 +33,12 @@ app.use('', require('./routes/login'));
 app.use('/users', require('./routes/users'));
 app.use('/pacientes',require('./routes/pacientes'));
 app.use('/admins',require('./routes/admins'));
-app.use('/administradorDB',require('./routes/administradorDB'));
-app.use('/examenes',require('./routes/examenes'));
+app.use('/administradorDB',require('./routes/administradorDB'));// crea un usuario con su respectivo rol
+app.use('/examenes',require('./routes/examenes'));//devuelve Examenes
+app.use('/orden',require('./routes/orden'));// crea una orden
+app.use('/muestra',require('./routes/muestra'));// une orden con muestra
 
-app.use('/orden',require('./routes/orden'));
 
-//app.use('/orden',require('./routes/orden')); OTRA RUTA PARA CREAR ORDEN
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

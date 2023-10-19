@@ -4,7 +4,7 @@ const {Examen}=require('../models');
 
 
 
-const examenesorden= async (req,res) => {
+const examenesver= async (req,res) => {
 try {console.log("HOlas");
       const ex= await Examen.findAll();
       console.log(ex);
@@ -30,5 +30,5 @@ try {console.log("HOlas");
 
 
 module.exports={
-   examenesorden
+   examenesver
   }

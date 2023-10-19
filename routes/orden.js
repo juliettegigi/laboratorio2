@@ -1,5 +1,4 @@
 const{Router}=require('express');
-
 const {ordenlogin}=require('../controllers/orden');
 
 const router=Router();

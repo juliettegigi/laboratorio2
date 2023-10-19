@@ -1,9 +1,9 @@
 const{Router}=require('express');
-const {examenesorden}=require('../controllers/examen');
+const {examenesver}=require('../controllers/examen');
 
 const router=Router();
 
 
-router.get('/',examenesorden);
+router.get('/',examenesver);
 
 module.exports = router;

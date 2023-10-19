@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   Examen.init({
-    tipoMuestraId:DataTypes.INTEGER,
+     tipoMuestraId:DataTypes.INTEGER,
     nombre: DataTypes.STRING,
     detalle: DataTypes.TEXT,
     tipoExamenId:DataTypes.INTEGER
