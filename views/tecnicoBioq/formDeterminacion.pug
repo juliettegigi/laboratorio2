@@ -1,0 +1,18 @@
+form(method="POST", action=`${ruta}`, name="formDeterminacion" novalidate)
+  div
+    label(for="nombre") Nombre:
+    input(type="text", name="nombre", id="nombre")
+  div
+    label(for="unidadMedida") Unidad de Medida:
+    input(type="text", name="unidadMedida", id="unidadMedida")
+  div
+    label(for="valorMin") Valor Mínimo:
+    input(type="number", name="valorMin", id="valorMin", step="0.1")
+  div
+    label(for="valorMax") Valor Máximo:
+    input(type="number", name="valorMax", id="valorMax", step="0.1")
+  div
+    label(for="examenId") ID del Examen:
+    input(type="number", name="examenId", id="examenId")
+  div
+    button(type="submit") Enviar
