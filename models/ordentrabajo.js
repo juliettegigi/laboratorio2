@@ -6,11 +6,9 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class OrdenTrabajo extends Model {
     static associate(models) {
-      OrdenTrabajo.belongsToMany(models.Examen,{through:"ExamenOrden"})
-      OrdenTrabajo.hasMany(models.ExamenOrden);
-      OrdenTrabajo.hasOne(models.Estado);
-      OrdenTrabajo.hasOne(models.Usuario)
-      OrdenTrabajo.hasMany(models.Muestra)
+      Usuario.belongsToMany(models.Rol, {through:"UsuarioRol"})
+      Usuario.hasMany(models.UsuarioRol);
+      Usuario.hasMany(models.OrdenTrabajo);
     }
   }
 
