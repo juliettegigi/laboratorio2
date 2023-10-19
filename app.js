@@ -38,8 +38,8 @@ app.use('/examenes',require('./routes/examenes'));//devuelve Examenes
 app.use('/orden',require('./routes/orden'));// crea una orden
 //app.use('/muestra',require('./routes/muestra'));// une orden con muestra
 app.use('/examenordenes',require('./routes/examenordenes'));// une orden con muestra
-
-
+app.use('/determinaciones',require('./routes/determinaciones'));
+app.use('/valorReferencia',require('./routes/valorreferencia'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

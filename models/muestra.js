@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
 
       Muestra.belongsTo(models.OrdenTrabajo);
-      Muestra.belongsTo(models.tipoMuestra);
+      Muestra.belongsTo(models.TipoMuestra);
   }
 }
 
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     entregada: DataTypes.BOOLEAN
   }, {
     sequelize,
-    modelName: 'Muestras',
+    modelName: 'Muestra',
     tableName: 'muestras',
     paranoid: true
   });
