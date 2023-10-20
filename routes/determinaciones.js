@@ -7,5 +7,8 @@ router.get('/',detGet);
 router.post('/',detPost);
 router.post('/detidexamen',detPostidexamen);
 
+//router.post('/',detPost);
+//router.get('/',detGet);
+
 
 module.exports=router

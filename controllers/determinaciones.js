@@ -13,8 +13,7 @@ const detPost=async(req,res=response)=>{
 
 
 }
-//insert con  Id de exament--------------------------------------------------------
-// ya esta anexada la DETERMINACION A SU EXAMEN 
+
 const detPostidexamen=async(req,res=response)=>{
     try{ const {examenId,nombre,unidadMedida,valorMin,valorMax,comentarios}=req.body;
      await Determinacion.create({nombre,unidadMedida,valorMin,valorMax,comentarios,examenId});
@@ -32,13 +31,22 @@ const detPostidexamen=async(req,res=response)=>{
 
 
 //-------------------------------------------------------------------
-const detGet=async(req,res)=>{
+
+
+const detGet=async()=>{
+
 try {
     const det=  await Determinacion.findAll();
     console.log(det);
-      return res.status(200).json(det);
+    return det
+      //return res.status(200).json(det);
 } catch (error) {
+
     return res.status(500).json({ error: 'No se pudieron obtener la  determinacion' });
+
+    //return res.status(500).json({ error: 'No se pudieron obtener a le determinacion' });
+    return {error}
+
 }
 
 

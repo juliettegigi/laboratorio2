@@ -1,0 +1,80 @@
+.container.mt-4
+  form(method="POST", action=`${ruta}`, name="formDeterminacion", novalidate)
+    .col-lg-4.col-md-6.col-sm-12
+      div#listaDets
+        ul
+      label(for="determinacion", class="form-label") Determinación:
+      input#determinacion.form-control(list="datalistOptions", name="determinacion", placeholder="Type to search...")
+      datalist(id="datalistOptions")
+        each det in arrDet
+          option(id=det.id)= det.nombre
+      button.btn.btn-primary(type="button", id="addFieldsButton") ADD
+
+    // Campos adicionales ocultos por defecto
+    .col-lg-4.col-md-6.col-sm-12.ocultos.d-none
+      label(for="unidadMedida") Unidad de Medida:
+      input.form-control(type="text", name="unidadMedida", id="unidadMedida")
+
+    .col-lg-4.col-md-6.col-sm-12.ocultos.d-none
+      label(for="valorMin") Valor Mínimo:
+      input.form-control(type="number", name="valorMin", id="valorMin", step="0.1")
+
+    .col-lg-4.col-md-6.col-sm-12.ocultos.d-none
+      label(for="valorMax") Valor Máximo:
+      input.form-control(type="number", name="valorMax", id="valorMax", step="0.1")
+
+    .col-lg-4.col-md-6.col-sm-12.ocultos.d-none
+      label(for="examenId") ID del Examen:
+      input.form-control(type="number", name="examenId", id="examenId")
+    button.btn.btn-primary.ocultos.d-none(type="submit") Agregar determinacion  
+    h2 Valores de referencia
+
+    .form-row
+      .form-group.col-md-6
+        label(for="edad_minima") Edad Mínima:
+        input#edad_minima.form-control(type="number", name="edad_minima", required)
+    
+      .form-group.col-md-6
+        label(for="edad_maxima") Edad Máxima:
+        input#edad_maxima.form-control(type="number", name="edad_maxima", required)
+    
+    .form-row
+      .form-group.col-md-6
+        label(for="valor_minimo") Valor Mínimo:
+        input#valor_minimo.form-control(type="number", name="valor_minimo", required)
+    
+      .form-group.col-md-6
+        label(for="valor_maximo") Valor Máximo:
+        input#valor_maximo.form-control(type="number", name="valor_maximo", required)
+
+script.
+  const listaDets = document.getElementById('listaDets').querySelector('ul');
+  const inputDet = document.getElementById('determinacion');
+  const datalistOptions = document.getElementById('datalistOptions').querySelectorAll('option');
+
+  inputDet.addEventListener('input', () => {
+    const valorSeleccionado = inputDet.value;
+    const optionExists = Array.from(datalistOptions).some(option => option.value === valorSeleccionado);
+
+    if (optionExists) {
+      const li = document.createElement('li');
+      li.textContent = valorSeleccionado;
+      const cruz = document.createElement('button');
+      cruz.className = 'btn btn-close danger btn-sm'; 
+      cruz.addEventListener('click', () => {
+        li.remove();
+      });
+
+      li.appendChild(cruz);
+      listaDets.appendChild(li);
+      inputDet.value = '';
+    }
+  });
+
+  const addBtn= document.getElementById('addFieldsButton');
+  const ocultos = document.querySelectorAll('.ocultos');
+
+  addBtn.addEventListener('click', () => {
+    addBtn.remove();
+    ocultos.forEach(field => field.classList.remove('d-none'));
+  });
