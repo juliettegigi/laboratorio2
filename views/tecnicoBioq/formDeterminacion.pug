@@ -8,8 +8,11 @@ html
     .container.mt-4
         form(method="POST", action=`${ruta}`, name="formDeterminacion", novalidate)
           div
-            label(for="nombre") Nombre:
-            input.form-control(type="text", name="nombre", id="nombre")
+            label(for="determinacion", class="form-label") Determinación:
+            input#determinacion.form-control(list="datalistOptions", name="determinacion", placeholder="Type to search...")
+            datalist(id="datalistOptions")
+              each det in arrDet
+                option(id=det.id)= det.nombre
           div
             label(for="unidadMedida") Unidad de Medida:
             input.form-control(type="text", name="unidadMedida", id="unidadMedida")
