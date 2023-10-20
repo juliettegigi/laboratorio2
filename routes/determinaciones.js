@@ -1,9 +1,11 @@
 const express = require('express')
-const { detPost,detGet} = require('../controllers/determinaciones')
+const { detPostidexamen,detPost,detGet} = require('../controllers/determinaciones')
 
 const router=express.Router();
 
-router.post('/',detPost);
 router.get('/',detGet);
+router.post('/',detPost);
+router.post('/detidexamen',detPostidexamen);
+
 
 module.exports=router
