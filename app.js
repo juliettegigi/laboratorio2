@@ -37,7 +37,7 @@ app.use('/administradorDB',require('./routes/administradorDB'));// crea un usuar
 app.use('/examenes',require('./routes/examenes'));//devuelve Examenes
 app.use('/orden',require('./routes/orden'));// crea una orden
 //app.use('/muestra',require('./routes/muestra'));// une orden con muestra
-app.use('/examenordenes',require('./routes/examenordenes'));// une orden con muestra
+app.use('/examenordenes',require('./routes/examenordenes'));// Ingresa un Examen  y Unda Orden a Examen Orden tambien crea la muestra 
 app.use('/determinaciones',require('./routes/determinaciones'));
 app.use('/valorReferencia',require('./routes/valorreferencia'));
 app.use('/vistaTecBioq',require('./routes/vistaTecBioq'));
