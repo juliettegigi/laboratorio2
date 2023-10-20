@@ -12,10 +12,21 @@ const detPost=async(req,res=response)=>{
     }  
 
 }
+const detGet=async(req,res)=>{
+try {
+    const det=  await Determinacion.findAll();
+    console.log(det);
+      return res.status(200).json(det);
+} catch (error) {
+    return res.status(500).json({ error: 'No se pudieron obtener a le determinacion' });
+}
 
+
+}
 
 module.exports={
-    detPost
+    detPost,
+    detGet
 }
 
 /*
