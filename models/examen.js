@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       Examen.belongsTo(models.TipoExamen)
       Examen.belongsToMany(models.OrdenTrabajo, {through: 'ExamenOrden'})
       Examen.hasMany(models.ExamenOrden)
-      Examen.belongsTo(models.Determinacion)
+      Examen.hasMany(models.Determinacion)
     }
   }
 

@@ -20,7 +20,7 @@ router.get('/formExamen',async(req,res)=>{
 router.post('/submit',async(req,res)=>{
     console.log("---------------------------------------------------------");
     console.log(req.body);
-    
+    console.log(req.body.eNombre);
     const examen=await Examen.create({nombre:req.body.eNombre,detalle:req.body.detalle});
 
      for(let muestra of req.body.muestras){
@@ -77,23 +77,23 @@ router.post('/submit',async(req,res)=>{
   console.log("DETERMINACIONESS ",determinaciones);
     for(let obj of determinaciones){
         const det=await Determinacion.create({nombre:obj.determinacion.nombre,unidadMedida:obj.determinacion.unidadMedida,valorMin:obj.determinacion.valorMin,valorMax:obj.determinacion.valorMax,comentarios:""});
-        det.addExamen(examen)
+        await examen.addDeterminacion(det)
         if(obj.hombre){
               for(let fila of obj.hombre){
-                const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'H',embarazo,valorMinimo:fila[2],valorMaximo:fila[3]});
-                det.addValorReferencia(vr)
+                const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'H',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]});
+                await det.addValorReferencia(vr)
               }
         }
         if(obj.mujer){
             for(let fila of obj.mujer){
-              const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo,valorMinimo:fila[2],valorMaximo:fila[3]});
-              det.addValorReferencia(vr)
+              const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]});
+              await det.addValorReferencia(vr)
             }
       }
       if(obj.embarazada){
         for(let fila of obj.mujer){
           const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:true,valorMinimo:fila[2],valorMaximo:fila[3]});
-          det.addValorReferencia(vr)
+          await det.addValorReferencia(vr)
         }
   }
         
@@ -103,9 +103,7 @@ router.post('/submit',async(req,res)=>{
 
    }
 
-    let arrDet= await detGet();
-    let arrMuestras= await tipoMuestrasGet();
-   return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras})
+   return res.render("tecnicoBioq/inicio")
 
 })
 module.exports=router

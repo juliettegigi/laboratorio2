@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
     
     static associate(models) {
       Determinacion.hasMany(models.ValorReferencia)
-      Determinacion.hasMany(models.Examen)
+      Determinacion.belongsTo(models.Examen)
 
     }
   }
