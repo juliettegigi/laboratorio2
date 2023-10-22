@@ -15,7 +15,6 @@ const detPost=async(req,res=response)=>{
 const detGet=async()=>{
 try {
     const det=  await Determinacion.findAll();
-    console.log(det);
     return det
       //return res.status(200).json(det);
 } catch (error) {
