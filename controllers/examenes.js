@@ -11,10 +11,10 @@ try {console.log("HOlas");
       return res.status(200).json(ex);
 } catch (error) {
     return res.status(500).json({ error: 'No se pudieron obtener los exámenes' });
-
+        
 }
 
-}
+}   
 
 const tieneOrden=async(req,res)=>{
     try{
@@ -60,7 +60,18 @@ const examenPost= async(req,res)=>{
 
 
 
+//------------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+//------------------------------------------------------------------
 
 
 
