@@ -20,32 +20,33 @@ html
               th Tipo de examen
               th Determinaciones
               th Editar
-          tbody
-            each examen in examenes
-              tr
-                td= examen.nombre
-                if examen.TipoMuestra 
-                  td= examen.TipoMuestra.nombre 
-                else 
-                  td -    
-                if examen.TipoExamen 
-                  td= examen.TipoExamen.nombre 
-                else
-                  td - 
-                if examen.Determinacions 
-                  td ver 
-                else 
-                  td -
-                td 
-                  form(action=`/vistaTecBioq/edit` method="post")
-                        input(type="hidden" name="examen" value=JSON.stringify(examen))
-                        input(type="submit" value="Editar" class="btn btn-primary")
+          if examen
+            tbody
+              each examen in examenes
+                tr
+                  td= examen.nombre
+                  if examen.TipoMuestra 
+                    td= examen.TipoMuestra.nombre 
+                  else 
+                    td -    
+                  if examen.TipoExamen 
+                    td= examen.TipoExamen.nombre 
+                  else
+                    td - 
+                  if examen.Determinacions 
+                    td ver 
+                  else 
+                    td -
+                  td 
+                    form(action=`/vistaTecBioq/edit` method="post")
+                          input(type="hidden" name="examen" value=JSON.stringify(examen))
+                          input(type="submit" value="Editar" class="btn btn-primary")
           tfoot
             tr
-              th Name
-              th Position
-              th Office
-              th Age
+              th Nombre
+              th Tipo de muestra
+              th Tipo de examen
+              th Editar
       
       script(src="https://code.jquery.com/jquery-3.7.0.js") 
       script(src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js")         
