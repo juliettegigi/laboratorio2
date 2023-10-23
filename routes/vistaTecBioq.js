@@ -1,14 +1,36 @@
 const{Router}=require('express');
-const { detGet } = require('../controllers/determinaciones');
+const { detGet, detPost } = require('../controllers/determinaciones');
 const { tipoMuestrasGet } = require('../controllers/muestras');
 const router=Router();
 const {Determinacion,Examen,TipoMuestra,TipoExamen,ValorReferencia}=require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
+const { tieneOrden, examenesGet } = require('../controllers/examenes');
 
 
 router.get('/inicio',(req,res)=>{res.render("tecnicoBioq/inicio")})
 //router.get('/inicio',(req,res)=>{res.render("inicioAdmin2/inicioAdmin2")})
-router.get('/formDeterminacion',(req,res)=>{res.render("tecnicoBioq/formDeterminacion")})
+router.get('/formdeterminacion',async(req,res)=>{
+            return res.render("tecnicoBioq/formdeterminacion",{modal:false})})
+
+
+
+router.post('/edit',async(req,res)=>{
+  try{
+    
+    const examen=JSON.parse(req.body.examen)
+    console.log("zzzzzzzzzz", examen);
+    let arrTe= await tipoExamenesGet();
+    let arrMuestras= await tipoMuestrasGet();
+    res.render("tecnicoBioq/editExamen",{examen,arrTe,arrMuestras});
+  }
+  catch(err){
+    res.json({err})
+  }
+  
+})
+
+
+router.post('/addet',detPost)            
 router.get('/formExamen',async(req,res)=>{
     let arrDet= await detGet();
     let arrMuestras= await tipoMuestrasGet();
@@ -16,8 +38,23 @@ router.get('/formExamen',async(req,res)=>{
     let arrTe= await tipoExamenesGet();
    return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras,arrTe})})
 
+  router.get('/actualizar',async(req,res)=>{
+           const {ok,examenes}=await examenesGet();
+           console.log(examenes);
 
-router.post('/submit',async(req,res)=>{
+    res.render('tecnicoBioq/actualizarExamen',{examenes})
+  })
+
+router.put('/actualizar/:id',async(req,res)=>{
+         const{id}=req.id;
+         const rta=await tieneOrden(id)
+})
+
+
+
+
+
+   router.post('/submit',async(req,res)=>{
     console.log("---------------------------------------------------------");
     console.log(req.body);
     console.log(req.body.eNombre);

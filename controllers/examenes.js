@@ -1,16 +1,16 @@
 const { Sequelize} = require('sequelize');
-const {Examen,OrdenTrabajo}=require('../models');
+const {Examen,OrdenTrabajo,TipoExamen,TipoMuestra,Determinacion}=require('../models');
 
 
 
 
 const examenesGet= async (req,res) => {
-try {console.log("HOlas");
-      const ex= await Examen.findAll();
-      console.log(ex);
-      return res.status(200).json(ex);
+try { 
+       let examenes= await Examen.findAll({include: [{ model:OrdenTrabajo },{ model:TipoMuestra },{ model:TipoExamen },{model:Determinacion}]});
+       examenes= examenes.filter(examen=>examen.OrdenTrabajos.length===0)
+      return {ok:true,examenes};
 } catch (error) {
-    return res.status(500).json({ error: 'No se pudieron obtener los exámenes' });
+    return {ok:false,error};
         
 }
 
@@ -22,7 +22,7 @@ const tieneOrden=async(req,res)=>{
         const{id}=req.params;
         const examen=await Examen.findByPk(id, 
             {include: [
-                { model:OrdenTrabajo },
+                { model:OrdenTrabajo }
             ]
            }); 
 
@@ -30,18 +30,18 @@ const tieneOrden=async(req,res)=>{
 
         if(examen){
             if (examen.OrdenTrabajos.length===0) 
-              return res.json({ msg:"El examen no tiene orden relacionada.",examen});
-            else return res.json({ msg:"El examen tiene orden relacionada.",examen});
+              return { ok:true,examen};
+            else return { ok:false,examen};
         }
         else{ 
            
-            return res.json({msg:'no hay examen con ese id'});
+            return {msg:'no hay examen con ese id'};
         }
 
     }
     catch(error){
         console.log(error);
-        res.json({msg:"Error en controllers/examenes/tieneOrden",error})
+        return {msg:"Error en controllers/examenes/tieneOrden",error}
     }
 }
 
