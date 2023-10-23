@@ -7,8 +7,6 @@ html
       link(href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet")       
       title Alfgo 
     body
-      if modal
-          include ../modal.pug
       .container
         include navBar.pug
       .container 
@@ -16,31 +14,22 @@ html
           thead
             tr
               th Nombre
-              th Tipo de muestra
-              th Tipo de examen
-              th Determinaciones
-              th Editar
-          if examenes
+              th Valor mínimo
+              th Valor máximo
+              th Unidad
+          - console.log({determinaciones})    
+          if determinaciones
             tbody
-              each examen in examenes
+              each det in determinaciones
                 tr
-                  td= examen.nombre
-                  if examen.TipoMuestra 
-                    td= examen.TipoMuestra.nombre 
-                  else 
-                    td -    
-                  if examen.TipoExamen 
-                    td= examen.TipoExamen.nombre 
-                  else
-                    td - 
-                  if examen.Determinacions 
-                    td ver 
-                  else 
-                    td -
+                  td= det.nombre 
+                  td= det.valorMin 
+                  td= det.valorMax 
+                  td= det.unidadMedida
                   td 
-                    form(action=`/vistaTecBioq/edit` method="post")
-                          input(type="hidden" name="examen" value=JSON.stringify(examen))
-                          input(type="submit" value="Editar" class="btn btn-primary")
+                    form(action=`/vistaTecBioq/activarDeterminacion` method="post")
+                          input(type="hidden" name="id" value=det.id)
+                          input(type="submit" value="Activar/Desactivar" class="btn btn-primary")
           tfoot
             tr
               th Nombre

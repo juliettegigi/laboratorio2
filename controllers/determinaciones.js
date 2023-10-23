@@ -2,6 +2,17 @@ const{response}=require('express');
 const {Determinacion}=require("../models")
 
 
+
+const detGetTodas=async()=>{
+    try {
+        const determinaciones = await Determinacion.findAll( {paranoid: false});
+        return {ok:true,determinaciones}
+      } catch (error) {
+        console.error(error);
+        return({ok:false})
+      }
+}
+
 const detPost=async(req,res=response)=>{
      try{ const {nombre,unidadMedida,valorMin,valorMax,comentarios}=req.body;
       await Determinacion.create({nombre,unidadMedida,valorMin,valorMax,comentarios});
@@ -54,7 +65,8 @@ try {
 module.exports={
     detPost,
     detGet,
-    detPostidexamen
+    detPostidexamen,
+    detGetTodas
 }
 
 /*

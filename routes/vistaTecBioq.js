@@ -1,5 +1,5 @@
 const{Router}=require('express');
-const { detGet, detPost } = require('../controllers/determinaciones');
+const { detGet, detPost, detGetTodas } = require('../controllers/determinaciones');
 const { tipoMuestrasGet } = require('../controllers/muestras');
 const router=Router();
 const {Determinacion,Examen,TipoMuestra,TipoExamen,ValorReferencia}=require("../models");
@@ -14,6 +14,18 @@ router.get('/formdeterminacion',async(req,res)=>{
 
 
 
+
+
+router.get('/tableActivarDeterminacion',async(req,res)=>{
+        console.log("lala");
+        const d=detGetTodas()
+        if (d.ok){
+          res.render('tecnicoBioq/activarDeter',{determinaciones:d.determinaciones})
+        }     
+        else  res.render('tecnicoBioq/activarDeter',{determinaciones:[]})
+      })  
+      
+      
 router.post('/edit',async(req,res)=>{
   try{
     
