@@ -24,13 +24,18 @@ html
             each examen in examenes
               tr
                 td= examen.nombre
-                - console.log("TTTTTTT", examen.TipoMuestra)
-                - let p=JSON.stringify(examen.TipoMuestra)
-                td= p   
-                - p=JSON.stringify(examen.TipoExamen)
-                td= p
-                - p=JSON.stringify(examen.Determinaciones)
-                td= p
+                if examen.TipoMuestra 
+                  td= examen.TipoMuestra.nombre 
+                else 
+                  td -    
+                if examen.TipoExamen 
+                  td= examen.TipoExamen.nombre 
+                else
+                  td - 
+                if examen.Determinacions 
+                  td ver 
+                else 
+                  td -
                 td 
                   form(action=`/vistaTecBioq/edit` method="post")
                         input(type="hidden" name="examen" value=JSON.stringify(examen))
