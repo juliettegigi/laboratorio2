@@ -55,11 +55,8 @@ try {
     return det
       //return res.status(200).json(det);
 } catch (error) {
-
-    return res.status(500).json({ error: 'No se pudieron obtener la  determinacion' });
-
-    //return res.status(500).json({ error: 'No se pudieron obtener a le determinacion' });
-    return {error}
+console.log(error);
+    return error
 
 }
 
