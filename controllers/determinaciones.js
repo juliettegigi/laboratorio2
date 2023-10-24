@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const{response}=require('express');
-const {Determinacion}=require("../models")
+const {Determinacion,Resultado,ValorReferencia}=require("../models")
 
 
 
@@ -68,29 +68,29 @@ try {
 
 const activarDeterminacion=async(req,res)=>{
     const{id}=req.body
-    await Determinacion.restore({
-        where: {
-          id
-        }
-      })
+    await Determinacion.restore({where: {id}})
 
       const determinaciones=await detGetTodas()
       res.render('tecnicoBioq/activarDeter',{determinaciones})
-     /*   const det=Determinacion.findByPk(pk, {
-            paranoid: false 
-          })*/
 
 }
 
 
 const desactivarDeterminacion=async(req,res)=>{
-    const{id}=req.body
-    await Determinacion.destroy({
-        where: {
-          id
-        }
-      })
+    const{id}=req.body;
 
+    await ValorReferencia.destroy({ where: { determinacionId: id } });
+    await ValorReferencia.update(
+        { determinacionId: null },
+        { where: { determinacionId: id } }
+      );
+      
+    await Resultado.destroy({ where: { determinacionId: id } }); 
+    await Resultado.update(
+        { determinacionId: null },
+        { where: { determinacionId: id } }
+      ); 
+    await Determinacion.destroy({where: {id}})
       const determinaciones=await detGetTodas()
       res.render('tecnicoBioq/activarDeter',{determinaciones})
 
