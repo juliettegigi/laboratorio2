@@ -1,6 +1,6 @@
 const{Router}=require('express');
 const { detGet, detPost, detGetTodas } = require('../controllers/determinaciones');
-const { tipoMuestrasGet } = require('../controllers/muestras');
+const { tipoMuestrasGet, postMuestra, getVistaMuestra } = require('../controllers/muestras');
 const router=Router();
 const {Determinacion,Examen,TipoMuestra,TipoExamen,ValorReferencia}=require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
@@ -34,11 +34,10 @@ router.get('/tableActivarDeterminacion',async(req,res)=>{
      })
 
 
+      router.post('/addMuestra',postMuestra)
       router.post('/addValorRef',postValorRef)
-
-
       router.post('/addRef',postValorRef)
-
+      router.get('/addMuestra',getVistaMuestra)
 router.post('/edit',async(req,res)=>{
   try{
     
@@ -46,6 +45,8 @@ router.post('/edit',async(req,res)=>{
     console.log("zzzzzzzzzz", examen);
     let arrTe= await tipoExamenesGet();
     let arrMuestras= await tipoMuestrasGet();
+    console.log("TIPO EXAMEN",arrTe);
+    console.log(arrMuestras);
     res.render("tecnicoBioq/editExamen",{examen,arrTe,arrMuestras});
   }
   catch(err){
@@ -65,7 +66,6 @@ router.get('/formExamen',async(req,res)=>{
 
   router.get('/actualizar',async(req,res)=>{
            const {ok,examenes}=await examenesGet();
-           console.log(examenes);
 
     res.render('tecnicoBioq/actualizarExamen',{examenes})
   })

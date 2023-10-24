@@ -1,5 +1,5 @@
 const { Sequelize} = require('sequelize');
-const {OrdenTrabajo}=require('../models');
+const {OrdenTrabajo,Usuario}=require('../models');
 
 const ordenPost = async (req, res) => {
     try {
@@ -14,9 +14,14 @@ const ordenPost = async (req, res) => {
       return res.status(500).json({ error: 'No se pudo crear la orden de trabajo' });
     }
    };
+
+
+   const ordenesGet=async()=>{
+    return await OrdenTrabajo.findAll({ include: [{model: Usuario}],});
+   }
    
    module.exports={
-    ordenPost
+    ordenPost,ordenesGet
   }
   
   /*

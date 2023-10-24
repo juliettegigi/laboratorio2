@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
        static associate(models) {
       OrdenTrabajo.belongsToMany(models.Examen,{through:"ExamenOrden"})
       OrdenTrabajo.hasMany(models.ExamenOrden);
-      OrdenTrabajo.hasOne(models.Estado);
+      OrdenTrabajo.belongsTo(models.Estado);
       OrdenTrabajo.belongsTo(models.Usuario)
       OrdenTrabajo.hasMany(models.Muestra)
     }

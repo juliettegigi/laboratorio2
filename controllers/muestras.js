@@ -1,4 +1,6 @@
-const {TipoMuestra}=require("../models")
+const {TipoMuestra,Muestra}=require("../models");
+const { getEstadoOrden } = require("./estadoOrden");
+const { ordenesGet } = require("./orden");
 
 
 const tipoMuestrasGet=async()=>{
@@ -14,6 +16,24 @@ try {
 
 }
 
+
+const postMuestra=async(req,res)=>{
+       console.log(req.body);
+       const{ordenId,tipoMuestraId}=req.body
+       const entregada=req.body.entregada?true:false;
+       await Muestra.create({ordenId,tipoMuestraId,entregada})
+       const tipoM= await tipoMuestrasGet();
+        const ordenes= await ordenesGet();
+       res.render('tecnicoBioq/addMuestra',{ordenes,tipoM,modal:"Muestra agregada."})
+}
+
+const getVistaMuestra=async(req,res)=>{
+
+        const tipoM= await tipoMuestrasGet();
+        const ordenes= await ordenesGet();
+        res.render('tecnicoBioq/addMuestra',{ordenes,tipoM,modal:false})
+}
+
 module.exports={
-   tipoMuestrasGet
+   tipoMuestrasGet,postMuestra,getVistaMuestra
 }

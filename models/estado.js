@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   class Estado extends Model {
     static associate(models) {
       
-      Estado.belongsTo(models.OrdenTrabajo)
+      Estado.hasMany(models.OrdenTrabajo)
   }
 }
 
@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Estado',
     tableName: 'estados',
+    timestamps: false,
     paranoid: true
   });
 
