@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Determinacion.hasMany(models.ValorReferencia)
       Determinacion.belongsTo(models.Examen)
+      Determinacion.hasMany(models.ExamenDeterminacion)
+      Determinacion.belongsToMany(models.Examen,{through:"ExamenDeterminacion"})
 
     }
   }
@@ -15,8 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     nombre: DataTypes.STRING,
     unidadMedida:DataTypes.STRING,
     valorMin: DataTypes.DECIMAL(10,2),
-    valorMax: DataTypes.DECIMAL(10,2),
-    examenId: DataTypes.INTEGER
+    valorMax: DataTypes.DECIMAL(10,2)
   }, {
     sequelize,
     modelName: 'Determinacion',

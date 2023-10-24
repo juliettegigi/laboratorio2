@@ -34,6 +34,15 @@ const getVistaMuestra=async(req,res)=>{
         res.render('tecnicoBioq/addMuestra',{ordenes,tipoM,modal:false})
 }
 
+
+const activarMuestra=(req,res)=>{
+
+}
+
+const desactivarMuestra=(req,res)=>{
+
+}
+
 module.exports={
-   tipoMuestrasGet,postMuestra,getVistaMuestra
+   tipoMuestrasGet,postMuestra,getVistaMuestra,activarMuestra,desactivarMuestra
 }
