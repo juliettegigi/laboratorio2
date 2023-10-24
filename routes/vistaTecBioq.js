@@ -17,13 +17,10 @@ router.get('/addet',async(req,res)=>{
 
 
 
-router.get('/tableActivarDeterminacion',async(req,res)=>{
+router.get('/activarDeterminacion',async(req,res)=>{
         console.log("lala");
-        const d=detGetTodas()
-        if (d.ok){
-          res.render('tecnicoBioq/activarDeter',{determinaciones:d.determinaciones})
-        }     
-        else  res.render('tecnicoBioq/activarDeter',{determinaciones:[]})
+        const determinaciones=await detGetTodas()
+          res.render('tecnicoBioq/activarDeter',{determinaciones})
       })  
       
 

@@ -1,3 +1,4 @@
+const Sequelize = require('sequelize');
 const{response}=require('express');
 const {Determinacion}=require("../models")
 
@@ -5,8 +6,9 @@ const {Determinacion}=require("../models")
 
 const detGetTodas=async()=>{
     try {
-        const determinaciones = await Determinacion.findAll( {paranoid: false});
-        return {ok:true,determinaciones}
+        const determinaciones = await Determinacion.findAll( { where: { deletedAt: { [Sequelize.Op.or]: [null, { [Sequelize.Op.not]: null }]}}});
+        console.log(determinaciones);
+        return determinaciones
       } catch (error) {
         console.error(error);
         return({ok:false})
