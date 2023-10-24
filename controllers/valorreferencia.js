@@ -1,4 +1,4 @@
-const {ValorReferencia}=require('../models');
+const {ValorReferencia,Determinacion}=require('../models');
 const { detGet } = require('./determinaciones');
 
 const valorReferenciaPost=async(req,res)=>{
@@ -23,6 +23,18 @@ const postValorRef=async(req,res)=>{
     res.render('tecnicoBioq/addReferencia',{arrDet,modal:"Valor de referencia agregado."})
  }
 
-module.exports={valorReferenciaPost,postValorRef}
+
+const refGetTodos=async(req,res)=>{
+    try {
+        const valorRef = await ValorReferencia.findAll( {paranoid:false,include: [{model: Determinacion}]});
+        console.log(valorRef);
+        return valorRef
+      } catch (error) {
+        console.error(error);
+        return({ok:false})
+      }
+}
+
+module.exports={valorReferenciaPost,postValorRef,refGetTodos}
 
 
