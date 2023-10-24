@@ -65,7 +65,6 @@ router.post('/addet',detPost)
 router.get('/formExamen',async(req,res)=>{
     let arrDet= await detGet();
     let arrMuestras= await tipoMuestrasGet();
-    
     let arrTe= await tipoExamenesGet();
    return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras,arrTe})})
 
@@ -87,7 +86,6 @@ router.put('/actualizar/:id',async(req,res)=>{
    router.post('/submit',async(req,res)=>{
     console.log("---------------------------------------------------------");
     console.log(req.body);
-    console.log(req.body.eNombre);
     const examen=await Examen.create({nombre:req.body.eNombre,detalle:req.body.detalle});
 
      for(let muestra of req.body.muestras){
@@ -143,8 +141,11 @@ router.put('/actualizar/:id',async(req,res)=>{
 
   console.log("DETERMINACIONESS ",determinaciones);
     for(let obj of determinaciones){
+     
         const det=await Determinacion.create({nombre:obj.determinacion.nombre,unidadMedida:obj.determinacion.unidadMedida,valorMin:obj.determinacion.valorMin,valorMax:obj.determinacion.valorMax,comentarios:""});
+        
         await examen.addDeterminacion(det)
+        console.log("Holaaaaaaaaaa");
         if(obj.hombre){
               for(let fila of obj.hombre){
                 const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'H',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]});
