@@ -35,6 +35,24 @@ const refGetTodos=async(req,res)=>{
       }
 }
 
-module.exports={valorReferenciaPost,postValorRef,refGetTodos}
+const activarRef=async(req,res)=>{
+    const{id}=req.body;
+    await ValorReferencia.restore({where:{id}})
+    let arrRef=await refGetTodos();
+    res.render('tecnicoBioq/activarRef',{arrRef})
+}
+
+
+const desactivarRef=async(req,res)=>{
+    const{id}=req.body;
+
+    await ValorReferencia.destroy({ where: { id } });
+    
+    let arrRef=await refGetTodos();
+    res.render('tecnicoBioq/activarRef',{arrRef})
+
+}
+
+module.exports={valorReferenciaPost,postValorRef,refGetTodos,activarRef,desactivarRef}
 
 

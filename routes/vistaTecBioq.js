@@ -5,7 +5,7 @@ const router=Router();
 const {Determinacion,Examen,TipoMuestra,TipoExamen,ValorReferencia}=require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
 const { tieneOrden, examenesGet } = require('../controllers/examenes');
-const { postValorRef, refGetTodos } = require('../controllers/valorreferencia');
+const { postValorRef, refGetTodos, activarRef, desactivarRef } = require('../controllers/valorreferencia');
 
 
 router.get('/inicio',(req,res)=>{res.render("tecnicoBioq/inicio")})
@@ -33,6 +33,8 @@ router.get('/activarDeterminacion',async(req,res)=>{
       let arrRef=await refGetTodos();
       res.render('tecnicoBioq/activarRef',{arrRef})
      })
+     router.post('/activarRef',activarRef)
+     router.post('/desactivarRef',desactivarRef)
      router.post('/desactivarDeterminacion',desactivarDeterminacion)
      router.post('/activarDeterminacion',activarDeterminacion)
       router.post('/addMuestra',postMuestra)
