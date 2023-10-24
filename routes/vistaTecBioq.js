@@ -1,5 +1,5 @@
 const{Router}=require('express');
-const { detGet, detPost, detGetTodas } = require('../controllers/determinaciones');
+const { detGet, detPost, detGetTodas,activarDeterminacion, desactivarDeterminacion } = require('../controllers/determinaciones');
 const { tipoMuestrasGet, postMuestra, getVistaMuestra } = require('../controllers/muestras');
 const router=Router();
 const {Determinacion,Examen,TipoMuestra,TipoExamen,ValorReferencia}=require("../models");
@@ -30,7 +30,8 @@ router.get('/activarDeterminacion',async(req,res)=>{
         res.render('tecnicoBioq/addReferencia',{arrDet,modal:false})
      })
 
-
+     router.post('/desactivarDeterminacion',desactivarDeterminacion)
+     router.post('/activarDeterminacion',activarDeterminacion)
       router.post('/addMuestra',postMuestra)
       router.post('/addValorRef',postValorRef)
       router.post('/addRef',postValorRef)

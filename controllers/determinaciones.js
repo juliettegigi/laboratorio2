@@ -6,7 +6,7 @@ const {Determinacion}=require("../models")
 
 const detGetTodas=async()=>{
     try {
-        const determinaciones = await Determinacion.findAll( { where: { deletedAt: { [Sequelize.Op.or]: [null, { [Sequelize.Op.not]: null }]}}});
+        const determinaciones = await Determinacion.findAll( {paranoid:false});
         console.log(determinaciones);
         return determinaciones
       } catch (error) {
@@ -66,11 +66,41 @@ try {
 
 }
 
+const activarDeterminacion=async(req,res)=>{
+    const{id}=req.body
+    await Determinacion.restore({
+        where: {
+          id
+        }
+      })
+
+      const determinaciones=await detGetTodas()
+      res.render('tecnicoBioq/activarDeter',{determinaciones})
+     /*   const det=Determinacion.findByPk(pk, {
+            paranoid: false 
+          })*/
+
+}
+
+
+const desactivarDeterminacion=async(req,res)=>{
+    const{id}=req.body
+    await Determinacion.destroy({
+        where: {
+          id
+        }
+      })
+
+      const determinaciones=await detGetTodas()
+      res.render('tecnicoBioq/activarDeter',{determinaciones})
+
+}
+
 module.exports={
     detPost,
     detGet,
     detPostidexamen,
-    detGetTodas
+    detGetTodas,activarDeterminacion,desactivarDeterminacion
 }
 
 /*

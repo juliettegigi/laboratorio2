@@ -17,6 +17,7 @@ html
               th Valor mínimo
               th Valor máximo
               th Unidad
+              th 
           - console.log({determinaciones})    
           if determinaciones
             tbody
@@ -27,9 +28,14 @@ html
                   td= det.valorMax 
                   td= det.unidadMedida
                   td 
-                    form(action=`/vistaTecBioq/activarDeterminacion` method="post")
-                          input(type="hidden" name="id" value=det.id)
-                          input(type="submit" value="Activar/Desactivar" class="btn btn-primary")
+                    if det.deletedAt
+                      form(action=`/vistaTecBioq/activarDeterminacion` method="post")
+                            input(type="hidden" name="id" value=det.id)
+                            input(type="submit" value="Activar" class="btn btn-primary")
+                    else 
+                      form(action=`/vistaTecBioq/desactivarDeterminacion` method="post")
+                            input(type="hidden" name="id" value=det.id)
+                            input(type="submit" value="Desactivar" class="btn btn-primary")
           tfoot
             tr
               th Nombre
