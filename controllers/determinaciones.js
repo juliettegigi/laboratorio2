@@ -14,7 +14,9 @@ const detGetTodas=async()=>{
 }
 
 const detPost=async(req,res=response)=>{
-     try{ const {nombre,unidadMedida,valorMin,valorMax,comentarios}=req.body;
+     try{ 
+        
+        const {nombre,unidadMedida,valorMin,valorMax,comentarios}=req.body;
       await Determinacion.create({nombre,unidadMedida,valorMin,valorMax,comentarios});
       return res.render('tecnicoBioq/formDeterminacion',{modal:"Determinación agregada."})}
     catch{

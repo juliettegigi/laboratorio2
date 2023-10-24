@@ -72,12 +72,12 @@ html
                  }
                }
              });
-  
+
        const addBtn= document.getElementById('addFieldsButton');
        const ocultos = document.querySelectorAll('.ocultos');
        const acordeon=document.getElementById("acordeon");
        let i=0;
-  
+
        addBtn.addEventListener('click', () => {
          const item=document.createElement('div');
          item.id=`item-${i}`
@@ -130,9 +130,9 @@ html
                      item.remove();
                  }
              }
-  
+
        })
-  
+
        ///////////////////////////////////////////////////////////  DETERMINACIÓN
           const htmlDeterminacion=(n)=>{
            const header={}
@@ -158,12 +158,12 @@ html
                  arrDiv[5].appendChild(label);
                  arrDiv[5].appendChild(input);
                  input.addEventListener('input',(e)=>{
-                  
+
                      const head=document.getElementById(`s-${n}`);
                        header.nombre=e.target.value 
-                                          
+
                      head.textContent=JSON.stringify(header)
-                   
+
                  })
                  label = document.createElement('label');
                  label.setAttribute('for', `valorMiny${n}`);
@@ -180,7 +180,7 @@ html
                      const head=document.getElementById(`s-${n}`);
                        header.valorMin=e.target.value                      
                      head.textContent=JSON.stringify(header)
-                   
+
                  })
              label = document.createElement('label');
              label.setAttribute('for', `valorMaxy${n}`);
@@ -197,7 +197,7 @@ html
                      const head=document.getElementById(`s-${n}`);
                        header.valorMax=e.target.value                      
                      head.textContent=JSON.stringify(header)
-                   
+
                  })
              label = document.createElement('label');
              label.setAttribute('for', `unidadMediday${n}`);
@@ -210,11 +210,11 @@ html
              arrDiv[8].appendChild(label);
              arrDiv[8].appendChild(input);
              input.addEventListener('input',(e)=>{
-                      
+
                      const head=document.getElementById(`s-${n}`);
                        header.unidadMedida=e.target.value                      
                      head.textContent=JSON.stringify(header)
-                   
+
                  })            
              arrDiv[0].innerHTML=`<h2>Determinación</h2>`
              for(let p=2;p<5;p++)
@@ -228,8 +228,8 @@ html
              divElement.setAttribute('id', 'determinacion');
              divElement.appendChild(arrDiv[0])            
              divElement.appendChild(arrDiv[1])
-  
-  
+
+
              return divElement
              }   
        ////////////////////////////////////////////////////     tabla
@@ -237,14 +237,14 @@ html
            const header2={}   
             const titulo = document.createElement('div');
             titulo.classList.add('row', 'align-items-center');
-  
+
              const innerDiv = document.createElement('div');
              innerDiv.classList.add('md-6', 'd-flex', 'justify-content-center');
              const h2 = document.createElement('h2');
              h2.textContent = 'Valores de referencia';
              titulo.appendChild(innerDiv);
              innerDiv.appendChild(h2);
-  
+
              /*crear el acordeon*/
                const acordeon=crearAcordion("ac2");
                const i1=addItem(n,"ac2-0","Hombre",crearBtnAdd(`Hombre${n}`,"ac2-0",n),false);// n=cantidad de determinaciones
@@ -260,7 +260,7 @@ html
                  divElement.appendChild(acordeon)
                  return divElement;  
            }
-  
+
            ///////////////////////////////////////////////////// CREAR ACORDION
            const crearAcordion=(id)=>{
            const acordeon= document.createElement('div');
@@ -272,10 +272,10 @@ html
            const addItem=(c,n, titulo, body, expanded)=>{//c=cantidad de determinaciones
                    const accordionItem = document.createElement('div');
                    accordionItem.className = 'accordion-item';                  
-  
+
                    const h2 = document.createElement('h2');
                    h2.className = 'accordion-header';                  
-  
+
                    const button = document.createElement('button');
                    h2.appendChild(button)
                    accordionItem.appendChild(h2);
@@ -286,18 +286,18 @@ html
                    button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
                    button.setAttribute('aria-controls', `panelsStayOpen-collapses${n+c}`);
                    button.textContent = titulo;                  
-  
+
                    const accordionCollapse = document.createElement('div');
                    accordionItem.appendChild(accordionCollapse);
                    accordionCollapse.id = `panelsStayOpen-collapses${n+c}`;
                    accordionCollapse.className = 'accordion-collapse collapse' + (expanded ? ' show' : '');                   
-  
+
                    const accordionBody = document.createElement('div');
                    accordionBody.id=`body-${n}`
                    accordionCollapse.appendChild(accordionBody);
                    accordionBody.className = 'accordion-body';
                    accordionBody.appendChild(body);       
-  
+
                    const table = document.createElement('table');
                    const thead = document.createElement('thead');
                    const tr = document.createElement('tr');
@@ -309,7 +309,7 @@ html
                      th.textContent = enc;
                      tr.appendChild(th);
                    });
-  
+
                    const tbody = document.createElement('tbody');  
                    table.appendChild(tbody)
                    tbody.id=`${n+c}` //
@@ -319,7 +319,7 @@ html
                    accordionBody.appendChild(container) 
                    return accordionItem;
                  }
-  
+
                  ////////////////////////////////////// crear boton agregar
                  const crearBtnAdd=(id,m,n)=>{
                    const button = document.createElement('button');
@@ -355,7 +355,7 @@ html
                        const fila = document.createElement('tr');
                        fila.id=`fila-${nuroFila}`
                  const encabezados = ['edadMin', 'edadMax', 'valorMin', 'valorMax'];
-  
+
                          for (let j = 0; j < 5; j++) {
                           const td = document.createElement('td');
                           if(j===4){
@@ -369,8 +369,8 @@ html
                           td.appendChild(input);}
                           fila.appendChild(td);
                         }
-  
+
                         tbody.appendChild(fila);
-                   
-  
+
+
                    }

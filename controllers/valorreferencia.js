@@ -1,4 +1,5 @@
-const {ValorReferencia}=require('../models')
+const {ValorReferencia}=require('../models');
+const { detGet } = require('./determinaciones');
 
 const valorReferenciaPost=async(req,res)=>{
     try {
@@ -13,6 +14,15 @@ const valorReferenciaPost=async(req,res)=>{
     }
 }
 
-module.exports={valorReferenciaPost}
+
+const postValorRef=async(req,res)=>{
+    let {determinacionId,edadMin,edadMax,sexo,embarazo,valorMinimo,valorMaximo}=req.body;
+     console.log(determinacionId); 
+    await ValorReferencia.create({determinacionId: parseInt(req.body.determinacionId, 10),edadMin,edadMax,sexo,embarazo,valorMinimo,valorMaximo})
+    let arrDet= await detGet();
+    res.render('tecnicoBioq/addReferencia',{arrDet,modal:"Valor de referencia agregado."})
+ }
+
+module.exports={valorReferenciaPost,postValorRef}
 
 

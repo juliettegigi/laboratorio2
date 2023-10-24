@@ -5,11 +5,12 @@ const router=Router();
 const {Determinacion,Examen,TipoMuestra,TipoExamen,ValorReferencia}=require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
 const { tieneOrden, examenesGet } = require('../controllers/examenes');
+const { postValorRef } = require('../controllers/valorreferencia');
 
 
 router.get('/inicio',(req,res)=>{res.render("tecnicoBioq/inicio")})
 //router.get('/inicio',(req,res)=>{res.render("inicioAdmin2/inicioAdmin2")})
-router.get('/formdeterminacion',async(req,res)=>{
+router.get('/addet',async(req,res)=>{
             return res.render("tecnicoBioq/formdeterminacion",{modal:false})})
 
 
@@ -25,7 +26,19 @@ router.get('/tableActivarDeterminacion',async(req,res)=>{
         else  res.render('tecnicoBioq/activarDeter',{determinaciones:[]})
       })  
       
-      
+
+
+      router.get('/addValorRef',async(req,res)=>{
+        let arrDet= await detGet();
+        res.render('tecnicoBioq/addReferencia',{arrDet,modal:false})
+     })
+
+
+      router.post('/addValorRef',postValorRef)
+
+
+      router.post('/addRef',postValorRef)
+
 router.post('/edit',async(req,res)=>{
   try{
     
