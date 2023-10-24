@@ -24,7 +24,7 @@ html
                         div#listaOrden
                           ul
                         label(for="orden", class="form-label") Ordenes existentes:
-                        input#orden.form-control(list="datalistOptions", name="orden", placeholder=ordenes.length===0?"No hay determiniaciones":"Type to search...",disabled= ordenes.length === 0)
+                        input#orden.form-control(list="datalistOptions", name="orden", placeholder=ordenes.length===0?"No hay órdenes":"Type to search...",disabled= ordenes.length === 0)
                         datalist(id="datalistOptions")
                           each ord in ordenes
                             option(id=ord.id)= `${ord.Usuario.nombre} - ${ord.Usuario.documento}`
