@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'ExamenDeterminacion',
-    tableName:'examendeterminaciones'
+    tableName:'examendeterminaciones',
+    paranoid:true
   });
   return ExamenDeterminacion;
 };
