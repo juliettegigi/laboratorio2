@@ -66,6 +66,8 @@ console.log(error);
 const activarDeterminacion=async(req,res)=>{
     const{id}=req.body
     await Determinacion.restore({where: {id}})
+    await ValorReferencia.restore({ where: { determinacionId: id } });
+    await Resultado.restore({ where: { determinacionId: id } }); 
 
       const determinaciones=await detGetTodas()
       res.render('tecnicoBioq/activarDeter',{determinaciones})
@@ -76,7 +78,7 @@ const activarDeterminacion=async(req,res)=>{
 const desactivarDeterminacion=async(req,res)=>{
     const{id}=req.body;
 
-    await ValorReferencia.destroy({ where: { determinacionId: id } });
+    /* await ValorReferencia.destroy({ where: { determinacionId: id } });
     await ValorReferencia.update(
         { determinacionId: null },
         { where: { determinacionId: id } }
@@ -86,8 +88,10 @@ const desactivarDeterminacion=async(req,res)=>{
     await Resultado.update(
         { determinacionId: null },
         { where: { determinacionId: id } }
-      ); 
-    await Determinacion.destroy({where: {id}})
+      );  */
+      await ValorReferencia.destroy({ where: { determinacionId: id } });
+      await Resultado.destroy({ where: { determinacionId: id } }); 
+      await Determinacion.destroy({where:{id}})
       const determinaciones=await detGetTodas()
       res.render('tecnicoBioq/activarDeter',{determinaciones})
 
