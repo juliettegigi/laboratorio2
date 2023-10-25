@@ -1,6 +1,6 @@
 const{Router}=require('express');
 const { detGet, detPost, detGetTodas,activarDeterminacion, desactivarDeterminacion } = require('../controllers/determinaciones');
-const { tipoMuestrasGet, postMuestra, getVistaMuestra, activarMuestra, desactivarMuestra } = require('../controllers/muestras');
+const { tipoMuestrasGet, postMuestra, getVistaMuestra, activarMuestra, desactivarMuestra, muestrasGetTodos } = require('../controllers/muestras');
 const router=Router();
 const {Determinacion,Examen,TipoMuestra,TipoExamen,ValorReferencia}=require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
@@ -32,6 +32,11 @@ router.get('/activarDeterminacion',async(req,res)=>{
      router.get('/activarRef',async(req,res)=>{
       let arrRef=await refGetTodos();
       res.render('tecnicoBioq/activarRef',{arrRef})
+     })
+     router.get('/activarMuestra',async(req,res)=>{
+        let muestras= await muestrasGetTodos();
+        console.log(muestras);
+        res.render('tecnicoBioq/activarMuestra',{muestras,modal:false})
      })
      router.post('/activarMuestra',activarMuestra)
      router.post('/desactivarMuestra',desactivarMuestra)
@@ -145,7 +150,6 @@ router.put('/actualizar/:id',async(req,res)=>{
         const det=await Determinacion.create({nombre:obj.determinacion.nombre,unidadMedida:obj.determinacion.unidadMedida,valorMin:obj.determinacion.valorMin,valorMax:obj.determinacion.valorMax,comentarios:""});
         
         await examen.addDeterminacion(det)
-        console.log("Holaaaaaaaaaa");
         if(obj.hombre){
               for(let fila of obj.hombre){
                 const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'H',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]});

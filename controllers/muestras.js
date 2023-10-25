@@ -1,5 +1,4 @@
-const {TipoMuestra,Muestra}=require("../models");
-const { getEstadoOrden } = require("./estadoOrden");
+const {TipoMuestra,Muestra,OrdenTrabajo}=require("../models");
 const { ordenesGet } = require("./orden");
 
 
@@ -35,14 +34,26 @@ const getVistaMuestra=async(req,res)=>{
 }
 
 
-const activarMuestra=(req,res)=>{
-
+const muestrasGetTodos=async()=>{
+      return  await Muestra.findAll({paranoid:false,include:[{model:OrdenTrabajo},{model:TipoMuestra}]})
 }
 
-const desactivarMuestra=(req,res)=>{
+const activarMuestra=async(req,res)=>{
+    const{id}=req.body;
+    await Muestra.restore({where:{id}}) 
+    const muestras=await muestrasGetTodos();
+    res.render('tecnicoBioq/activarMuestra',{muestras})
+}
 
+const desactivarMuestra=async(req,res)=>{
+    const{id}=req.body;
+
+    await Muestra.destroy({ where: { id } });
+    
+    let muestras=await muestrasGetTodos();
+    res.render('tecnicoBioq/activarMuestra',{muestras})
 }
 
 module.exports={
-   tipoMuestrasGet,postMuestra,getVistaMuestra,activarMuestra,desactivarMuestra
+   tipoMuestrasGet,postMuestra,getVistaMuestra,activarMuestra,desactivarMuestra,muestrasGetTodos
 }

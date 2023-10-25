@@ -17,7 +17,7 @@ const valorReferenciaPost=async(req,res)=>{
 
 const postValorRef=async(req,res)=>{
     let {determinacionId,edadMin,edadMax,sexo,embarazo,valorMinimo,valorMaximo}=req.body;
-     console.log(determinacionId); 
+    
     await ValorReferencia.create({determinacionId: parseInt(req.body.determinacionId, 10),edadMin,edadMax,sexo,embarazo,valorMinimo,valorMaximo})
     let arrDet= await detGet();
     res.render('tecnicoBioq/addReferencia',{arrDet,modal:"Valor de referencia agregado."})
@@ -27,7 +27,7 @@ const postValorRef=async(req,res)=>{
 const refGetTodos=async(req,res)=>{
     try {
         const valorRef = await ValorReferencia.findAll( {paranoid:false,include: [{model: Determinacion}]});
-        console.log(valorRef);
+        
         return valorRef
       } catch (error) {
         console.error(error);
