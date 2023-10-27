@@ -19,12 +19,6 @@ const emailExiste = async (email = "") => {
 
 
 
-/**
-* @param {Array}- arreglo con valores de referencia
-* @return {number} Retorna:
-* false si no se inserta
-* el id de la  inserción 
-*/
 const detValorRef = (arrValoresRef, de,obj,index) => {
     let msg=""
     const i = arrValoresRef.length

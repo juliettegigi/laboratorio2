@@ -90,7 +90,7 @@ router.put('/actualizar/:id',async(req,res)=>{
 
 
    router.post('/submit',[
-    procesarBody,  //detValorRef
+    procesarBody,  
   ],async(req,res)=>{
     
     const t = await sequelize.transaction();
@@ -152,8 +152,13 @@ router.put('/actualizar/:id',async(req,res)=>{
     
     await t.rollback();
 
-
-   return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras,arrTe,modal:req.body.msg,form:req.body})
+    if (error.name === 'SequelizeUniqueConstraintError')
+       req.body.nombreExiste=true
+       
+       let arrDet= await detGet();
+       let arrMuestras= await tipoMuestrasGet();
+       let arrTe= await tipoExamenesGet(); 
+   return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras,arrTe,modal:false,form:req.body})
   }
 
 })

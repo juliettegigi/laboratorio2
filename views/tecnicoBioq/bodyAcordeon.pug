@@ -19,6 +19,11 @@
                     .col-lg-4.col-md-6.col-sm-12
                         label(for=`unidadMediday${i}`) Unidad de Medida:
                         input(required="" class="form-control" type="text" name=`unidadMediday${i}` value= form && form.determinaciones ? form.determinaciones[i].determinacion.unidadMedida: "")
+                - if(form.determinaciones[i][`errorDetValor`])
+                 .row
+                    .alert.alert-danger
+                        p Los rangos se solapan.
+                        
         .col#valoresReferencia
             .row.align-items-center
                 .md-6.d-flex.justify-content-center

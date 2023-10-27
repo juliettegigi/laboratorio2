@@ -18,6 +18,14 @@ html
                   .mb-5.col-3
                     label(for="nombre", class="form-label ") Nombre:
                     input#nombre.form-control(type="text", name="eNombre" required,value= form && form.eNombre ? form.eNombre: "")
+                    - if(form && form.nombreExiste)
+                     .row
+                      .alert.alert-danger
+                        p El examen ya está registrado.
+                  .mb-5.col-3
+                    label(for="demora", class="form-label ") Demora:
+                    input#demora.form-control(type="number", name="demora" required,value= form && form.demora ? form.demora: "")
+                          
                 .row
                   .mb-3.col-lg-3.col-md-3.col-sm-3
                      label(for="muestras", class="form-label") Muestras:
@@ -42,9 +50,7 @@ html
                         input#determinacion.form-control(list="datalistOptions", name="determinacion", placeholder="Type to search...")
                         datalist(id="datalistOptions")
                           each det in arrDet
-                            option(id=det.id)= det.nombre
-                      .col-lg-1.col-md-1.col-sm-2  
-                        button.btn.btn-primary(type="button", id="addFieldsButton") Agregar nueva determinación   
+                            option(id=det.id)= det.nombre   
 
                       div#listaDets
                         ul
@@ -61,7 +67,12 @@ html
                           .accordion-body
                               include bodyAcordeon.pug
                         - i++
-                  button.btn.btn-primary(type="submit") Enviar
+
+                  .row
+                   .col-lg-6.col-md-6.col-sm-6  
+                         button.btn.btn-primary(type="button", id="addFieldsButton") Agregar nueva determinación      
+                   .col-lg-1.col-md-2.col-sm-2    
+                     button.btn.btn-primary(type="submit") Enviar
     script.
          const modal1=("#{modal}"!=="false")
          if(modal1){
@@ -72,7 +83,6 @@ html
                          let clicksCantidad=0;
                         return (e)=>{
                           let u=e.currentTarget.getAttribute("ultimafila");
-                          console.log("ulala ",u)
                                inputs(`${id}-${u}`,m,n)                               
                                let id2=id.slice(0,-1)
                                const input= document.querySelector(`[name="${id2}${u}filay${n}"]`)

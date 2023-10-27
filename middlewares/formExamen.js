@@ -4,11 +4,10 @@ const { tipoExamenesGet } = require('../controllers/tipoexamen');
 const { tipoMuestrasGet } = require('../controllers/muestras');
 
 const procesarBody = async(req, res, next) => {
-    console.log("entro");
     let msg = ""
     let err=""
-    const {eNombre,muestras,tipoExamen,detalle,detExistentes}=req.body
-    const nuevoBody={eNombre,muestras,tipoExamen,detalle,detExistentes};
+    const {eNombre,muestras,tipoExamen,detalle,detExistentes,demora}=req.body
+    const nuevoBody={eNombre,muestras,tipoExamen,detalle,detExistentes,demora};
     nuevoBody.determinaciones=[]
 
     console.log("---------------------------------------------------------");
@@ -30,6 +29,9 @@ const procesarBody = async(req, res, next) => {
             det.valorMax = req.body[`valorMaxy${b}`];
             det.unidadMedida = req.body[`unidadMediday${b}`];
             obj.determinacion = det;
+
+            if(parseFloat(det.valorMin)>=parseFloat(det.valorMax))
+               obj.errorDetValor=true;
 
             const valoresRefHombre = [];
             const valoresRefMujer = [];
