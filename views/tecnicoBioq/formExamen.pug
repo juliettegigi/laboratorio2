@@ -71,10 +71,13 @@ html
             const eventoBtnMas=(id,m,n)=>{
                          let clicksCantidad=0;
                         return (e)=>{
-                               inputs(`${id}-${clicksCantidad}`,m,n)
-                               const input= document.querySelector(`[name="${id}${clicksCantidad}filay${n}"]`)
-                               clicksCantidad++  
+                          let u=e.currentTarget.getAttribute("ultimafila");
+                          console.log("ulala ",u)
+                               inputs(`${id}-${u}`,m,n)                               
+                               let id2=id.slice(0,-1)
+                               const input= document.querySelector(`[name="${id2}${u}filay${n}"]`)
                                if(input)input.focus()
+                               e.currentTarget.setAttribute("ultimafila",++u)
                          } 
                         }           
            var determinaciones = !{form !== null ? JSON.stringify(form) : 'null'};
