@@ -51,9 +51,16 @@ html
                         datalist(id="datalistOptions")
                           each det in arrDet
                             option(id=det.id)= det.nombre   
-
                       div#listaDets
                         ul
+                          if form && form.detExistentes
+                            each detId in form.detExistentes
+                              - const det=arrDet.find(elem=>elem.id==detId)
+                              - console.log(arrDet)
+                              li
+                                = det.nombre
+                                input(name="detExistentes" type="hidden" value=detId)
+                                button(class="btn btn-close danger btn-sm")
 
 
                   #acordeon.accordion.mt-5

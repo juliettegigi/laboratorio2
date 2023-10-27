@@ -140,7 +140,7 @@ router.put('/actualizar/:id',async(req,res)=>{
 
    if(req.body.detExistentes){
              for(let det of req.body.detExistentes){
-                   await examen.addDeterminacion(det, { transaction: t })
+                   const p=await examen.addDeterminacion(det,{ transaction: t })
              }
    }
 
@@ -149,7 +149,7 @@ router.put('/actualizar/:id',async(req,res)=>{
    return res.render("tecnicoBioq/inicio",{modal:"Examen agregado."})
   
   }catch (error) {
-    
+    console.log(error);
     await t.rollback();
 
     if (error.name === 'SequelizeUniqueConstraintError')
