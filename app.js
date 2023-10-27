@@ -27,9 +27,24 @@ app.use(
     saveUninitialized: true,
   })
 );
+/*
+app.get('/', (req, res) => {
+  res.render('inicioOrden'); // Para Probar la pagina inicioOrdemn
+});
+app.get('/actualizar-orden', (req, res) => {
+ const ok = true;
+  res.render('inicioOrden',{ok}); 
+});
 
+app.get('/formulario', (req, res) => {
+ console.log("holaa") ;
+ const k=true;
+res.render('inicioOrden',{k,ok:true})
 
+}); 
+*/
 app.use('', require('./routes/login'));
+
 app.use('/users', require('./routes/users'));
 app.use('/pacientes',require('./routes/pacientes'));
 app.use('/admins',require('./routes/admins'));

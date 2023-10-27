@@ -1,10 +1,9 @@
 const { Sequelize} = require('sequelize');
 const {Examen}=require('../models');
 //const {TipoMuestra}=require('../models');
-const {ExamenOrden ,Muestra}=require('../models');
 
 
-
+const { Usuario, OrdenTrabajo, ExamenOrden,Muestra } = require('../models'); 
 const examenOrdenPost = async (req, res) => {
 const { OrdenTrabajoId,ExamenId,tipoMuestraId,entregada }=req.body;
 /*
@@ -24,7 +23,7 @@ try {
   });
 
   return res.status(200).json({ msg: "Examen/orden y muestra registrados en la DB." });
-} catch (error) {
+} catch (error) {   
     console.error('Error en examenOrdenPost :', error);
       return res.status(500).json({ error});
 }
@@ -32,6 +31,84 @@ try {
 
 };
 
+const prueba= async (req, res) => {
+const para=req.body;
+console.log(para);
+
+};
+
+/*
+const examenOrdenGet = async (req, res) => {
+  let searchTerm = req.query.term;
+  console.log(searchTerm+"................");
+  try {
+    const usuario = await Usuario.findOne({
+      where: { documento: searchTerm },
+      include: [
+        {
+          model: OrdenTrabajo,
+          include: [
+            {
+              model: ExamenOrden
+            }
+          ]
+        }
+      ]
+    });
+
+    if (usuario) {
+
+      console.log("kkkkkkkkkkkkkk");
+      res.json(usuario);
+    } else {
+      // Si no se encuentra un usuario por documento, busca por OrdenTrabajoId
+      const ordenTrabajo = await OrdenTrabajo.findAll({
+        where: { OrdenTrabajoId: searchTerm },
+        include: [
+          {
+            model: ExamenOrden
+          }
+        ]
+      });
+
+      if (ordenTrabajo) {
+        res.json(ordenTrabajo);
+      } else {
+        res.json({ message: 'Usuario y Orden de Trabajo no encontrados' });
+      }
+    }
+  } catch (error) {
+    console.error('Error en examenOrdenGet:', error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+*/
+
+
+
+
+const examenOrdenGet = async (req, res) => {
+  const searchTerm = req.query.term;
+  let resultados;
+
+  if (searchTerm) {
+    
+    resultados = await ExamenOrden.findAll({ 
+      where: {
+        OrdenTrabajoId:searchTerm
+      }
+     // include: [{ model: Usuario }]
+    });
+    
+  } else {
+    resultados = []; 
+  }
+
+  res.json(resultados); // Devuelve los resultados en formato JSON
+};
+
 module.exports ={
-    examenOrdenPost
+    examenOrdenPost,
+    examenOrdenGet,
+    prueba
 }

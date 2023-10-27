@@ -49,9 +49,9 @@ const tieneOrden=async(req,res)=>{
 const examenPost= async(req,res)=>{
     try{ 
     
-        const {nombre,detalle,muestraId,examenId}=req.body;
+        const {nombre,detalle,muestraId,examenId,demora}=req.body;
 
-    await Examen.create({nombre,detalle,muestraId,examenId});
+    await Examen.create({nombre,detalle,muestraId,examenId,demora});
     return res.json({msg:"Examen insertado en la DB."})}
   catch{
       return res.json({msg:"Error al insertar un examen en la DB"})
@@ -62,7 +62,27 @@ const examenPost= async(req,res)=>{
 
 //------------------------------------------------------------------
 
+const cargarmuestras=async (req, res) => {
+    const id=req.body.examen1;
+   
 
+    
+try {
+    const tipomues = await TipoMuestra.findOne({
+        where: {
+          "id": id
+        }
+      });
+      console.log(tipomues);
+      return res.json(tipomues); 
+} catch (error) {
+    tipomues=[];
+    return res.json(tipomues);
+}
+
+
+
+}
 
 
 
@@ -72,8 +92,17 @@ const examenPost= async(req,res)=>{
 
 
 //------------------------------------------------------------------
+const crearorden= async (req, res)=>{
+    try {
+        examen=await Examen.findAll();
+        res.render('inicioOrden',{ok:false,k:true,examen1:examen}); 
+    } catch (error) {
+        examen=[];
+        res.render('inicioOrden',{ok:false,k:true,examen1:examen}); 
+    }
+  
 
-
+}
 
 
 
@@ -82,5 +111,5 @@ const examenPost= async(req,res)=>{
 
 
 module.exports={
-   examenesGet,examenPost,tieneOrden
+   examenesGet,examenPost,tieneOrden,crearorden,cargarmuestras
   }

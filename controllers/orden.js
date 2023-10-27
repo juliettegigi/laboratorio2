@@ -16,13 +16,21 @@ const ordenPost = async (req, res) => {
    };
 
 
-   const ordenesGet=async()=>{
-    return await OrdenTrabajo.findAll({ include: [{model: Usuario}],});
+   const ordenesGet=async(req,res)=>{
+    const orden= await OrdenTrabajo.findAll({ include: [{model: Usuario}],});
+    res.render("inicioOrden",{orden: orden});
    }
    
    module.exports={
     ordenPost,ordenesGet
   }
+  
+  
+  
+  module.exports = {
+    ordenesGet,ordenPost
+  };
+  
   
   /*
   {
