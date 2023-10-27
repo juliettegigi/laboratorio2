@@ -1,15 +1,19 @@
 const{Router}=require('express');
+const { check } = require('express-validator');
+
 const { detGet, detPost, detGetTodas,activarDeterminacion, desactivarDeterminacion } = require('../controllers/determinaciones');
 const { tipoMuestrasGet, postMuestra, getVistaMuestra, activarMuestra, desactivarMuestra, muestrasGetTodos } = require('../controllers/muestras');
 const router=Router();
-const {Determinacion,Examen,TipoMuestra,TipoExamen,ValorReferencia}=require("../models");
+const {Determinacion,Examen,TipoMuestra,TipoExamen,ValorReferencia,sequelize}=require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
 const { tieneOrden, examenesGet } = require('../controllers/examenes');
 const { postValorRef, refGetTodos, activarRef, desactivarRef } = require('../controllers/valorreferencia');
+const { procesarBody } = require('../middlewares/formExamen');
 
 
-router.get('/inicio',(req,res)=>{res.render("tecnicoBioq/inicio")})
+router.get('/inicio',(req,res)=>{res.render("tecnicoBioq/inicio",{modal:false})})
 //router.get('/inicio',(req,res)=>{res.render("inicioAdmin2/inicioAdmin2")})
+
 router.get('/addet',async(req,res)=>{
             return res.render("tecnicoBioq/formdeterminacion",{modal:false})})
 
@@ -52,11 +56,8 @@ router.post('/edit',async(req,res)=>{
   try{
     
     const examen=JSON.parse(req.body.examen)
-    console.log("zzzzzzzzzz", examen);
     let arrTe= await tipoExamenesGet();
     let arrMuestras= await tipoMuestrasGet();
-    console.log("TIPO EXAMEN",arrTe);
-    console.log(arrMuestras);
     res.render("tecnicoBioq/editExamen",{examen,arrTe,arrMuestras});
   }
   catch(err){
@@ -71,8 +72,8 @@ router.get('/formExamen',async(req,res)=>{
     let arrDet= await detGet();
     let arrMuestras= await tipoMuestrasGet();
     let arrTe= await tipoExamenesGet();
-   return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras,arrTe})})
-
+   return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras,arrTe,modal:false,form:null})//{arrDet,arrMuestras,arrTe,modal:"Los datos ingresados son incorrectos.",form:req.body}
+})
   router.get('/actualizar',async(req,res)=>{
            const {ok,examenes}=await examenesGet();
 
@@ -88,94 +89,72 @@ router.put('/actualizar/:id',async(req,res)=>{
 
 
 
-   router.post('/submit',async(req,res)=>{
-    console.log("---------------------------------------------------------");
-    console.log(req.body);
-    const examen=await Examen.create({nombre:req.body.eNombre,detalle:req.body.detalle});
-
-     for(let muestra of req.body.muestras){
+   router.post('/submit',[
+    procesarBody,  //detValorRef
+  ],async(req,res)=>{
+    
+    const t = await sequelize.transaction();
+    try{
+     const {eNombre,detalle,muestras,tipoExamen,determinaciones}=req.body
+      const examen=await Examen.create({nombre:eNombre,detalle}, { transaction: t });
+   
+   
+     for(let muestra of muestras){
                 const m=await TipoMuestra.findByPk(muestra)
-                 m.addExamen(examen)
+                 await m.addExamen(examen,{ transaction: t})
      }
 
-     for(let teId of req.body.tipoExamen){
+     for(let teId of tipoExamen){
         const te=await TipoExamen.findByPk(teId)
-         te.addExamen(examen)
+         await te.addExamen(examen, { transaction: t })
 }
 
 
 
-    const determinacionesNombre=[]
-    for (const propiedad in req.body) {
-        if (propiedad.startsWith("nombre")) {
-          determinacionesNombre.push(propiedad);
-        }
-      }
-      
-
-    const determinaciones=determinacionesNombre.map(nom=>{
-        const obj={hombre:{},mujer:{},embarazada:{}}  
-        const det={}
-        const[,b]=nom.split("y");
-        det.nombre=req.body[nom];
-        det.valorMin=req.body[`valorMiny${b}`]
-        det.valorMax=req.body[`valorMaxy${b}`];        
-        det.unidadMedida=req.body[`unidadMediday${b}`];
-        obj.determinacion=det;
-        
-        const valoresRefHombre=[];
-        const valoresRefMujer=[];
-        const valoresRefEmbarazada=[];
-        for (const propiedad in req.body) {
-            if (propiedad.startsWith("Hombre") && propiedad.endsWith(b)) {
-              valoresRefHombre.push(req.body[propiedad]);
-            }else if (propiedad.startsWith("Mujer") && propiedad.endsWith(b)) {
-                valoresRefMujer.push(req.body[propiedad]);
-              }else if (propiedad.startsWith("Embarazada") && propiedad.endsWith(b)) {
-                valoresRefEmbarazada.push(req.body[propiedad]);
-              }
-          }
-          console.log(valoresRefHombre);
-        obj.hombre=valoresRefHombre;
-        obj.mujer=valoresRefMujer;
-        obj.embarazada=valoresRefEmbarazada;       
-
     
-        return obj
-    })
-
-  console.log("DETERMINACIONESS ",determinaciones);
     for(let obj of determinaciones){
      
-        const det=await Determinacion.create({nombre:obj.determinacion.nombre,unidadMedida:obj.determinacion.unidadMedida,valorMin:obj.determinacion.valorMin,valorMax:obj.determinacion.valorMax,comentarios:""});
+        const det=await Determinacion.create({nombre:obj.determinacion.nombre,unidadMedida:obj.determinacion.unidadMedida,valorMin:obj.determinacion.valorMin,valorMax:obj.determinacion.valorMax,comentarios:""}, { transaction: t});
         
-        await examen.addDeterminacion(det)
+        await examen.addDeterminacion(det, { transaction: t })
         if(obj.hombre){
               for(let fila of obj.hombre){
-                const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'H',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]});
-                await det.addValorReferencia(vr)
+                const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'H',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]}, { transaction: t });
+                await det.addValorReferencia(vr, { transaction: t })
               }
         }
         if(obj.mujer){
             for(let fila of obj.mujer){
-              const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]});
-              await det.addValorReferencia(vr)
+              const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]}, { transaction: t });
+              await det.addValorReferencia(vr, { transaction: t })
             }
       }
       if(obj.embarazada){
         for(let fila of obj.mujer){
-          const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:true,valorMinimo:fila[2],valorMaximo:fila[3]});
-          await det.addValorReferencia(vr)
+          const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:true,valorMinimo:fila[2],valorMaximo:fila[3]}, { transaction: t });
+          await det.addValorReferencia(vr, { transaction: t })
         }
   }
         
     }
 
    if(req.body.detExistentes){
-
+             for(let det of req.body.detExistentes){
+                   await examen.addDeterminacion(det, { transaction: t })
+             }
    }
 
-   return res.render("tecnicoBioq/inicio")
+   await t.commit();
+
+   return res.render("tecnicoBioq/inicio",{modal:"Examen agregado."})
+  
+  }catch (error) {
+    
+    await t.rollback();
+
+
+   return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras,arrTe,modal:req.body.msg,form:req.body})
+  }
 
 })
 module.exports=router
