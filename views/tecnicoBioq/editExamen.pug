@@ -10,52 +10,57 @@ html
     body
       if modal
           include ../modal.pug
-      .container
+      .container-fluid
         include navBar.pug
-      form(action="/vistaTecBioq/submit", method="post" name="formu")
-            .row 
-                .mb-3.col-lg-4.col-md-6.col-sm-12
-                    .row
-                      .mb-3.col-lg-8.col-md-8.col-sm-4
-                        label(for="nombre", class="form-label") Nombre:
-                        input#nombre.form-control(type="text", name="eNombre", value=examen.nombre)      
-                    .row 
-                      .mb-3.col-lg-8.col-md-8.col-sm-4
-                        label(for="detalle", class="form-label") Detalle:
-                        textarea#detalle.form-control(name="detalle", rows="3")= examen.detalle
-                .mb-3.col-lg-3.col-md-3.col-sm-3
-                  label(for="muestras", class="form-label") Muestras:
-                  each muestra in arrMuestras
-                    .form-check
-                      input.form-check-input(type="radio", id=`muestra-${muestra.id}`, name="muestras", value=muestra.id, checked=examen.TipoMuestra.nombre === muestra.nombre)
-                      label.form-check-label(for=`muestra-${muestra.id}`)= muestra.nombre
-                .mb-3.col-lg-3.col-md-3.col-sm-3
-                   label(for="tipoExamen", class="form-label") Tipo examen:
-                   each te in arrTe
-                     .form-check
-                       input.form-check-input(type="radio", id=`te-${te.id}`, name="tipoExamen", value=te.id, checked= examen.TipoExamen && examen.TipoExamen.nombre === te.nombre)
-                       label.form-check-label(for=`te-${te.id}`)= te.nombre    
-            .row
-                .mb-3.col-lg-4.col-md-6.col-sm-12
-                    label(for="determinaciones", class="form-label") Determinaciones:
-                    each d in examen.Determinacions
-                       input(type="hidden" name="deTerminacionId" value= d.id)
-                       label(for="determinacion", class="form-label") Nombre:                 
-                       input(type="text" class="form-control" name="nombre" value=d.nombre)
-                       label(for="valorMin", class="form-label") Valor mínimo:
-                       input(type="number" class="form-control" name="valorMin" step="0.1")
-                       label(for="valorMax", class="form-label") Valor máximo:
-                       input(type="number" class="form-control" name="valorMin" step="0.1")
-                       label(for="unidad", class="form-label") Unidad:
-                       input(type="number" class="form-control" name="unidad" step="0.1")
-            .row 
-                #acordeon.accordion
-            .row 
-                .mb-3.col-lg-3.col-md-3.col-sm-3   
-                    button.btn.btn-primary(type="button", id="addFieldsButton") Agregar nueva determinación   
-            .row
-                .mb-3.col-lg-3.col-md-3.col-sm-3    
-                    button.btn.btn-primary(type="submit") Enviar
+      .container  
+        form(action="/vistaTecBioq/submit", method="post" name="formu")
+              .row 
+                  .mb-3.col-lg-4.col-md-6.col-sm-12
+                      .row
+                        .mb-3.col-lg-8.col-md-8.col-sm-4
+                          label(for="nombre", class="form-label") Nombre:
+                          input#nombre.form-control(type="text", name="eNombre", value=examen.nombre)      
+                      .row 
+                        .mb-3.col-lg-8.col-md-8.col-sm-4
+                          label(for="detalle", class="form-label") Detalle:
+                          textarea#detalle.form-control(name="detalle", rows="3")= examen.detalle
+                  .mb-3.col-lg-3.col-md-3.col-sm-3
+                    label(for="muestras", class="form-label") Muestras:
+                    each muestra in arrMuestras
+                      .form-check
+                        input.form-check-input(type="radio", id=`muestra-${muestra.id}`, name="muestras", value=muestra.id, checked=examen.TipoMuestra.nombre === muestra.nombre)
+                        label.form-check-label(for=`muestra-${muestra.id}`)= muestra.nombre
+                  .mb-3.col-lg-3.col-md-3.col-sm-3
+                     label(for="tipoExamen", class="form-label") Tipo examen:
+                     each te in arrTe
+                       .form-check
+                         input.form-check-input(type="radio", id=`te-${te.id}`, name="tipoExamen", value=te.id, checked= examen.TipoExamen && examen.TipoExamen.nombre === te.nombre)
+                         label.form-check-label(for=`te-${te.id}`)= te.nombre    
+              .row 
+                .mb-3.col-lg-8.col-md-8.col-sm-4
+                  label(for="demora", class="form-label ") Demora:
+                        input#demora.form-control(type="number", name="demora" required)
+              .row
+                  .mb-3.col-lg-4.col-md-6.col-sm-12
+                      label(for="determinaciones", class="form-label") Determinaciones:
+                      each d in examen.Determinacions
+                         input(type="hidden" name="deTerminacionId" value= d.id)
+                         label(for="determinacion", class="form-label") Nombre:                 
+                         input(type="text" class="form-control" name="nombre" value=d.nombre)
+                         label(for="valorMin", class="form-label") Valor mínimo:
+                         input(type="number" class="form-control" name="valorMin" step="0.1")
+                         label(for="valorMax", class="form-label") Valor máximo:
+                         input(type="number" class="form-control" name="valorMin" step="0.1")
+                         label(for="unidad", class="form-label") Unidad:
+                         input(type="number" class="form-control" name="unidad" step="0.1")
+              .row 
+                  #acordeon.accordion
+              .row 
+                  .mb-3.col-lg-3.col-md-3.col-sm-3   
+                      button.btn.btn-primary(type="button", id="addFieldsButton") Agregar nueva determinación   
+              .row
+                  .mb-3.col-lg-3.col-md-3.col-sm-3    
+                      button.btn.btn-primary(type="submit") Enviar
     script.
                    const addBtn= document.getElementById('addFieldsButton');
                    let i=0;
