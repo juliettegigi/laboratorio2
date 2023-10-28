@@ -13,7 +13,9 @@ html
       .container-fluid
         include navBar.pug
       .container.mt-4   
-              form(action="/vistaTecBioq/submit", method="post" name="formu")
+              form(action=`/vistaTecBioq/${ruta}`, method="post" name="formu")
+                if form && form.id
+                 input(name="id" type="hidden" value=form.id)
                 .row
                   .mb-5.col-3
                     label(for="nombre", class="form-label ") Nombre:
@@ -54,13 +56,13 @@ html
                       div#listaDets
                         ul
                           if form && form.detExistentes
+                            - let li=0
                             each detId in form.detExistentes
                               - const det=arrDet.find(elem=>elem.id==detId)
-                              - console.log(arrDet)
-                              li
+                              li(id=`lili-${li}`)
                                 = det.nombre
                                 input(name="detExistentes" type="hidden" value=detId)
-                                button(class="btn btn-close danger btn-sm")
+                                button(class="btn btn-close danger btn-sm btnLili" type="button" id=`btnLili-${li}`)
 
 
                   #acordeon.accordion.mt-5
@@ -81,6 +83,14 @@ html
                    .col-lg-1.col-md-2.col-sm-2    
                      button.btn.btn-primary(type="submit") Enviar
     script.
+         const btnsLili=document.querySelectorAll('.btnLili')
+         for(btn of btnsLili){          
+           btn.addEventListener('click', (e) => {
+                           const[,b]=e.target.id.split("-"); 
+                           const li=document.getElementById(`lili-${b}`)
+                           li.remove();
+                         });
+         }
          const modal1=("#{modal}"!=="false")
          if(modal1){
          const miModal = new bootstrap.Modal(document.getElementById('miModal'));
@@ -90,6 +100,8 @@ html
                          let clicksCantidad=0;
                         return (e)=>{
                           let u=e.currentTarget.getAttribute("ultimafila");
+                          if(u===null)
+                            u=0
                                inputs(`${id}-${u}`,m,n)                               
                                let id2=id.slice(0,-1)
                                const input= document.querySelector(`[name="${id2}${u}filay${n}"]`)

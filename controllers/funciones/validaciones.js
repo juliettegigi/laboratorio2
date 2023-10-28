@@ -22,7 +22,10 @@ const emailExiste = async (email = "") => {
 const detValorRef = (arrValoresRef, de,obj,index) => {
     let msg=""
     const i = arrValoresRef.length
-    if(!((arrValoresRef[i-1][0]<arrValoresRef[i-1][1]) && (arrValoresRef[i-1][2]<arrValoresRef[i-1][3]))){
+    if(!( (arrValoresRef[i-1][0]<arrValoresRef[i-1][1]) && 
+          (arrValoresRef[i-1][2]<arrValoresRef[i-1][3])
+          )
+          ){
         msg= `Los rangos de valores de referencia de ${de} se solapan`
                        
     }else
