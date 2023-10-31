@@ -1,5 +1,5 @@
 const { Sequelize} = require('sequelize');
-const {OrdenTrabajo,Usuario}=require('../models');
+const {OrdenTrabajo,Usuario,Estado}=require('../models');
 
 const ordenPost = async (req, res) => {
     try {
@@ -20,16 +20,22 @@ const ordenPost = async (req, res) => {
     const orden= await OrdenTrabajo.findAll({ include: [{model: Usuario}],});
     res.render("inicioOrden",{orden: orden});
    }
+
+    // const ordenes=await getOrdenes(['Informada','Esperando toma de muestra','Analitica']);
+const getOrdenes=async(arr)=>{
+  if (arr){
+    return await OrdenTrabajo.findAll({ include: [{model: Usuario},{model: Estado,where:{nombre:arr}}]});
+  }
+   
+  return await OrdenTrabajo.findAll({ include: [{model: Usuario},{model: Estado}]});
+}
+
+
    
    module.exports={
-    ordenPost,ordenesGet
+    ordenPost,ordenesGet,getOrdenes
   }
   
-  
-  
-  module.exports = {
-    ordenesGet,ordenPost
-  };
   
   
   /*

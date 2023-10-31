@@ -33,7 +33,7 @@ try {
 
 const prueba= async (req, res) => {
 const para=req.body;
-console.log(para);
+
 
 };
 

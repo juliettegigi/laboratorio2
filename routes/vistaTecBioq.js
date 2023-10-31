@@ -10,6 +10,7 @@ const { tipoExamenesGet } = require('../controllers/tipoexamen');
 const { tieneOrden, examenesGet, examenPost, putExamen } = require('../controllers/examenes');
 const { postValorRef, refGetTodos, activarRef, desactivarRef } = require('../controllers/valorreferencia');
 const { procesarBody } = require('../middlewares/formExamen');
+const { validarCampos0 } = require('../middlewares/validar-campos');
 
 
 router.get('/inicio',(req,res)=>{res.render("tecnicoBioq/inicio",{modal:false})})
@@ -50,8 +51,45 @@ router.get('/activarDeterminacion',async(req,res)=>{
      router.post('/desactivarDeterminacion',desactivarDeterminacion)
      router.post('/activarDeterminacion',activarDeterminacion)
      router.post('/addMuestra',postMuestra)
-     router.post('/addValorRef',postValorRef)
-     router.post('/addRef',postValorRef)
+     router.post('/addValorRef',[
+                    check('sexo').notEmpty().withMessage('Valor requerido.').isIn(['F','M','O']).withMessage('Valor inválido'), 
+                    check('embarazo').notEmpty().withMessage('Valor requerido.').isIn(['true','false']).withMessage('Valor inválido'),
+                   check('determinacionId').notEmpty().withMessage('Valor requerido.').isNumeric(),
+                    check('determinacion').notEmpty().withMessage('Valor requerido.'),
+                    check('edadMin').notEmpty().withMessage('Valor requerido.').isInt().withMessage('Valor inválido.'),
+                    check('edadMax').notEmpty().withMessage('Valor requerido.').isInt().withMessage('Valor inválido.'),
+                    check('valorMinimo').notEmpty().withMessage('Valor requerido.').isDecimal().withMessage('Valor inválido.'),
+                    check('valorMaximo').notEmpty().withMessage('Valor requerido.').isDecimal().withMessage('Valor inválido.'),
+                    async(req, res, next) => {
+                      let arrDet= await detGet();
+                     req.renderizar=(errors)=>{
+                      res.render('tecnicoBioq/addReferencia',{arrDet,modal:false,errors,opc:req.body})
+                     } 
+                      next(); 
+                      },
+                    validarCampos0],
+                    postValorRef)
+    
+    
+    router.get('/addValorRef2',async(req,res)=>{
+      
+      console.log("pepepep")
+      
+      let arrDet= await detGet();
+      return res.render('tecnicoBioq/addRef2',{arrDet})
+    })      
+    
+    router.post('/addValorRef2',async(req,res)=>{
+
+      console.log(req.body)
+      let arrDet= await detGet();
+      return res.render('tecnicoBioq/addRef2',{arrDet})
+    })      
+    
+
+
+
+
      router.get('/addMuestra',getVistaMuestra)
 
     router.put('/editar',[procesarBody],putExamen)  

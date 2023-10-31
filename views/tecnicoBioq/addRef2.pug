@@ -1,0 +1,144 @@
+html
+    head 
+      link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css")
+      link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous")
+      script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" 
+             integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" 
+             crossorigin="anonymous")
+      title Alfgo 
+    body
+      if modal
+          include ../modal.pug
+      .container
+        include navBar.pug
+      .container 
+        .row 
+          .div.col 
+            h1 Valores de referencia
+        .row  
+          .col.mt-4
+            form( action=`/vistaTecBioq/addValorRef2`,method="POST", name="formDeterminacion" )
+                    .row
+                       input(type="hidden" name="determinacionId" id="determinacionId")
+                    .row
+                        .container.mt-4
+                              .col-lg-4.col-md-6.col-sm-12
+                                div#listaDets
+                                  ul
+                                label(for="determinacion", class="form-label") Determinaciones existentes:
+                                input#determinacion.form-control(list="datalistOptions", name="determinacion", placeholder=arrDet && arrDet.length===0?"No hay determiniaciones":"Type to search...",disabled= arrDet && arrDet.length === 0)
+                                datalist(id="datalistOptions")
+                                  each det in arrDet
+                                     option(id=det.id)= det.nombre   
+                    .row 
+                        #acordeon.accordion.mt-5
+                            .accordion-item
+                                h2(class="accordion-header")
+                                    button(class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=`#panelsStayOpen-collapse0` aria-expanded="true" aria-controls=`panelsStayOpen-collapse0`) Hombre
+                                div(id=`panelsStayOpen-collapse0` class="accordion-collapse collapse show")
+                                 .accordion-body
+                                    table
+                                          thead
+                                            tr
+                                              th Edad Min
+                                              th Edad Max
+                                              th Valor Min
+                                              th Valor Max
+                                          tbody(id="hombreBody")
+                                    button(type="submit" class="btn btn-success btn-sm" id="btnHombre")
+                                          i(class="bi bi-plus")          
+                            .accordion-item
+                                h2(class="accordion-header")
+                                    button(class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=`#panelsStayOpen-collapse1` aria-expanded="true" aria-controls=`panelsStayOpen-collapse1`) Mujer
+                                div(id=`panelsStayOpen-collapse1` class="accordion-collapse collapse show")
+                                 .accordion-body
+                                    table
+                                     thead
+                                       tr
+                                         th Edad Min
+                                         th Edad Max
+                                         th Valor Min
+                                         th Valor Max
+                                     tbody(id="mujerBody")
+                                       tr  
+                                    button(type="button" class="btn btn-success btn-sm" id="btnMujer")
+                                          i(class="bi bi-plus")          
+                            .accordion-item
+                                h2(class="accordion-header")
+                                    button(class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=`#panelsStayOpen-collapse2` aria-expanded="true" aria-controls=`panelsStayOpen-collapse2`) Mujer Embarazada
+                                div(id=`panelsStayOpen-collapse2` class="accordion-collapse collapse show")
+                                 .accordion-body
+                                    table
+                                          thead
+                                            tr
+                                              th Edad Min
+                                              th Edad Max
+                                              th Valor Min
+                                              th Valor Max
+                                          tbody(id="embarazadaBody")
+                                            tr  
+                                    button(type="button" class="btn btn-success btn-sm" id="btnEmbarazada")
+                                          i(class="bi bi-plus")                            
+
+                    .row
+                        .col-lg-1.col-md-2.col-sm-2    
+                              button.btn.btn-primary(type="submit") Enviar                
+                       
+    script.  
+          let detId=document.getElementById("determinacionId")
+           const listaDets = document.getElementById('listaDets').querySelector('ul');
+       const inputDet = document.getElementById('determinacion');
+       const datalistOptions = document.getElementById('datalistOptions').querySelectorAll('option');      
+           inputDet.addEventListener('input', () => {
+                                 const enteredValue = inputDet.value;
+                                 const options = Array.from(datalistOptions).map(option => option.value);
+                                 if (options.length===0 || !options.includes(enteredValue)) {
+                                     inputDet.setCustomValidity('No ha seleccionado una determinación');
+                                 } else {
+                                   inputDet.setCustomValidity('');
+                                 }
+                                let selectedId = null;
+                                 const selectedOption = Array.from(datalistOptions).find(option => option.value === inputDet.value);
+                                       if (selectedOption) {
+                                         selectedId = selectedOption.getAttribute('id');
+                                         detId.value=selectedId
+                                       } else {
+                                         selectedId = null;
+                                       }
+               
+             });
+
+        const addFila=(id)=>{
+            let ultimaFila=0
+            return(e)=>{
+                
+            console.log("ok",id)
+                const tr=document.createElement('tr')
+                document.getElementById(id).appendChild(tr)
+                for(let i=0;i<4;i++){
+                    const td=document.createElement('td');
+                    let input=document.createElement('input')
+                    input.setAttribute('type','number')
+                    switch(i){
+                        case 0:  input.setAttribute('name',`edadMin-${id}`)
+                                 input.id=`fila${id}${ultimaFila}`
+                                 break;
+                        case 1:  input.setAttribute('name',`edadMax-${id}`)
+                                 break;
+                        case 2:  input.setAttribute('name',`valorMinimo-${id}`)
+                                 break;
+                        case 3:  input.setAttribute('name',`valorMaximo-${id}`)
+                                 break;
+                    }
+                                               
+                    td.appendChild(input);
+                    input= document.getElementById(`fila${id}${ultimaFila}`)
+                    if(input)input.focus()
+                    tr.appendChild(td)
+                }
+                ultimaFila++;
+        }
+            }
+            document.getElementById('btnHombre').addEventListener('click',addFila('hombreBody'))
+            document.getElementById('btnMujer').addEventListener('click',addFila('mujerBody'))
+            document.getElementById('btnEmbarazada').addEventListener('click',addFila('embarazadaBody'))

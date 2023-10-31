@@ -11,8 +11,7 @@ html
   body
     .custom-container.mt-5
       h1 Orden de Trabajo de Laboratorio Médico
-      form(action="procesar_orden.php", method="POST")
-        
+      form        
         .custom-form-group
           label(for="cedula_paciente" class="input-group-prepend") Documento del Paciente:
         .custom-form-group.input-group
@@ -309,35 +308,3 @@ html
              });
           
              }); 
-      
-     
-     generar.addEventListener('click', function() {
-
-             const cedulaPaciente = document.getElementById('cedula_paciente').value;
-             const fechaPedido = document.getElementById('fecha_pedido').value;
-             const diagnostico = document.getElementById('diagnostico').value;
-  
-             const muestrasRequeridasArray = Array.from(muestrasServidor );
-
-             const formData = {
-                cedulaPaciente,
-                fechaPedido,
-                diagnostico,
-                examenes: examenesSeleccionados,
-                muestras: muestrasRequeridasArray
-              };
-               fetch('/examenordenes/prueba', {
-                 method: 'POST',
-                 headers: {
-                 'Content-Type': 'application/json',
-                 },
-                  body: JSON.stringify(formData)
-                  })
-               .then(response => response.json())
-               .then(responseData => {
-                   console.log("porfin")
-                  })
-                .catch(error => {
-                   console.error('Error al enviar la orden: ', error);
-                 });
-                });

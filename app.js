@@ -27,7 +27,7 @@ app.use(
     saveUninitialized: true,
   })
 );
-/*
+
 app.get('/', (req, res) => {
   res.render('inicioOrden'); // Para Probar la pagina inicioOrdemn
 });
@@ -42,8 +42,8 @@ app.get('/formulario', (req, res) => {
 res.render('inicioOrden',{k,ok:true})
 
 }); 
-*/
-app.use('', require('./routes/login'));
+
+//app.use('', require('./routes/login'));
 
 app.use('/users', require('./routes/users'));
 app.use('/pacientes',require('./routes/pacientes'));
@@ -56,6 +56,8 @@ app.use('/examenordenes',require('./routes/examenordenes'));// Ingresa un Examen
 app.use('/determinaciones',require('./routes/determinaciones')); //aca esta el post y el get de Determinacion
 app.use('/valorReferencia',require('./routes/valorreferencia'));
 app.use('/vistaTecBioq',require('./routes/vistaTecBioq'));
+app.use('/vistaAdmin',require('./routes/vistaAdmin'));
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
