@@ -11,8 +11,7 @@ html
   body
     .custom-container.mt-5
       h1 Orden de Trabajo de Laboratorio Médico
-      form(action="procesar_orden.php", method="POST")
-        
+      form        
         .custom-form-group
           label(for="cedula_paciente" class="input-group-prepend") Documento del Paciente:
         .custom-form-group.input-group
@@ -85,6 +84,15 @@ html
    const fechas=[];
 
     const muestrasSet = new Set();
+    document.querySelectorAll('input[name="muestrasRequeridas"]').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+      if (checkbox.checked) {
+        muestrasRequeridas.add(checkbox.value);
+      } else {
+        muestrasRequeridas.delete(checkbox.value);
+      }
+      });
+     });
 
     function resultadoClickHandler(paciente) {
     
@@ -299,4 +307,4 @@ html
               console.error('Error al cargar muestras: ', error);
              });
           
-      })
+             }); 
