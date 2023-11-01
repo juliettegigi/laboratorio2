@@ -4,6 +4,7 @@ const Sequelize = require('sequelize');
 const { detGet } = require('./determinaciones');
 const { tipoMuestrasGet } = require('./muestras');
 const { tipoExamenesGet } = require('./tipoexamen');
+const { getOrdenes } = require('../controllers/orden');
 
 
 const examenesGet= async (req,res) => {
@@ -271,7 +272,8 @@ console.log("NUEVO BODY: ",req.body)
   }
 
   const eliminadoLogico = async (req, res) => {
-    const ordenId = req.body.term;
+    const ordenId = req.body.term;  
+    console.log(ordenId,"Nuevo ");
   
     try {
       // Verifica si la orden existe antes de intentar eliminarla
@@ -285,7 +287,8 @@ console.log("NUEVO BODY: ",req.body)
       await OrdenTrabajo.update({ deletedAt: new Date() }, { where: { id: ordenId } });
   
       // Envía una respuesta exitosa
-      return res.status(200).json({ message: 'Orden eliminada lógicamente con éxito' });
+      const ordenes=await getOrdenes(['Informada','Esperando toma de muestra','Analitica']);
+      res.render("administrativo/listaOrdenes",{ordenes})
     } catch (error) {
       console.error('Error al eliminar la orden:', error);
       return res.status(500).json({ error: 'Error en el servidor' });

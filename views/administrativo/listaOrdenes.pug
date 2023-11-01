@@ -18,6 +18,7 @@ html
               th Médico
               th Diagnóstico
               th
+              th
           if ordenes
             tbody
               each orden in ordenes
@@ -30,6 +31,10 @@ html
                     form(action=`/vistaAdmin/editar` method="get")
                           input(type="hidden" name="ordenId" value=orden.id)
                           input(type="submit" value="Editar" class="btn btn-primary")
+                  td
+                    form(action=`/examenes/eliminadoLogico/` method="post")
+                          input(type="hidden" name="term" value=orden.id)
+                          input(type="submit" value="Eliminar" class="btn btn-primary")
           tfoot
             tr
               th Usuario
@@ -37,6 +42,7 @@ html
               th Médico
               th Diagnóstico
               th
+              
       
       script(src="https://code.jquery.com/jquery-3.7.0.js") 
       script(src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js")         
