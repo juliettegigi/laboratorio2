@@ -16,7 +16,8 @@ const router=Router()
 router.get('/listaOrdenes', async(req,res)=>{
     /*Actualización de Orden de Trabajo (siempre y cuando todavía este en los estado "ingresada" y "esperando toma de muestra" y "Analítica") */
     const ordenes=await getOrdenes(['Informada','Esperando toma de muestra','Analitica']);
-    res.render("administrativo/listaOrdenes",{ordenes})})
+    res.render("administrativo/listaOrdenes",{ordenes})
+})
 
 
 

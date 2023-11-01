@@ -32,9 +32,6 @@ const postValorRef=async(req,res)=>{
     }
 
     const vr=await ValorReferencia.findAll({where:{determinacionId,sexo}})
-    console.log("-----------------------------------------------")
-    console.log(req.body)
-    console.log(vr)
     if(vr){
         for(valor of vr){
             if(valor.edadMax>= edadMin || valor.valorMaximo>= valorMinimo ){ 

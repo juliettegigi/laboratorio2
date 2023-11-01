@@ -4,8 +4,6 @@ const { tipoExamenesGet } = require('../controllers/tipoexamen');
 const { tipoMuestrasGet } = require('../controllers/muestras');
 
 const procesarBody = async(req, res, next) => {
-    console.log("-****************************************************************")
-    console.log(req.body)
     let msg = ""
     let err=""
     
@@ -16,8 +14,6 @@ const procesarBody = async(req, res, next) => {
       
     nuevoBody.determinaciones=[]
 
-    console.log("---------------------------------------------------------");
-    console.log(req.body);
     const determinacionesNombre = []
     for (const propiedad in req.body) {
        if (propiedad.startsWith("nombre")) {
@@ -25,7 +21,6 @@ const procesarBody = async(req, res, next) => {
             }
         }
 
-        console.log("DETERMINACIONES NOMBRE: ", determinacionesNombre);
       if(determinacionesNombre.length!==0){  nuevoBody.determinaciones = determinacionesNombre.map((nom,index) => {
             const obj = { hombre: {}, mujer: {}, embarazada: {} }
             const det = {}
@@ -61,7 +56,6 @@ const procesarBody = async(req, res, next) => {
             obj.hombre = valoresRefHombre;
             obj.mujer = valoresRefMujer;
             obj.embarazada = valoresRefEmbarazada;
-            console.log("qqqq",valoresRefEmbarazada)
             return obj
         })}
 
@@ -77,4 +71,111 @@ const procesarBody = async(req, res, next) => {
         else next();
     }
 
-module.exports = { procesarBody };
+
+
+
+    const procesarBody2 =async(req,res,next) => {
+
+  
+        const { determinacionId } = req.body
+        const obj = { hombre: [], mujer: [], embarazada: [] }
+      
+        function procesar( arr, sex, obj){
+        const propH = [`${sex}BodyedadMin`, `${sex}BodyedadMax`, `${sex}BodyvalorMinimo`, `${sex}BodyvalorMaximo`];
+        if (req.body[`${sex}BodyedadMin`]) {
+          if (Array.isArray(req.body[`${sex}BodyedadMin`])) {
+                       function parsear(prop,f){
+                                req.body[prop] = req.body[prop].map(elem => {
+                                  const p = f(elem)
+                                  if (isNaN(p)) {
+                                    if (!obj[`error${sex}NaN`]) {
+                                      obj[`error${sex}NaN`] = true
+                                    
+                                    }
+                                    return elem
+                                  }
+                                  return p
+                                })
+                                 }
+                    for (let prop of propH) {
+                      if(prop===`${sex}BodyedadMin` || prop===`${sex}BodyedadMax`)
+                         parsear(prop,parseInt);
+                      else parsear(prop,parseFloat)  
+                    }
+                    for (let i = 0; i < req.body[`${sex}BodyedadMax`].length; i++) {
+                      arr[i] = []
+                      for (let j = 0; j < 4; j++) {
+                        arr[i].push(req.body[propH[j]][i])
+                      }
+                      detValorRef(arr, sex, obj, 0);
+                    }
+                  
+                  }
+          else {
+            arr[0] = []
+            let p=parseInt(req.body[`${sex}BodyedadMin`])
+            if(isNaN(p)){
+                arr[0].push(req.body[`${sex}BodyedadMin`]);
+                if (!obj[`error${sex}NaN`]) {
+                  obj[`error${sex}NaN`] = true
+      
+                }
+              }
+            else arr[0].push(p) 
+            
+            
+            p=parseInt(req.body[`${sex}BodyedadMax`])
+            if(isNaN(p)){
+                arr[0].push(req.body[`${sex}BodyedadMax`]);
+                if (!obj[`error${sex}NaN`]) {
+                  obj[`error${sex}NaN`] = true
+      
+                }
+              }
+            else arr[0].push(p) 
+      
+            
+            p=parseInt(req.body[`${sex}BodyvalorMinimo`])
+            if(isNaN(p)){
+                arr[0].push(req.body[`${sex}BodyvalorMinimo`]);
+                if (!obj[`error${sex}NaN`]) {
+                  obj[`error${sex}NaN`] = true
+      
+                }}
+            else arr[0].push(p) 
+      
+            
+            p=parseInt(req.body[`${sex}BodyvalorMaximo`])
+            if(isNaN(p)){
+                arr[0].push(req.body[`${sex}BodyvalorMaximo`]);
+                if (!obj[`error${sex}NaN`]) {
+                  obj[`error${sex}NaN`] = true
+      
+                }}
+            else arr[0].push(p) 
+      
+            
+            detValorRef(arr, sex, obj, 0);
+          }
+      
+      
+        }
+      
+        }
+      
+        procesar( obj.hombre, 'hombre', obj)
+        procesar( obj.mujer, 'mujer', obj)
+        procesar( obj.embarazada, 'embarazada', obj)
+        if (Object.keys(obj).length > 3) {
+          //los rangos se solapan errorhombre0,errormujer0,errormujer0
+          let arrDet = await detGet();
+          return res.render('tecnicoBioq/addRef2', { arrDet, obj })
+        }
+        else {
+            
+        req.obj=obj
+            next()}
+      }
+      
+
+module.exports = { procesarBody,procesarBody2 };

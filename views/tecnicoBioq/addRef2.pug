@@ -7,6 +7,9 @@ html
              crossorigin="anonymous")
       title Alfgo 
     body
+      - var id1=''
+      - var id2=''
+      - var id3=''
       if modal
           include ../modal.pug
       .container
@@ -29,7 +32,11 @@ html
                                 input#determinacion.form-control(list="datalistOptions", name="determinacion", placeholder=arrDet && arrDet.length===0?"No hay determiniaciones":"Type to search...",disabled= arrDet && arrDet.length === 0)
                                 datalist(id="datalistOptions")
                                   each det in arrDet
-                                     option(id=det.id)= det.nombre   
+                                     option(id=det.id)= det.nombre 
+                                if errors
+                                 - e=errors.find(e=>e.path==='determinacionId') 
+                                 if e 
+                                   p(class="text-danger")= e.msg       
                     .row 
                         #acordeon.accordion.mt-5
                             .accordion-item
@@ -45,8 +52,27 @@ html
                                               th Valor Min
                                               th Valor Max
                                           tbody(id="hombreBody")
-                                    button(type="submit" class="btn btn-success btn-sm" id="btnHombre")
-                                          i(class="bi bi-plus")          
+                                            - if(obj)
+                                              - let tr=0
+                                              each h in obj.hombre
+                                                tr(id=`hombreBodytr-${tr}`)
+                                                  - let k=0
+                                                  each j in h 
+                                                   td
+                                                    - const name= k ===0?'hombreBodyedadMin':k===1?'hombreBodyedadMax':k===2?'hombreBodyvalorMinimo':'hombreBodyvalorMaximo'
+                                                    - k++
+                                                    input(class="form-control" type="number" required name=name value=j id=id1)
+                                                  td
+                                                    button(id=`btn-hombreBody-${tr}` type="button" class="btn btn-close danger btn-sm")  
+                                                - tr++
+                                                - id1=tr    
+                                    button(type="button" class="btn btn-success btn-sm" id="btnHombre")
+                                          i(class="bi bi-plus")
+                                    
+                                    - if(obj && obj.errorhombre0)
+                                      p(class="text-danger") Rangos incorrectos.
+                                    - if(obj && obj.errorhombreNaN)
+                                      p(class="text-danger") Campos incompletos.             
                             .accordion-item
                                 h2(class="accordion-header")
                                     button(class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=`#panelsStayOpen-collapse1` aria-expanded="true" aria-controls=`panelsStayOpen-collapse1`) Mujer
@@ -60,9 +86,28 @@ html
                                          th Valor Min
                                          th Valor Max
                                      tbody(id="mujerBody")
-                                       tr  
+                                            - if(obj)
+                                              - let tr=0
+                                              each h in obj.mujer
+                                                tr(id=`mujerBodytr-${tr}`)
+                                                  - let k=0
+                                                  each j in h 
+                                                   td
+                                                    - const name= k ===0?'mujerBodyedadMin':k===1?'mujerBodyedadMax':k===2?'mujerBodyvalorMinimo':'mujerBodyvalorMaximo'
+                                                    - id2 = k===0 ? `filamujerBody-${tr}`:''
+                                                    - k++
+                                                    input(class="form-control" type="number" required name=name value=j id=id2)
+                                                  td
+                                                    button(id=`btn-mujerBody-${tr}` type="button" class="btn btn-close danger btn-sm")  
+                                                - tr++
+                                                - id2=tr   
                                     button(type="button" class="btn btn-success btn-sm" id="btnMujer")
-                                          i(class="bi bi-plus")          
+                                          i(class="bi bi-plus")
+                                    
+                                    - if(obj && obj.errormujer0)
+                                      p(class="text-danger") Rangos incorrectos.
+                                    - if(obj && obj.errormujerNaN)
+                                      p(class="text-danger") Campos incompletos.                    
                             .accordion-item
                                 h2(class="accordion-header")
                                     button(class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target=`#panelsStayOpen-collapse2` aria-expanded="true" aria-controls=`panelsStayOpen-collapse2`) Mujer Embarazada
@@ -76,69 +121,128 @@ html
                                               th Valor Min
                                               th Valor Max
                                           tbody(id="embarazadaBody")
-                                            tr  
+                                            - if(obj)
+                                              - let tr=0
+                                              each h in obj.embarazada
+                                                tr(id=`embarazadaBodytr-${tr}`)
+                                                  - let k=0
+                                                  each j in h 
+                                                   td
+                                                    - const name= k ===0?'embarazadaBodyedadMin':k===1?'embarazadaBodyedadMax':k===2?'embarazadaBodyvalorMinimo':'embarazadaBodyvalorMaximo'
+                                                    - id3= k===0 ? `filaembarazadaBody-${tr}`:''
+                                                    - k++
+                                                    - if (k===4)
+                                                    input(class="form-control" type="number" required name=name value=j id=id3 )
+                                                  td
+                                                    button(id=`btn-embarazadaBody-${tr}` type="button" class="btn btn-close danger btn-sm" onclick="eliminarFila('embarazadaBody')")  
+                                                - tr++
+                                                - id3=tr    
                                     button(type="button" class="btn btn-success btn-sm" id="btnEmbarazada")
-                                          i(class="bi bi-plus")                            
+                                          i(class="bi bi-plus")
+                                    
+                                    - if(obj && obj.errorembarazada0)
+                                      p(class="text-danger") Rangos incorrectos.
+                                    - if(obj && obj.errorembarazadaNaN)
+                                      p(class="text-danger") Campos incompletos.                                    
 
                     .row
                         .col-lg-1.col-md-2.col-sm-2    
                               button.btn.btn-primary(type="submit") Enviar                
                        
-    script.  
-          let detId=document.getElementById("determinacionId")
-           const listaDets = document.getElementById('listaDets').querySelector('ul');
-       const inputDet = document.getElementById('determinacion');
-       const datalistOptions = document.getElementById('datalistOptions').querySelectorAll('option');      
-           inputDet.addEventListener('input', () => {
-                                 const enteredValue = inputDet.value;
-                                 const options = Array.from(datalistOptions).map(option => option.value);
-                                 if (options.length===0 || !options.includes(enteredValue)) {
-                                     inputDet.setCustomValidity('No ha seleccionado una determinación');
-                                 } else {
-                                   inputDet.setCustomValidity('');
-                                 }
-                                let selectedId = null;
-                                 const selectedOption = Array.from(datalistOptions).find(option => option.value === inputDet.value);
-                                       if (selectedOption) {
-                                         selectedId = selectedOption.getAttribute('id');
-                                         detId.value=selectedId
-                                       } else {
-                                         selectedId = null;
-                                       }
-               
-             });
+      script.  
+          let arr=[parseInt('#{id1}'),parseInt( '#{id2}'),parseInt('#{id3}')]
+            let detId=document.getElementById("determinacionId")
+             const listaDets = document.getElementById('listaDets').querySelector('ul');
+         const inputDet = document.getElementById('determinacion');
+         const datalistOptions = document.getElementById('datalistOptions').querySelectorAll('option');      
+             inputDet.addEventListener('input', () => {
+                                   const enteredValue = inputDet.value;
+                                   const options = Array.from(datalistOptions).map(option => option.value);
+                                   if (options.length===0 || !options.includes(enteredValue)) {
+                                       inputDet.setCustomValidity('No ha seleccionado una determinación');
+                                   } else {
+                                     inputDet.setCustomValidity('');
+                                   }
+                                  let selectedId = null;
+                                   const selectedOption = Array.from(datalistOptions).find(option => option.value === inputDet.value);
+                                         if (selectedOption) {
+                                           selectedId = selectedOption.getAttribute('id');
+                                           detId.value=selectedId
+                                         } else {
+                                           selectedId = null;
+                                         }
 
-        const addFila=(id)=>{
-            let ultimaFila=0
-            return(e)=>{
-                
-            console.log("ok",id)
-                const tr=document.createElement('tr')
-                document.getElementById(id).appendChild(tr)
-                for(let i=0;i<4;i++){
-                    const td=document.createElement('td');
-                    let input=document.createElement('input')
-                    input.setAttribute('type','number')
-                    switch(i){
-                        case 0:  input.setAttribute('name',`edadMin-${id}`)
-                                 input.id=`fila${id}${ultimaFila}`
-                                 break;
-                        case 1:  input.setAttribute('name',`edadMax-${id}`)
-                                 break;
-                        case 2:  input.setAttribute('name',`valorMinimo-${id}`)
-                                 break;
-                        case 3:  input.setAttribute('name',`valorMaximo-${id}`)
-                                 break;
+               });
+
+          const eliminarFila=(id)=>{ return e=>{
+                                 const [,,b]=e.target.id.split("-")
+                                  const fila = document.getElementById(`${id}tr-${b}`);
+                                       if (fila) {
+                                            fila.remove();
+                                        }
+                                }                             
                     }
-                                               
-                    td.appendChild(input);
-                    input= document.getElementById(`fila${id}${ultimaFila}`)
-                    if(input)input.focus()
-                    tr.appendChild(td)
-                }
-                ultimaFila++;
-        }
+                    //  let arr=[parseInt('#{id1}'),parseInt( '#{id2}'),parseInt('#{id3}')]
+            let arr2=['hombreBody','mujerBody','embarazadaBody']
+           
+            let j=0;
+            for(let elem of arr){
+                  if(!isNaN(elem)){              
+                       for(let i=0;i<elem;i++){
+                       const btn=document.getElementById(`btn-${arr2[j]}-${i}`);
+                       btn.addEventListener('click',eliminarFila(`${arr2[j]}`))
+                      }
+                    }   j++              
             }
-            document.getElementById('btnHombre').addEventListener('click',addFila('hombreBody'))
-            document.getElementById('btnMujer').addEventListener('click',addFila('mujerBody'))
-            document.getElementById('btnEmbarazada').addEventListener('click',addFila('embarazadaBody'))
+                  
+          const addFila=(id)=>{  
+            let ultimaFila=0
+            const tbody = document.getElementById(`${id}`);
+            const ultimoTr = tbody.lastElementChild;
+            if(ultimoTr){
+            const[,b]=ultimoTr.id.split("-")
+              let ultimaFila=parseInt(b)+1}
+              return(e)=>{
+
+                  const tr=document.createElement('tr')
+                  tr.id=`${id}tr-${ultimaFila}`
+                  document.getElementById(id).appendChild(tr)
+
+                  const eliminarBtn=document.createElement('button')
+                  eliminarBtn.id=`btn-${id}-${ultimaFila}`
+                 eliminarBtn.type="button"
+                 eliminarBtn.classList.add("btn", "btn-close" ,"danger", "btn-sm")
+                 eliminarBtn.addEventListener('click',eliminarFila(id));
+
+                  for(let i=0;i<4;i++){
+                      const td=document.createElement('td');
+                      let input=document.createElement('input')
+                      input.classList.add('form-control')
+                      input.setAttribute('type','number')
+                      switch(i){
+                          case 0:  input.setAttribute('name',`${id}edadMin`)
+                                   input.id=`fila${id}${ultimaFila}`
+                                   break;
+                          case 1:  input.setAttribute('name',`${id}edadMax`)
+                                   break;
+                          case 2:  input.setAttribute('name',`${id}valorMinimo`)
+                                   break;
+                          case 3:  input.setAttribute('name',`${id}valorMaximo`)
+                                   break;
+                      }                              
+                      td.appendChild(input);
+                      input= document.getElementById(`fila${id}${ultimaFila}`)
+                      if(input)input.focus()
+                      tr.appendChild(td)
+
+                  }
+                        const td=document.createElement('td');
+                        td.appendChild(eliminarBtn);
+                        tr.appendChild(td)
+
+                  ultimaFila++;
+               }
+              }
+              document.getElementById('btnHombre').addEventListener('click',addFila('hombreBody'))
+              document.getElementById('btnMujer').addEventListener('click',addFila('mujerBody'))
+              document.getElementById('btnEmbarazada').addEventListener('click',addFila('embarazadaBody'))

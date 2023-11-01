@@ -10,7 +10,6 @@ const emailExiste = async (email = "") => {
     }
 
     if (existeEmail) {
-        console.log(existeEmail);
         return existeEmail
     }
 
@@ -19,12 +18,11 @@ const emailExiste = async (email = "") => {
 
 
 
-const detValorRef = (arrValoresRef, de,obj,index) => {
+const detValorRef = (arrValoresRef, de,obj,v) => {
     let msg=""
     const i = arrValoresRef.length
-   
-    if(!( (arrValoresRef[i-1][0]<arrValoresRef[i-1][1]) && 
-          (arrValoresRef[i-1][2]<arrValoresRef[i-1][3])
+    if(i==1 && !( (arrValoresRef[i-1][0]<arrValoresRef[i-1][1]) && 
+                  (arrValoresRef[i-1][2]<arrValoresRef[i-1][3])
           )
           ){
 
@@ -33,24 +31,26 @@ const detValorRef = (arrValoresRef, de,obj,index) => {
                        
     }else
      
-    if (i > 1 &&  arrValoresRef.some((elem,index)=>{
-        
-       
-        return( i-1!=index &&(
-                ((elem[0]<=arrValoresRef[i-1][0]) && (arrValoresRef[i-1][0]<=elem[1]))||
-                ((elem[0]<=arrValoresRef[i-1][1]) && (arrValoresRef[i-1][1]<=elem[1])) ||
-                ((elem[2]<=arrValoresRef[i-1][2]) && (arrValoresRef[i-1][2]<=elem[3])) ||
-                ((elem[2]<=arrValoresRef[i-1][3]) && (arrValoresRef[i-1][3]<=elem[3])))
-        )
-            })
-    ) {
+    if (  (i > 1) &&(  ( arrValoresRef[i-1][2] >= arrValoresRef[i-1][3])||
+                       (arrValoresRef.some((elem,index)=>{  return( i-1!=index &&(
+                                                                     ((elem[0]<=arrValoresRef[i-1][0]) && (arrValoresRef[i-1][0]<=elem[1]))||
+                                                                     ((elem[0]<=arrValoresRef[i-1][1]) && (arrValoresRef[i-1][1]<=elem[1]))||
+                                                                     ((arrValoresRef[i-1][0]<=elem[0]) && (elem[0]<=arrValoresRef[i-1][1]))||
+                                                                     ((arrValoresRef[i-1][0]<=elem[1]) && (elem[1]<=arrValoresRef[i-1][1]))
+                                                                    )
+                                                                   )
+                                                        }
+                                          )
+                        )
+                    )
+         ) {
 
        
-        msg=`Los rangos de edades de ${de} se solapan.`
+        msg=`Los rangos  se solapan.`
     }
     if(msg) {
-        if(!obj[`error${de}${index}`]){
-            obj[`error${de}${index}`]=true
+        if(!obj[`error${de}${v}`]){
+            obj[`error${de}${v}`]=true
         }
     }
     return msg
@@ -65,6 +65,12 @@ const usuarioExiste=async(usuario,{req})=>{
         }
         else req.user=existeUser
 }
+
+
+
+
+
+
 
 module.exports = {
     emailExiste, detValorRef,usuarioExiste
