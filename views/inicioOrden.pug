@@ -25,6 +25,8 @@ body
               li
                 a.dropdown-item(href='/actualizar-orden') Actualizar Orden
               li
+                a.dropdown-item(href="/examenes/eliminarorden") Eliminar Orden
+              li
                 hr.dropdown-divider
               li
                 a.dropdown-item(href='#') No se
@@ -36,6 +38,9 @@ body
     if k
       .contein
       include formularioOrden.pug
+    if j 
+      .contein 
+      include formularioEliminarOrden.pug
   script.
     let okas=#{ok};
     console.log(k+"----------------");

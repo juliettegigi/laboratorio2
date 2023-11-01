@@ -145,6 +145,15 @@ try {
 
 
 }
+const eliminarorden=async(req,res)=>{
+  const examen1 = [
+      { nombre: 'Examen A', demora: 1, tipoMuestraId: 1, id: 1 },
+      { nombre: 'Examen B', demora: 2, tipoMuestraId: 2, id: 2 },
+      // Agrega más datos según sea necesario
+    ];
+  res.render('inicioOrden',{ok:false,k:false,j:true,examen1:examen1});
+
+}
 
 
 
@@ -261,8 +270,28 @@ console.log("NUEVO BODY: ",req.body)
 
   }
 
-
+  const eliminadoLogico = async (req, res) => {
+    const ordenId = req.body.term;
+  
+    try {
+      // Verifica si la orden existe antes de intentar eliminarla
+      const orden = await OrdenTrabajo.findOne({ where: { id: ordenId } });
+  
+      if (!orden) {
+        return res.status(404).json({ error: 'Orden no encontrada' });
+      }
+  
+      // Realiza la eliminación lógica marcando el campo `deletedAt`
+      await OrdenTrabajo.update({ deletedAt: new Date() }, { where: { id: ordenId } });
+  
+      // Envía una respuesta exitosa
+      return res.status(200).json({ message: 'Orden eliminada lógicamente con éxito' });
+    } catch (error) {
+      console.error('Error al eliminar la orden:', error);
+      return res.status(500).json({ error: 'Error en el servidor' });
+    }
+  };
 
 module.exports={
-   examenesGet,examenPost,tieneOrden,crearorden,cargarmuestras,putExamen
+   examenesGet,examenPost,tieneOrden,crearorden,cargarmuestras,putExamen,eliminadoLogico,eliminarorden
   }

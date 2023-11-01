@@ -11,7 +11,8 @@ html
   body
     .custom-container.mt-5
       h1 Orden de Trabajo de Laboratorio Médico
-      form        
+      form
+        
         .custom-form-group
           label(for="cedula_paciente" class="input-group-prepend") Documento del Paciente:
         .custom-form-group.input-group
@@ -26,8 +27,8 @@ html
         br
 
         .custom-form-group
-          label(for="fecha_pedido") Fecha del Pedido Médico:
-          input(type="date", class="form-control", id="fecha_pedido", name="fecha_pedido", required)
+          label(for="fecha_pedido")  Médico:
+          input(type="text", class="form-control", id="medico", name="medico", required)
         br
         br
         .custom-form-group
@@ -42,7 +43,7 @@ html
            select(id="examen1", class="form-control", name="examen1")
              option(value="", disabled, selected) Selecciona un examen
              each examen in examen1
-                option(value=examen.nombre, data-tiempo=examen.demora,data-id=examen.tipoMuestraId) #{examen.nombre}
+                   option(value=examen.nombre, data-tiempo=examen.demora, data-idmuestra=examen.tipoMuestraId, data-idexamen=examen.id) #{examen.nombre}
            table(id="tablaExamenes" class="table table-striped")
            thead
                 tr 
@@ -54,12 +55,15 @@ html
 
 
         // Agrega más campos de examen según sea necesario
-
+    
         h2.mt-4 Muestras Requeridas
         label(for="muestras")
           #muestras_requeridas 
+          button(type="button" id="guardar-checkboxes" class="btn btn-primary") Guardar
         br
         br
+      
+
 
         .custom-form-group
           label(for="fecha_resultados") Fecha de Resultados:
@@ -75,6 +79,12 @@ html
     const resultadosDiv = document.getElementById('resultados');
     const tablaExamenes = document.getElementById('tablaExamenes');
     const muestrasRequeridas=document.getElementById('muestras_requeridas');
+    let idDocumento;
+    let idExamenes=[];
+    let idMuestra;
+    const checkboxesSeleccionados = [];
+    const checkboxesNoSeleccionados = [];
+    
     const textoexamen=document.getElementById('examen1');
    const generar=document.getElementById('generar');
     const resul=document.getElementById('resul');
@@ -100,6 +110,7 @@ html
      resultadosDiv.innerHTML = '';
      resultadosDiv.style.color = '';
     }
+    
 
      searchInput.addEventListener('input', () => {
        resultadosDiv.style.color = '';
@@ -121,15 +132,16 @@ html
       });
      });
        const examenes = !{JSON.stringify(examen1)};
-       console.log(examenes+"aca estoy"); // Convierte las opciones de JSON del backend
+        // Convierte las opciones de JSON del backend
     $(document).ready(function() {
+       console.log(examenes[0]);
       $('#examen1').select2({
        data: examenes,
        placeholder: 'Selecciona un examen', // Mensaje para la opción por defecto
        allowClear: true, // Permite borrar la selección
        width: '100%', // Ajusta el ancho del select
      });
-
+     
      $('#examen1').select2({ 
       dropdownAutoWidth : true,
       tags: true
@@ -139,11 +151,17 @@ html
   
 
     $('#examen1, #examen2').on('change', function() {
-      
+     
       const seleccionExamen1 = $('#examen1').val(); // Esto te dará el nombre del examen
-      const idExamen1 = $('#examen1 option:selected').data('id'); 
+      const idExamen1 = $('#examen1 option:selected').data('idexamen');
+       idMuestra = $('#examen1 option:selected').data('idmuestra');
+      
+      
+      console.log(idExamen1,"que pasio");
+        
+        //------------------------------
        const tiempo = $('#examen1 option:selected').data('tiempo'); 
-      examenesSeleccionados.push({ idExamen: idExamen1, nombre: seleccionExamen1 });
+      examenesSeleccionados.push({ idExamen: idExamen1, nombre: seleccionExamen1});//({ idExamen: idExamen1, nombre: seleccionExamen1 });
       console.log(seleccionExamen1 +"...........");
        
        if (seleccionExamen1) {
@@ -167,12 +185,12 @@ html
          `;
          fechas.push(dia);
          console.log(fechas);
-        
+         
           const fechasDate = fechas.map(fechaStr => {
            const [dia, mes, anio] = fechaStr.split('/'); // Divide la cadena en día, mes y año
            return new Date(anio, mes - 1, dia); // Resta 1 al mes, ya que en JavaScript los meses son 0-indexados
            });  
-
+          
                // Encuentra la fecha más grande
            const fechaMasLejana = new Date(Math.max(...fechasDate));
            resul.innerHTML=fechaMasLejana.toISOString().split('T')[0];
@@ -183,7 +201,7 @@ html
             headers: {
             'Content-Type': 'application/json',
              },
-            body: JSON.stringify({ examen1: idExamen1}),
+            body: JSON.stringify({ examen1: idMuestra}),
            })
             .then(response => {
                if (!response.ok) {
@@ -194,12 +212,35 @@ html
             .then(data => {
                const jsonString = data;
                const jsonObject = JSON.parse(jsonString);
+               console.log(jsonObject,"id de Tipo de Muestra");
                const nombre = jsonObject.nombre;
+               const idMuestra = jsonObject.id;
+
               if (!muestrasSet.has(nombre)) {
                muestrasSet.add(nombre);  
+               //---------------------------------------------------------------------------------
+                 
+               const checkboxContainer = document.createElement('div');
+               checkboxContainer.className = 'form-check';
+               const checkboxInput = document.createElement('input');
+               checkboxInput.type = 'checkbox';
+               checkboxInput.id = `muestra_${idMuestra}`; // Asigna un ID único
+               checkboxInput.name = 'muestrasRequeridas';
+               checkboxInput.value = nombre;
+               checkboxInput.className = 'form-check-input';
+               const label = document.createElement('label');
+               label.textContent = nombre;
+               label.className = 'form-check-label';
+               label.setAttribute('for', `muestra_${idMuestra}`); // Establece el "for" del label para que coincida con el ID del checkbox
+               label.appendChild(checkboxInput);
+
+               checkboxContainer.appendChild(label);
+               muestrasRequeridas.appendChild(checkboxContainer);
+
+                //---------------------------------------------------------------------------------
                
-             
-               console.log({data})  
+               console.log({data}) 
+               /*
                const checkboxContainer = document.createElement('div');
                checkboxContainer.className = 'form-check'; // Agregar la clase form-check
                const checkboxInput = document.createElement('input');
@@ -213,6 +254,8 @@ html
                label.appendChild(checkboxInput);
                checkboxContainer.appendChild(label);
                muestrasRequeridas.appendChild(checkboxContainer);
+               */
+              //---------------------------------------------------------------------------------  
               }//---------------
    
                   //---------------
@@ -267,12 +310,12 @@ html
 
       const verific = document.getElementById('verificar');
 
-  
+         
       verific.addEventListener('click', function() {
 
       console.log("asfsadafs");
       const documento=searchInput.value;
-        fetch('/pacientes/verificar', {
+        fetch('/pacientes/verificare', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json',
@@ -287,8 +330,14 @@ html
                 })
             .then(data => {
                   
+                   
+                   console.log(data,"quegue aca o no?");
+                   
                  if (data.length > 2) {
-                    console.log("llego");
+
+                     const jsonData = JSON.parse(data);
+                    idDocumento=jsonData.id;
+                    console.log(idDocumento,"que mierdam tiene el iddocumento");
                      document.getElementById('generar').style.display = 'inline-block';
                       resultadosDiv.innerHTML = "Paciente Registrado Correctamente";
                       resultadosDiv.style.color = "green";
@@ -308,3 +357,73 @@ html
              });
           
              }); 
+       const muestrasSeleccionadas = {};
+
+          document.querySelectorAll('input[name="muestrasRequeridas"]').forEach(checkbox => {
+             checkbox.addEventListener('change', function() {
+             const nombreMuestra = checkbox.value;
+              const idMuestra = checkbox.getAttribute('data-idmuestra'); // Agregar el atributo data-idmuestra
+              if (checkbox.checked) {
+                 muestrasSeleccionadas[idMuestra] = nombreMuestra;
+              } else {
+                delete muestrasSeleccionadas[idMuestra];
+             }
+          });
+       });
+      
+     //--------------------------------------------------------------------------------------------
+      document.getElementById('guardar-checkboxes').addEventListener('click', function() {
+         const checkboxes = document.querySelectorAll('#muestras_requeridas input[type="checkbox"]');
+        
+
+            checkboxes.forEach(checkbox => {
+                const idMuestra = checkbox.id.replace('muestra_', ''); // Extraer el ID de la muestra
+                const nombreMuestra = checkbox.value;
+                  if (checkbox.checked) {
+                    checkboxesSeleccionados.push({ id: idMuestra, nombre: nombreMuestra });
+                   } else {
+                    checkboxesNoSeleccionados.push({ id: idMuestra, nombre: nombreMuestra });
+                    }
+                      });
+                     console.log('Checkboxes seleccionados:', checkboxesSeleccionados);
+                     console.log('Checkboxes no seleccionados:', checkboxesNoSeleccionados);
+                   });
+
+                
+
+     //--------------------------------------------------------------------------------------------   
+     generar.addEventListener('click', function() {
+
+             const cedulaPaciente = document.getElementById('cedula_paciente').value;
+             const medico = document.getElementById('medico').value;
+             const diagnostico = document.getElementById('diagnostico').value;
+  
+             const muestrasEntregada = checkboxesSeleccionados;
+             const muestrasNoEntregada = checkboxesNoSeleccionados;
+
+             const formData = {
+                cedulaPaciente,
+                idDocumento,
+                medico,
+                diagnostico,
+                examenes: examenesSeleccionados,
+                muestrasEntregada,
+                muestrasNoEntregada,
+             
+              };
+               fetch('/examenordenes/prueba', {
+                 method: 'POST',
+                 headers: {
+                 'Content-Type': 'application/json',
+                 },
+                  body: JSON.stringify(formData)
+                  })
+               .then(response => response.json())
+               .then(responseData => {
+                   console.log("porfin")
+                  })
+                .catch(error => {
+                   console.error('Error al enviar la orden: ', error);
+                 });
+                });
+            
