@@ -1,20 +1,20 @@
 const { Router } = require('express');
-const Sequelize = require('sequelize');
 const { check } = require('express-validator');
 
 const { detGet, detPost, detGetTodas, activarDeterminacion, desactivarDeterminacion } = require('../controllers/determinaciones');
 const { tipoMuestrasGet, postMuestra, getVistaMuestra, activarMuestra, desactivarMuestra, muestrasGetTodos } = require('../controllers/muestras');
 const router = Router();
-const { Determinacion, Examen, TipoMuestra, TipoExamen, ValorReferencia, sequelize, ExamenDeterminacion } = require("../models");
+const { ValorReferencia } = require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
-const { tieneOrden, examenesGet, examenPost, putExamen } = require('../controllers/examenes');
-const { postValorRef, refGetTodos, activarRef, desactivarRef } = require('../controllers/valorreferencia');
+const { tieneOrden, examenesGet, examenPost, putExamen, activarExamen, examenesGetTodos } = require('../controllers/examenes');
+const { postValorRef, refGetTodos, activarRef, desactivarRef, crearArregloValorRefyId } = require('../controllers/valorreferencia');
 const { procesarBody, procesarBody2 } = require('../middlewares/formExamen');
 const { validarCampos0 } = require('../middlewares/validar-campos');
 const { detValorRef } = require('../controllers/funciones/validaciones');
 
 
-router.get('/inicio', (req, res) => { res.render("tecnicoBioq/inicio", { modal: false }) })
+router.get('/inicio', (req, res) => { 
+  res.render("tecnicoBioq/inicio", { modal: false }) })
 //router.get('/inicio',(req,res)=>{res.render("inicioAdmin2/inicioAdmin2")})
 
 router.get('/addet', async (req, res) => {
@@ -36,14 +36,42 @@ router.get('/addValorRef', async (req, res) => {
   let arrDet = await detGet();
   res.render('tecnicoBioq/addReferencia', { arrDet, modal: false })
 })
+
+
 router.get('/activarRef', async (req, res) => {
-  let arrRef = await refGetTodos();
+  let arrRef2 = await refGetTodos();
+  const arrRef=[];
+  for(ref of arrRef2){
+           if(ref.deletedAt){
+                      const obj={ hombre: [], mujer: [], embarazada: [] };
+                      await crearArregloValorRefyId(ref.determinacionId,obj) 
+                      const arr=[ref.edadMin,ref.edadMax,ref.valorMinimo,ref.valorMaximo]
+                      switch(ref.sexo){
+                        case 'M':obj.hombre.push(arr);
+                                 detValorRef(obj['hombre'],'hombre', obj, 0);
+                                 break;
+                        case 'F': ref.embarazo?obj.embarazada.push(arr):obj.mujer.push(arr);
+                                  if(ref.embarazo)
+                                     detValorRef(obj['embarazada'],'embarazada', obj, 0);
+                                  else
+                                  detValorRef(obj['mujer'],'mujer', obj, 0);  
+                      }
+                      if (!(Object.keys(obj).length > 3))
+                          arrRef.push(ref)
+                 }
+           else arrRef.push(ref)
+  }
   res.render('tecnicoBioq/activarRef', { arrRef })
 })
 router.get('/activarMuestra', async (req, res) => {
   let muestras = await muestrasGetTodos();
   res.render('tecnicoBioq/activarMuestra', { muestras, modal: false })
 })
+router.get('/activarExamen',async (req, res) => {
+  let examenes = await examenesGetTodos();
+  res.render('tecnicoBioq/activarExamen', { examenes, modal: false })
+})
+router.post('/activarExamen', activarExamen)
 router.post('/activarMuestra', activarMuestra)
 router.post('/desactivarMuestra', desactivarMuestra)
 router.post('/activarRef', activarRef)
@@ -71,12 +99,24 @@ router.post('/addValorRef', [
   postValorRef)
 
 
+
+ 
+
 router.get('/addValorRef2', async (req, res) => {
+  const {determinacionId,determinacion}=req.query  
+  if(determinacionId){
+    const obj={ hombre: [], mujer: [], embarazada: [] };
+    const idsRef={ hombre: [], mujer: [], embarazada: [] }
 
-
+    await crearArregloValorRefyId(determinacionId,obj,idsRef)
+    let arrDet = await detGet();
+    
+    return res.render('tecnicoBioq/addRef2', { arrDet,obj2:{met:"post",idsRef,obj,determinacion},determinacionId })
+  }
+  
 
   let arrDet = await detGet();
-  return res.render('tecnicoBioq/addRef2', { arrDet })
+  return res.render('tecnicoBioq/addRef2', { arrDet,obj2:{met:"get",determinacionId} })
 })
 
 
@@ -91,25 +131,42 @@ router.post('/addValorRef2', [
   async (req, res, next) => {
     let arrDet = await detGet();
     req.renderizar = (errors) => {
-      res.render('tecnicoBioq/addRef2', { arrDet, errors, obj: req.obj })
+      return res.render('tecnicoBioq/addRef2', { obj2:{met:"post",determinacionId:req.determinacionId,idRef:[]},arrDet, errors, obj: req.obj })
     }
     next();
   },
   validarCampos0
 ], async (req, res) => {
   const {determinacionId}=req.body;
-   let arr=['hombre','mujer','embarazada'];
-   for(let elem of arr){
-    if(req.obj[elem].length!==0){
-          for(let valores of req.obj[elem]){
-            await ValorReferencia.create({determinacionId,edadMin:valores[0],edadMax:valores[1],sexo:elem==='hombre'?'M':'F',embarazo:elem==='embarazada',valorMinimo:valores[2],valorMaximo:valores[3]});
-          }
+  const arr=['hombre','mujer','embarazada']
+  
+  if(req.obj1){
+    for(let elem of arr){
+      if(req.obj1[elem]){      
+        for(let valores of req.obj1[elem]){
+         await ValorReferencia.create({determinacionId,edadMin:valores[0],edadMax:valores[1],sexo:elem==='hombre'?'M':'F',embarazo:elem==='embarazada',valorMinimo:valores[2],valorMaximo:valores[3]});
+        }
+      }}
+   
+  }
+  if(req.obj2){
+
+    for(let elem of arr){
+
+      if(req.obj2[elem]){     
+        for(let valores of req.obj2[elem]){
+         await ValorReferencia.update({edadMin:valores[0],edadMax:valores[1],sexo:elem==='hombre'?'M':'F',embarazo:elem==='embarazada',valorMinimo:valores[2],valorMaximo:valores[3]},
+                                     { where: { id: parseInt(valores[4])} });
+        }
+      }
     }
-   }
+  }
+  
+
 
 
   let arrDet = await detGet();
-  return res.render('tecnicoBioq/addRef2', { arrDet })
+  return res.render('tecnicoBioq/inicio')
 })
 
 
@@ -118,7 +175,7 @@ router.post('/addValorRef2', [
 
 router.get('/addMuestra', getVistaMuestra)
 
-router.put('/editar', [procesarBody], putExamen)
+router.put('/editar',  putExamen)
 
 
 
@@ -157,9 +214,7 @@ router.get('/actualizar', async (req, res) => {
   res.render('tecnicoBioq/actualizarExamen', { examenes })
 })
 
-router.put('/actualizar/:id', [
-  procesarBody,
-],
+router.put('/actualizar/:id', 
   async (req, res) => {
     const { id } = req.id;
     const rta = await tieneOrden(id)
@@ -169,7 +224,7 @@ router.put('/actualizar/:id', [
 
 
 
-router.post('/submit', [procesarBody], examenPost)
+router.post('/submit',  examenPost)
 
 
 module.exports = router

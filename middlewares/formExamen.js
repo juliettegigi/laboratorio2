@@ -2,74 +2,7 @@ const { detValorRef } = require("../controllers/funciones/validaciones");
 const { detGet} = require('../controllers/determinaciones');
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
 const { tipoMuestrasGet } = require('../controllers/muestras');
-
-const procesarBody = async(req, res, next) => {
-    let msg = ""
-    let err=""
-    
-    const {eNombre,muestras,tipoExamen,detalle,detExistentes,demora}=req.body
-    const nuevoBody={eNombre,muestras,tipoExamen,detalle,detExistentes,demora};
-    if(req.body.id){
-         nuevoBody.id=req.body.id}
-      
-    nuevoBody.determinaciones=[]
-
-    const determinacionesNombre = []
-    for (const propiedad in req.body) {
-       if (propiedad.startsWith("nombre")) {
-                determinacionesNombre.push(propiedad);
-            }
-        }
-
-      if(determinacionesNombre.length!==0){  nuevoBody.determinaciones = determinacionesNombre.map((nom,index) => {
-            const obj = { hombre: {}, mujer: {}, embarazada: {} }
-            const det = {}
-            const [, b] = nom.split("y");
-            det.nombre = req.body[nom];
-            det.valorMin = req.body[`valorMiny${b}`]
-            det.valorMax = req.body[`valorMaxy${b}`];
-            det.unidadMedida = req.body[`unidadMediday${b}`];
-            obj.determinacion = det;
-
-            if(parseFloat(det.valorMin)>=parseFloat(det.valorMax))
-               obj.errorDetValor=true;
-
-            const valoresRefHombre = [];
-            const valoresRefMujer = [];
-            const valoresRefEmbarazada = [];
-            for (const propiedad in req.body) {
-                if (propiedad.startsWith("Hombre") && propiedad.endsWith(b)) {
-                    valoresRefHombre.push(req.body[propiedad].map(elem=>parseFloat(elem)));
-                    msg=detValorRef(valoresRefHombre,'Hombre',obj,index)
-                    if(!err)
-                       err=msg
-                    
-                } else if (propiedad.startsWith("Mujer") && propiedad.endsWith(b)) {
-                    valoresRefMujer.push(req.body[propiedad].map(elem=>parseFloat(elem)));
-                    msg=detValorRef(valoresRefMujer,'Mujer',obj,index)
-                } else if (propiedad.startsWith("Embarazada") && propiedad.endsWith(b)) {
-
-                    valoresRefEmbarazada.push(req.body[propiedad].map(elem=>parseFloat(elem)));
-                    msg=detValorRef(valoresRefEmbarazada,'Embarazada',obj,index)
-                }
-            }
-            obj.hombre = valoresRefHombre;
-            obj.mujer = valoresRefMujer;
-            obj.embarazada = valoresRefEmbarazada;
-            return obj
-        })}
-
-
-        nuevoBody.msg=msg;
-        req.body=nuevoBody;        
-        if(msg){        
-            let arrDet= await detGet();
-            let arrMuestras= await tipoMuestrasGet();
-            let arrTe= await tipoExamenesGet();    
-            return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras,arrTe,modal:msg,form:req.body,ruta:"submit"})
-        }
-        else next();
-    }
+const { ValorReferencia} = require("../models");
 
 
 
@@ -77,9 +10,7 @@ const procesarBody = async(req, res, next) => {
     const procesarBody2 =async(req,res,next) => {
 
   
-        const { determinacionId } = req.body
-        const obj = { hombre: [], mujer: [], embarazada: [] }
-      
+    const {determinacion,determinacionId}=req.body
         function procesar( arr, sex, obj){
         const propH = [`${sex}BodyedadMin`, `${sex}BodyedadMax`, `${sex}BodyvalorMinimo`, `${sex}BodyvalorMaximo`];
         if (req.body[`${sex}BodyedadMin`]) {
@@ -162,20 +93,77 @@ const procesarBody = async(req, res, next) => {
         }
       
         }
+
+          
+        const obj2 = { hombre: [], mujer: [], embarazada: [] }  //son los  valores        existentes      
+        const obj3 = { hombre: [], mujer: [], embarazada: [] }
+        const arr=['dbhombre','dbmujer','dbembarazada']
       
-        procesar( obj.hombre, 'hombre', obj)
-        procesar( obj.mujer, 'mujer', obj)
-        procesar( obj.embarazada, 'embarazada', obj)
-        if (Object.keys(obj).length > 3) {
+
+
+  
+        procesar( obj3.hombre, 'hombre', obj3)
+        procesar( obj3.mujer, 'mujer', obj3)
+        procesar( obj3.embarazada, 'embarazada', obj3)
+        const obj={hombre:[...obj3.hombre],mujer:[...obj3.mujer],embarazada:[...obj3.embarazada]};  
+
+
+        for(let n of arr) {
+          if(req.body[n]){
+            if(Array.isArray(req.body[n])){ 
+                        for(id of req.body[n]) {
+                          const arr=[];
+                          if(!req.body[`${n}-${id}`])
+                            ValorReferencia.destroy({where:{id}})
+                          else{
+                            arr.push(parseInt(req.body[`${n}-${id}`][0]));
+                            arr.push(parseInt(req.body[`${n}-${id}`][1]));
+                            arr.push(parseFloat(req.body[`${n}-${id}`][2]));
+                            arr.push(parseFloat(req.body[`${n}-${id}`][3]));
+                            obj3[`${n.substring(2)}`].push(arr);
+                            detValorRef(obj3[`${n.substring(2)}`], `${n.substring(2)}`, obj3, 0);
+                            //arr.push(id)
+                            obj2[`${n.substring(2)}`].push(arr);
+                           // obj2[`${n.substring(2)}`].push(id);
+                          }
+                        }
+              }
+              else{
+                const arr=[];
+                if(!req.body[`${n}-${req.body[n]}`])
+                  ValorReferencia.destroy({where:{id:parseInt(req.body[n])}})
+                else{
+                  arr.push(parseInt(req.body[`${n}-${req.body[n]}`][0]));
+                  arr.push(parseInt(req.body[`${n}-${req.body[n]}`][1]));
+                  arr.push(parseFloat(req.body[`${n}-${req.body[n]}`][2]));
+                  arr.push(parseFloat(req.body[`${n}-${req.body[n]}`][3]));
+                  obj3[`${n.substring(2)}`].push(arr);
+                  detValorRef(obj3[`${n.substring(2)}`], `${n.substring(2)}`, obj3, 0);
+                  //arr.push(req.body[n])
+                  obj2[`${n.substring(2)}`].push(arr);
+              }
+        }
+      }
+    }
+        if (Object.keys(obj3).length > 3) {
           //los rangos se solapan errorhombre0,errormujer0,errormujer0
+
+          
+          const idsRef={ hombre: Array.isArray(req.body.dbhombre)?req.body.dbhombre:[req.body.dbhombre], 
+                         mujer: Array.isArray(req.body.dbmujer)?req.body.dbmujer:[req.body.dbmujer],  
+                         embarazada:Array.isArray(req.body.dbembarazada)?req.body.dbembarazada:[req.body.dbembarazada]  
+                        }//arreglos con los id
+        
           let arrDet = await detGet();
-          return res.render('tecnicoBioq/addRef2', { arrDet, obj })
+          return res.render('tecnicoBioq/addRef2', { arrDet, obj,obj2:{determinacion,met:"post",idsRef,obj:obj2,obj3},determinacionId })
         }
         else {
             
-        req.obj=obj
-            next()}
+        req.obj1=obj
+        req.obj2=obj2
+            next()
+          }
       }
       
 
-module.exports = { procesarBody,procesarBody2 };
+module.exports = { procesarBody2 };

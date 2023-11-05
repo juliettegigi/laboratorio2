@@ -1,6 +1,6 @@
 const bcryptjs=require('bcryptjs');
 const { Sequelize} = require('sequelize');
-
+const { Op } = require('sequelize');
 const {Usuario,Rol}=require('../models');
 
    
@@ -43,11 +43,13 @@ const userPost = async (req, res) => {
 
 
 
-
+const usersInternosGet=async()=>{
+        return await Usuario.findAll({include: [ { model: Rol,where: { nombre: { [Op.not]: 'Paciente' }}}]})
+}
 
 
 module.exports={
-   userPost
+   userPost,usersInternosGet
 }
 
 

@@ -9,6 +9,13 @@ const {Usuario,Rol,UsuarioRol,OrdenTrabajo}=require('../models');
 
 
 
+const listaDePacientes=async()=>{
+  const pacientes=await Usuario.findAll({include: { model: Rol, where: { nombre: 'Paciente'} } });
+  console.log(pacientes);
+  return pacientes
+}
+
+
 const buscarPacientes = async( termino = '', res = response ) => {
 try
 {      
@@ -287,5 +294,5 @@ const buscarordenes = async (req, res) => {
     }
 
 module.exports={
-   buscar,actualizar,encontrar,verificar,buscarinout,buscarordenes,buscarpaciente,verificare
+   buscar,actualizar,encontrar,verificar,buscarinout,buscarordenes,buscarpaciente,verificare,listaDePacientes
 }

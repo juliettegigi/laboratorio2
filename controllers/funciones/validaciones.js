@@ -19,6 +19,8 @@ const emailExiste = async (email = "") => {
 
 
 const detValorRef = (arrValoresRef, de,obj,v) => {
+    console.log("---------------------------------");
+    console.log(arrValoresRef,de);
     let msg=""
     const i = arrValoresRef.length
     if(i==1 && !( (arrValoresRef[i-1][0]<arrValoresRef[i-1][1]) && 
@@ -31,18 +33,45 @@ const detValorRef = (arrValoresRef, de,obj,v) => {
                        
     }else
      
-    if (  (i > 1) &&(  ( arrValoresRef[i-1][2] >= arrValoresRef[i-1][3])||
-                       (arrValoresRef.some((elem,index)=>{  return( i-1!=index &&(
-                                                                     ((elem[0]<=arrValoresRef[i-1][0]) && (arrValoresRef[i-1][0]<=elem[1]))||
-                                                                     ((elem[0]<=arrValoresRef[i-1][1]) && (arrValoresRef[i-1][1]<=elem[1]))||
-                                                                     ((arrValoresRef[i-1][0]<=elem[0]) && (elem[0]<=arrValoresRef[i-1][1]))||
-                                                                     ((arrValoresRef[i-1][0]<=elem[1]) && (elem[1]<=arrValoresRef[i-1][1]))
+    if (  (i > 1) &&(  ( arrValoresRef[i-1][2] < arrValoresRef[i-1][3])||
+                       ( arrValoresRef[i-1][0] < arrValoresRef[i-1][1])
+                       ) 
+                   &&    (arrValoresRef.some((elem,index)=>{ 
+                    console.log((parseInt(elem[0]) <=  parseInt(arrValoresRef[i-1][1]) ) && 
+                    (parseInt(arrValoresRef[i-1][1])<=parseInt(elem[1])));
+                    console.log(parseInt(elem[0])," <=  ",parseInt(arrValoresRef[i-1][1]) ," &&", 
+                    parseInt(arrValoresRef[i-1][1]),"<=",parseInt(elem[1]));
+                    return( i-1!=index &&(
+                                                                      ( (parseInt(elem[0]) <=  parseInt(arrValoresRef[i-1][0])) && 
+                                                                        (parseInt(arrValoresRef[i-1][0])<=parseInt(elem[1]))
+                                                                       )|| 
+                                                                     ( (parseInt(elem[0]) <=  parseInt(arrValoresRef[i-1][1]) ) && 
+                                                                       (parseInt(arrValoresRef[i-1][1])<=parseInt(elem[1]))
+                                                                       )||
+                                                                     ( (parseInt(arrValoresRef[i-1][0]) <= parseInt(elem[0])) && 
+                                                                       ( parseInt(elem[0]) <= parseInt(arrValoresRef[i-1][1])) 
+                                                                       )||
+                                                                     ( (parseInt(arrValoresRef[i-1][0]) <= parseInt(elem[1])) && 
+                                                                       ( parseInt(elem[1]) <= parseInt(arrValoresRef[i-1][1]) ) 
+                                                                       )||
+                                                                     ( (parseFloat(elem[2]) <= parseFloat(arrValoresRef[i-1][2])) && 
+                                                                       (parseFloat(arrValoresRef[i-1][2])<= parseFloat(elem[3]))
+                                                                      )||
+                                                                     ( (parseFloat(elem[2]) <= parseFloat(arrValoresRef[i-1][3])) && 
+                                                                       (parseFloat(arrValoresRef[i-1][3])<= parseFloat(elem[3]))
+                                                                     )||
+                                                                     ( (parseFloat(arrValoresRef[i-1][2])<= parseFloat(elem[2])) && 
+                                                                       (parseFloat(elem[2])<=parseFloat(arrValoresRef[i-1][3]))
+                                                                       )||
+                                                                     ( (parseFloat(arrValoresRef[i-1][2])<=parseFloat(elem[3])) && 
+                                                                       (parseFloat(elem[3])<=parseFloat(arrValoresRef[i-1][3]))
+                                                                       )
                                                                     )
                                                                    )
                                                         }
                                           )
                         )
-                    )
+                    
          ) {
 
        

@@ -1,4 +1,4 @@
-const{response}=require('express');
+
 const Sequelize = require('sequelize');
 const bcryptjs=require('bcryptjs');
 
@@ -15,10 +15,9 @@ const login=async(req,res=response)=>{
     if(!req.body.email)
        return res.render("index",{pass:"",email:""})
     const{email,contrasena,nombreRol}=req.body;
-       //verificar si el email existe
        try{
            const usuario = await Usuario.findOne({
-               where: {  [Sequelize.Op.or]: [ { email }, { documento: email } ] },
+               where: {  [Sequelize.Op.or]: [ { email }, { documento:email } ] },
                include: [
                  {
                    model: Rol,
@@ -27,16 +26,18 @@ const login=async(req,res=response)=>{
                ]
              });
 
-         if(!usuario)return res.render("index",{email:"Usuario o rol incorrecto.",pass:"",passValue:contrasena,emailValue:email})
+         if(!usuario)return res.render("login/index",{email:"Usuario o rol incorrecto.",pass:"",passValue:contrasena,emailValue:email})
          
         const passValida=await bcryptjs.compare(contrasena,usuario.contrasena);
-        if(!passValida) return res.render("index",{email:"",pass:"Contraseña incorrecta.",passValue:contrasena,emailValue:email});   
+        if(!passValida) return res.render("login/index",{email:"",pass:"Contraseña incorrecta.",passValue:contrasena,emailValue:email});   
        
         const token=await generarJWT(usuario.id);
         req.session.token = token;
         switch(nombreRol){
-          case "Paciente": res.redirect(`/pacientes`);
-          case "Administrativo":res.redirect(`/admins`);
+          case "Paciente": return res.redirect(`/pacientes`);
+          case "Administrativo":return res.redirect(`/vistaAdmin/inicio`);
+          case "Tecnico":return res.redirect(`/vistaTecBioc`);
+          case "Bioquimico":return res.redirect(`/vistaTecBioq/inicio`);
         }
        
        }

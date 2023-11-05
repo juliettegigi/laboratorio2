@@ -16,7 +16,6 @@ const validarCampos=(req,res,next)=>{
 
 const validarCampos0=(req,res,next)=>{
 
-  console.log("holaaa");
   const e=validationResult(req);
 
   if(!e.isEmpty()){
@@ -29,7 +28,7 @@ const validarCampos0=(req,res,next)=>{
 }
 
 const validarCampos2=(req,res,next)=>{
-    console.log("entro");
+  
     const result=validationResult(req);
    
     

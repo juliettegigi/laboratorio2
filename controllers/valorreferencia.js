@@ -1,5 +1,6 @@
 const {ValorReferencia,Determinacion}=require('../models');
 const { detGet } = require('./determinaciones');
+const { detValorRef } = require('./funciones/validaciones');
 
 const valorReferenciaPost=async(req,res)=>{
     try {
@@ -60,7 +61,20 @@ const refGetTodos=async(req,res)=>{
 }
 
 const activarRef=async(req,res)=>{
-    const{id}=req.body;
+    const{id}=req.body; // id del valor de referencia
+    const {determinacionId}=await ValorReferencia.findByPk(id,{paranoid:false, attributes: ['determinacionId']})
+    console.log("---------------------------------uuuuu");
+    console.log(determinacionId);
+
+    const obj={ hombre: [], mujer: [], embarazada: [] };
+   await crearArregloValorRefyId(determinacionId,obj)
+   
+   for (elem in obj ){
+    const msg=detValorRef(obj[elem],elem, obj, 0);
+    console.log(msg);
+}
+
+
     await ValorReferencia.restore({where:{id}})
     let arrRef=await refGetTodos();
     res.render('tecnicoBioq/activarRef',{arrRef})
@@ -77,6 +91,42 @@ const desactivarRef=async(req,res)=>{
 
 }
 
-module.exports={valorReferenciaPost,postValorRef,refGetTodos,activarRef,desactivarRef}
+
+
+
+const crearArregloValorRefyId=async(determinacionId,obj,idsRef={ hombre: [], mujer: [], embarazada: [] })=>{
+    const determinaciones=await ValorReferencia.findAll({where:{determinacionId}}) 
+    determinaciones.forEach((elem,index)=>{
+      const arr=[]
+      if(elem.embarazo){
+        idsRef.embarazada.push(elem.id)
+        arr.push(elem.edadMin);
+        arr.push(elem.edadMax);
+        arr.push(elem.valorMinimo);
+        arr.push(elem.valorMaximo);
+        obj.embarazada.push(arr)
+      }else
+      if(elem.sexo==='F'){
+        idsRef.mujer.push(elem.id)
+        arr.push(elem.edadMin);
+        arr.push(elem.edadMax);
+        arr.push(elem.valorMinimo);
+        arr.push(elem.valorMaximo);
+        obj.mujer.push(arr)
+      }
+      else {
+        idsRef.hombre.push(elem.id)
+        arr.push(elem.edadMin);
+        arr.push(elem.edadMax);
+        arr.push(elem.valorMinimo);
+        arr.push(elem.valorMaximo);
+        obj.hombre.push(arr)
+      }
+    })
+}
+
+
+
+module.exports={valorReferenciaPost,postValorRef,refGetTodos,activarRef,desactivarRef,crearArregloValorRefyId}
 
 

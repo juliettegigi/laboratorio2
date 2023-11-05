@@ -1,5 +1,5 @@
 const {TipoMuestra,Muestra,OrdenTrabajo}=require("../models");
-const { ordenesGet } = require("./orden");
+const { ordenesGet, getListaOrden } = require("./orden");
 
 
 const tipoMuestrasGet=async()=>{
@@ -17,19 +17,20 @@ try {
 
 
 const postMuestra=async(req,res)=>{
+    console.log("--------------------------");
        console.log(req.body);
-       const{ordenId,tipoMuestraId}=req.body
+       const{ordenTrabajoId,tipoMuestraId}=req.body
        const entregada=req.body.entregada?true:false;
-       await Muestra.create({ordenId,tipoMuestraId,entregada})
+       await Muestra.create({ordenTrabajoId,tipoMuestraId,entregada})
        const tipoM= await tipoMuestrasGet();
-        const ordenes= await ordenesGet();
+        const ordenes= await getListaOrden();
        res.render('tecnicoBioq/addMuestra',{ordenes,tipoM,modal:"Muestra agregada."})
 }
 
 const getVistaMuestra=async(req,res)=>{
 
         const tipoM= await tipoMuestrasGet();
-        const ordenes= await ordenesGet();
+        const ordenes= await getListaOrden();
         res.render('tecnicoBioq/addMuestra',{ordenes,tipoM,modal:false})
 }
 
@@ -44,6 +45,8 @@ const activarMuestra=async(req,res)=>{
     const muestras=await muestrasGetTodos();
     res.render('tecnicoBioq/activarMuestra',{muestras})
 }
+
+
 
 const desactivarMuestra=async(req,res)=>{
     const{id}=req.body;

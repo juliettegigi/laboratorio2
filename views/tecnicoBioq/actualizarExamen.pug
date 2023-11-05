@@ -23,6 +23,11 @@ html
           if examenes
             tbody
               each examen in examenes
+                - let str=""
+                - if(examen.Determinacions)
+                  - for(let i=0;i<examen.Determinacions.length;i++)
+                    - str= `${str}${str!==""?", ":""} ${examen.Determinacions[i].nombre}.`
+
                 tr
                   td= examen.nombre
                   if examen.TipoMuestra 
@@ -33,10 +38,7 @@ html
                     td= examen.TipoExamen.nombre 
                   else
                     td - 
-                  if examen.Determinacions 
-                    td ver 
-                  else 
-                    td -
+                  td= str
                   td 
                     form(action=`/vistaTecBioq/edit` method="post")
                           input(type="hidden" name="examen" value=JSON.stringify(examen))

@@ -7,6 +7,19 @@ const { tipoExamenesGet } = require('./tipoexamen');
 const { getOrdenes } = require('../controllers/orden');
 
 
+const examenesGetTodos=async()=>{
+  return  await Examen.findAll({paranoid:false,include:[{model:OrdenTrabajo},{model:TipoMuestra}]})
+}
+
+
+
+const activarExamen=async(req,res)=>{
+  const{id}=req.body;
+  await Examen.restore({where:{id}}) 
+  const examenes=await examenesGetTodos();
+  res.render('tecnicoBioq/activarExamen',{examenes})
+}
+
 const examenesGet= async (req,res) => {
 try { 
        let examenes= await Examen.findAll({include: [{ model:OrdenTrabajo },{ model:TipoMuestra },{ model:TipoExamen },{model:Determinacion}]});
@@ -50,11 +63,12 @@ const tieneOrden=async(req,res)=>{
 
 
 const examenPost= async(req,res)=>{
-    
+  console.log("-------------------------------------");
+    console.log(req.body);
     const t = await sequelize.transaction();
     try{
-     const {eNombre,detalle,muestras,tipoExamen,determinaciones}=req.body
-      const examen=await Examen.create({nombre:eNombre,detalle}, { transaction: t });
+     let {eNombre,demora,detalle,muestras,tipoExamen,detExistentes}=req.body
+      const examen=await Examen.create({nombre:eNombre,detalle,demora}, { transaction: t });
    
    
      for(let muestra of muestras){
@@ -67,40 +81,15 @@ const examenPost= async(req,res)=>{
          await te.addExamen(examen, { transaction: t })
 }
 
-
-
-    
-    for(let obj of determinaciones){
-     
-        const det=await Determinacion.create({nombre:obj.determinacion.nombre,unidadMedida:obj.determinacion.unidadMedida,valorMin:obj.determinacion.valorMin,valorMax:obj.determinacion.valorMax,comentarios:""}, { transaction: t});
-        
-        await examen.addDeterminacion(det, { transaction: t })
-        if(obj.hombre){
-              for(let fila of obj.hombre){
-                const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'H',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]}, { transaction: t });
-                await det.addValorReferencia(vr, { transaction: t })
-              }
-        }
-        if(obj.mujer){
-            for(let fila of obj.mujer){
-              const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]}, { transaction: t });
-              await det.addValorReferencia(vr, { transaction: t })
-            }
-      }
-      if(obj.embarazada){
-        for(let fila of obj.mujer){
-          const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:true,valorMinimo:fila[2],valorMaximo:fila[3]}, { transaction: t });
-          await det.addValorReferencia(vr, { transaction: t })
-        }
-  }
-        
+   if(detExistentes){
+    if(!Array.isArray(detExistentes)){
+        detExistentes=[detExistentes]
     }
-
-   if(req.body.detExistentes){
-             for(let det of req.body.detExistentes){
-                   const p=await examen.addDeterminacion(det,{ transaction: t })
-             }
+    for(let id of detExistentes){  
+      await examen.addDeterminacion(id, { transaction: t })
+    }
    }
+   
 
    await t.commit();
 
@@ -179,97 +168,55 @@ const crearorden= async (req, res)=>{
 
 
 const putExamen=async(req,res)=>{
-console.log("NUEVO BODY: ",req.body)
     const t = await sequelize.transaction();
     try{
-    const{id,muestras,eNombre,detalle,tipoExamen,demora,detExistentes,determinaciones}=req.body;
+
+      let {id,eNombre,demora,muestras,tipoExamen,detalle,detExistentes}=req.body;
     const valores={tipoMuestraId:muestras,nombre:eNombre,detalle,tipoExamenId:tipoExamen,demora}
-    const examen=await Examen.findByPk(id)
+    const examen=await Examen.findByPk(id,{include:{model:Determinacion}})
+    const determinacionesExamen=examen.Determinacions;
     Examen.update(valores,{where:{id}}) 
 
-    if(detExistentes && detExistentes.length!==0) {
-      await ExamenDeterminacion.destroy({
-        where: {
-          examenId:id,
-          determinacionId: {
-            [Sequelize.Op.notIn]: detExistentes
-          }
-        }
-      })
-
-
-      let detNuevas=await ExamenDeterminacion.findAll({
-        attributes: ['determinacionId'],
-        where: {
-          examenId:id,
-          determinacionId: {
-            [Sequelize.Op.in]: detExistentes,
-          },
-        },
-      })
-      detNuevas= detExistentes.filter(id=>{
-         return !detNuevas.some((value)=>{
-          return value.determinacionId==id})
-        })
-
-        for(let det of detNuevas){
-        //  const dett=Determinacion.findByPk(det)
-          console.log(examen)
-          await examen.addDeterminacion(det, { transaction: t })
-        }
-    } 
-
-    if(!detExistentes){
-        await ExamenDeterminacion.destroy({
-            where: {
-              examenId:id
-            }
-          })
     
+   if(detExistentes){
+    if(!Array.isArray(detExistentes)){
+        detExistentes=[detExistentes]
     }
-    
-    
+    for(let id of detExistentes){ 
+      if(!determinacionesExamen.some(elem=>elem.id===parseInt(id))){
+        await examen.addDeterminacion(id, { transaction: t })
+      } 
+      for(let id of determinacionesExamen){ 
+        if(!detExistentes.some(elem=>{
+          return parseInt(elem)===id.id})){
+         
+          await examen.removeDeterminacion(id, { transaction: t })
+        } 
 
-    console.log(req.body.determinaciones[0])
+    }
+  }
+   }
 
-    for(let obj of determinaciones){
    
-      const det=await Determinacion.create({nombre:obj.determinacion.nombre,unidadMedida:obj.determinacion.unidadMedida,valorMin:obj.determinacion.valorMin,valorMax:obj.determinacion.valorMax,comentarios:""}, { transaction: t});
-      
-      await examen.addDeterminacion(det, { transaction: t })
-      if(obj.hombre){
-            for(let fila of obj.hombre){
-              const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'H',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]}, { transaction: t });
-              await det.addValorReferencia(vr, { transaction: t })
-            }
-      }
-      if(obj.mujer){
-          for(let fila of obj.mujer){
-            const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:false,valorMinimo:fila[2],valorMaximo:fila[3]}, { transaction: t });
-            await det.addValorReferencia(vr, { transaction: t })
-          }
-    }
-    if(obj.embarazada){
-      for(let fila of obj.mujer){
-        const vr=await ValorReferencia.create({determinacionId:det.id,edadMin:fila[0],edadMax:fila[1],sexo:'F',embarazo:true,valorMinimo:fila[2],valorMaximo:fila[3]}, { transaction: t });
-        await det.addValorReferencia(vr, { transaction: t })
-      }
-}
-      
-  }
 
-  await t.commit();
+   await t.commit();
 
-  return res.render("tecnicoBioq/inicio",{modal:"Examen editado."}) 
-  }
-
-  catch(err){
-    console.log(err);
+   return res.render("tecnicoBioq/inicio",{modal:"Examen Editado"})
+  
+  }catch (error) {
+    console.log(error);
     await t.rollback();
+
+    if (error.name === 'SequelizeUniqueConstraintError')
+       req.body.nombreExiste=true
+       
+       let arrDet= await detGet();
+       let arrMuestras= await tipoMuestrasGet();
+       let arrTe= await tipoExamenesGet();
+   return res.render("tecnicoBioq/formExamen",{arrDet,arrMuestras,arrTe,modal:false,form:req.body,ruta:"submit"})
   }
 
-
-  }
+}
 
   const eliminadoLogico = async (req, res) => {
     const ordenId = req.body.term;  
@@ -296,5 +243,5 @@ console.log("NUEVO BODY: ",req.body)
   };
 
 module.exports={
-   examenesGet,examenPost,tieneOrden,crearorden,cargarmuestras,putExamen,eliminadoLogico,eliminarorden
+   examenesGet,examenPost,tieneOrden,crearorden,cargarmuestras,putExamen,eliminadoLogico,eliminarorden,activarExamen,examenesGetTodos
   }

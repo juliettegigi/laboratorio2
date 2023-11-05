@@ -1,11 +1,12 @@
 const{Router}=require('express');
-const Sequelize = require('sequelize');
+
 const { getOrdenes } = require('../controllers/orden');
 const {OrdenTrabajo,Usuario,Estado}=require('../models');
 const { getEstadoOrden } = require('../controllers/estadoOrden');
 const { check } = require('express-validator');
 const { validarCampos0 } = require('../middlewares/validar-campos');
 const { usuarioExiste } = require('../controllers/funciones/validaciones');
+const { listaDePacientes } = require('../controllers/pacientes');
 
 
 
@@ -35,9 +36,23 @@ router.get('/editar',async(req,res)=>{
 })
 
 
-router.get('/',async(req,res)=>{
-    res.render("administrativo/inicio",{modal:false})
+router.get('/inicio',async(req,res)=>{
+    res.render("inicioAdmin2/inicioAdmin2",{modal:false})
 })
+
+///////////////////////////////////////////////////////////////////////////////////////////////////// PACIENTES
+router.get('/inicio/personas',async(req,res)=>{
+    const pacientes=await listaDePacientes()
+    res.render("gestionPacientes/inicio",{modal:false,pacientes})
+})
+
+
+router.get('/add',(req,res)=>{
+    res.render("gestionPacientes/add")
+})
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 router.put('/editar',
 [check('usuario').notEmpty().withMessage('Valor requerido.'),

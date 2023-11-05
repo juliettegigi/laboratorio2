@@ -16,6 +16,11 @@ const ordenPost = async (req, res) => {
    };
 
 
+const getListaOrden=async()=>{
+  
+  return await OrdenTrabajo.findAll({ include: [{model: Usuario}],});
+}
+
    const ordenesGet=async(req,res)=>{
     const orden= await OrdenTrabajo.findAll({ include: [{model: Usuario}],});
     res.render("inicioOrden",{orden: orden});
@@ -33,14 +38,11 @@ const ordenPostCris = async (req, res) => {
   let estadoId = 0;
   const muesE = req.body.muestrasEntregada;
   const muesN = req.body.muestrasNoEntregada;
-   console.log(req.body);
-  console.log(muesE, muesN, "que paso");
+   
   if (muesN.length == 0 && muesE.length > 0) {
-    console.log("estoy en analitica");
     estadoId = 1;
   } else {
     estadoId = 2;
-    console.log("estoy en analitica");
   }
 
   try {
@@ -61,13 +63,13 @@ const ordenPostCris = async (req, res) => {
   }
 };
 const eliminarorden=async (req,res) => {
-  console.log("asdas");
+  
   res.render('inicioOrden',{k:false,j:true,ok:true});
 
   }  
    
    module.exports={
-    ordenPost,ordenesGet,getOrdenes,ordenPostCris,eliminarorden 
+    ordenPost,ordenesGet,getOrdenes,ordenPostCris,eliminarorden ,getListaOrden
   }
   
   
