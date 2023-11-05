@@ -11,7 +11,6 @@ const {Usuario,Rol,UsuarioRol,OrdenTrabajo}=require('../models');
 
 const listaDePacientes=async()=>{
   const pacientes=await Usuario.findAll({include: { model: Rol, where: { nombre: 'Paciente'} } });
-  console.log(pacientes);
   return pacientes
 }
 
@@ -83,7 +82,6 @@ const actualizar=async(req,res)=>{
 }
 
 const encontrar = async (req, res) => {
-  console.log(".......................................");
   try {
     const termino = req.query.term; // Obtener el término de búsqueda desde la solicitud GET
     // Realiza una búsqueda de pacientes en la base de datos
@@ -173,12 +171,10 @@ const verificare = async (req, res) => {
 
     // Renderiza una vista llamada 'inicioAdmin' con los resultados de la búsqueda
     // y establece algunas variables de contexto como 'ok', 'pacientes', 'modal' y 'errors'
-    console.log(pacientes[0].id);
     const data={
       id:pacientes[0].id,
       documento:pacientes[0].documento
     };
-    console.log(data);
     return res.json(data);
   } catch (err) {
     // Si ocurre un error durante la búsqueda, renderiza la vista 'inicioAdmin' con un mensaje de error
@@ -187,7 +183,6 @@ const verificare = async (req, res) => {
   }
 }
 const buscarinout = async (req, res) => {
-  console.log("hola");
   try {
     const termino = req.query.term; // Obtener el término de búsqueda desde la solicitud GET
 
@@ -270,7 +265,6 @@ const buscarordenes = async (req, res) => {
     }
     const buscarpaciente = async (req, res) => {
       const usuarioId = req.query.term;
-       console.log(usuarioId);
       try {
         const paciente = await Usuario.findOne({
           where: {

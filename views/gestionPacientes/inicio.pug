@@ -26,11 +26,11 @@ html
                   td= u.documento 
                   td= u.email 
                   td 
-                    form(action=`/vistaGestionUsers/eliminar?_method=delete` method="post")
+                    form(action=`/vistaAdmin/eliminar?_method=delete` method="post")
                             input(type="hidden" name="id" value=u.id)
                             input(type="submit" value="Eliminar" class="btn btn-primary")
                   td 
-                    form(action=`/vistaGestionUsers/editar` method="get")
+                    form(action=`/vistaAdmin/editarPaciente` method="get")
                             input(type="hidden" name="id" value=u.id)
                             input(type="submit" value="Editar" class="btn btn-primary")          
           tfoot

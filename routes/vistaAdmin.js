@@ -1,11 +1,12 @@
 const{Router}=require('express');
-
+const { Sequelize} = require('sequelize');
+const bcryptjs=require('bcryptjs');
 const { getOrdenes } = require('../controllers/orden');
-const {OrdenTrabajo,Usuario,Estado}=require('../models');
+const {OrdenTrabajo,Usuario,Estado,Rol}=require('../models');
 const { getEstadoOrden } = require('../controllers/estadoOrden');
 const { check } = require('express-validator');
 const { validarCampos0 } = require('../middlewares/validar-campos');
-const { usuarioExiste } = require('../controllers/funciones/validaciones');
+const { usuarioExiste, emailExiste } = require('../controllers/funciones/validaciones');
 const { listaDePacientes } = require('../controllers/pacientes');
 
 
@@ -47,10 +48,85 @@ router.get('/inicio/personas',async(req,res)=>{
 })
 
 
-router.get('/add',(req,res)=>{
-    res.render("gestionPacientes/add")
+
+
+
+router.get('/editarPaciente',async(req,res)=>{
+    const {id} = req.query
+    const user=await Usuario.findByPk(id,{include:{model:Rol}})
+   
+
+    return res.render('gestionPacientes/add', { ruta:`/vistaAdmin/editarPaciente?_method=put`,form:{embarazo:user.embarazo,id,nombre:user.nombre,apellido:user.apellido,documento:user.documento,fechaNacimiento:user.fechaNacimiento,genero:user.genero,telefono:user.telefono,direccion:user.direccion,email:user.email}})
+
+    
 })
 
+
+router.put('/editarPaciente',async(req,res)=>{
+         const pacientes=await listaDePacientes()
+            const {id,nombre,apellido,documento,matricula,fechaNacimiento,genero,telefono,direccion,email,embarazo}=req.body
+            await Usuario.update({nombre,apellido,documento,matricula,fechaNacimiento,genero,telefono,direccion,email,embarazo},{where:{id}})
+            return res.render("gestionPacientes/inicio",{pacientes})
+})
+
+
+
+
+
+
+router.get('/add',(req,res)=>{
+    res.render('gestionPacientes/add')
+})
+
+router.post('/add',[ 
+    check('nombre','introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úä-üñÑ]+( [A-Za-zÁ-Úä-üñÑ]+)*$/),
+check('apellido','Introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úä-üñÑ]+( [A-Za-zÁ-Úä-üñÑ]+)*$/).notEmpty(),
+check('documento','Sólo permitimos documentos de 7-9 dígitos.').notEmpty().matches(/^\d{7,9}$/),
+check('fechaNacimiento').notEmpty().withMessage('Campo requerido'),
+check('embarazo').notEmpty().withMessage('Campo requerido'),
+check('genero').notEmpty().isIn(['Otro', 'Femenino', 'Masculino']).withMessage('Seleccione una opción'),
+check('telefono').notEmpty().withMessage('Campo requerido'),
+check('direccion').isString().notEmpty().withMessage('Campo requerido.'),
+check('email',"El correo no es válido").isEmail(),
+check('email').custom(emailExiste),
+async (req, res, next) => {
+    req.renderizar = async(errors) => {
+      return res.render('gestionPacientes/add', { obj:{errors },form:req.body})
+    }
+    next();
+  },
+validarCampos0
+],
+
+async(req,res)=>{
+    const t = await Usuario.sequelize.transaction({ isolationLevel: Sequelize.Transaction.ISOLATION_LEVEL_READ_COMMITTED });
+  
+    try {
+      
+      const { nombre, apellido, documento, fechaNacimiento, genero, telefono, direccion, email, matricula,embarazo, rol } = req.body;
+      const contrasena = documento;
+      const usuario = await Usuario.create({contrasena,email,nombre,apellido,documento,fechaNacimiento,genero,telefono,direccion,matricula,embarazo}, { transaction: t });
+   
+     
+     
+            const r = await Rol.findOne({ where: { nombre: 'Paciente' } });
+            await usuario.addRol(r, { transaction: t });
+        
+  
+      const salt=bcryptjs.genSaltSync();
+      usuario.contrasena=bcryptjs.hashSync(contrasena,salt);
+      await usuario.save({ transaction: t });  
+      await t.commit();
+      const pacientes=await listaDePacientes()
+      return res.render("gestionPacientes/inicio",{modal:false,pacientes})
+    } catch (err) {
+      await t.rollback();
+      console.log(err);
+      
+      return res.render('gestionPacientes/add', {form:req.body })
+    }
+     
+})
 
 //////////////////////////////////////////////////////////////////////////////////////////
 

@@ -1,4 +1,4 @@
-form(action= ruta?ruta:`/vistaGestionUsers/add` method="post" name= novalidate class="mt-5")
+form(action= ruta?ruta:`/vistaAdmin/add` method="post" name= novalidate class="mt-5")
     if form && form.id
                  input(name="id" type="hidden" value=form.id)
     .row
@@ -36,9 +36,13 @@ form(action= ruta?ruta:`/vistaGestionUsers/add` method="post" name= novalidate c
                         label(for="embarazada") ¿Está embarazada?
                             div(id="embarazadaDiv")
                                 label(for="embarazada"+"Si") Sí
-                                input(type="radio", name="embarazo",value="true")
+                                input(type="radio", name="embarazo",value="true", checked= form && (form.embarazo === true))
                                 label(for="embarazadaNo") No
-                                input(type="radio", name="embarazo",value="false") 
+                                input(type="radio", name="embarazo",value="false" checked= form && (form.embarazo === false))
+                                if obj && obj.errors
+                                 - e=obj.errors.find(e=>e.path==='embarazo') 
+                                 if e 
+                                   p(class="text-danger")= e.msg 
     .row
         .col-6
             .row 
