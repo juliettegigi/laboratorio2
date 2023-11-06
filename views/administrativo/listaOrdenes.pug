@@ -39,7 +39,7 @@ html
                           input(type="hidden" name="term" value=orden.id)
                           input(type="submit" value="Eliminar" class="btn btn-danger")
                   td
-                    form(action=`/etiqueta` method="get" target="_blank")
+                    form(action=`/orden/etiqueta` method="get" target="_blank")
                           input(type="hidden" name="orden" value=orden.id)
                           input(type="hidden" name="nombreP" value=orden.Usuario.nombre)
                           input(type="hidden" name="codigoP" value=orden.Usuario.id)  
