@@ -24,30 +24,7 @@ router.get('/addet', async (req, res) => {
 })
 
 
-router.get('/cambiarPass',
-   (req,res)=>{
-  return res.render('tecnicoBioq/cambiarPass')
-})
 
-
-router.put('/cambiarPass',[
-  check('passActual').notEmpty().withMessage('Valor requerido.').custom(compararPass),
-  check('nuevaPass').notEmpty().withMessage('Valor requerido.').custom(nuevaPassCheck),
-  check('nuevaPass2').notEmpty().withMessage('Valor requerido.'),
-  async (req, res, next) => {
-    req.renderizar = (errors) => {
-      res.render('tecnicoBioq/cambiarPass',{errors,opc:req.body})
-    }
-    next();
-  },
-validarCampos0],
-(req,res)=>{
-  const salt=bcryptjs.genSaltSync();
-  const contrasena=bcryptjs.hashSync(req.body.nuevaPass,salt);
-  Usuario.update({contrasena},{where:{id:req.usuario.id}})
-  res.redirect('/')
-}
-)
 
 router.get('/activarDeterminacion', async (req, res) => {
   const determinaciones = await detGetTodas()

@@ -47,6 +47,7 @@ app.use('/valorReferencia',require('./routes/valorreferencia'));
 
 app.use('/',require('./routes/login'))
 app.use('/vistaTecBioq',[validarJWT,tieneRole('Tecnico','Bioquimico')],require('./routes/vistaTecBioq'));
+app.use('/cambiarPass',[validarJWT,tieneRole('Tecnico','Bioquimico','Administrativo','Paciente')],require('./routes/cambiarPass'));
 app.use('/vistaAdmin',[validarJWT,tieneRole('Administrativo')],require('./routes/vistaAdmin'));
 app.use('/vistaGestionUsers',require('./routes/vistaGestionUsers'));
 app.use('/orden',[validarJWT,tieneRole('Administrativo')],require('./routes/orden'));// crea una orden

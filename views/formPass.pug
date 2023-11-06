@@ -2,7 +2,7 @@
         .row
           .col-md-6.offset-md-3
             h2 Cambiar Contraseña
-            form(method="post" action="/vistaTecBioq/cambiarPass?_method=put")
+            form(method="post" action=`/cambiarPass?_method=put&&render=${nav}`)
               .form-group
                 label(for="passActual") Contraseña Actual
                 input.form-control(type="password" name="passActual" id="passActual" required value= opc?opc.passActual:'')

@@ -5,7 +5,7 @@ const bcryptjs=require('bcryptjs');
 const { Sequelize} = require('sequelize');
 
 const { check } = require('express-validator');
-const { emailExiste } = require('../controllers/funciones/validaciones');
+const { emailExiste, compararPass, nuevaPassCheck } = require('../controllers/funciones/validaciones');
 const {Usuario,Rol,UsuarioRol}=require('../models');
 const { usersInternosGet } = require('../controllers/users');
 
@@ -17,6 +17,24 @@ router.get('/inicio', (req, res) => { res.render("gestionUsers/inicio") })
 router.get('/add',(req,res)=>{
     res.render("gestionUsers/add")
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.get('/editar',async(req,res)=>{
     const {id} = req.query

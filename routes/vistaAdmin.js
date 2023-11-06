@@ -6,7 +6,7 @@ const {OrdenTrabajo,Usuario,Estado,Rol}=require('../models');
 const { getEstadoOrden } = require('../controllers/estadoOrden');
 const { check } = require('express-validator');
 const { validarCampos0 } = require('../middlewares/validar-campos');
-const { usuarioExiste, emailExiste } = require('../controllers/funciones/validaciones');
+const { usuarioExiste, emailExiste, compararPass, nuevaPassCheck } = require('../controllers/funciones/validaciones');
 const { listaDePacientes } = require('../controllers/pacientes');
 
 
@@ -20,6 +20,9 @@ router.get('/listaOrdenes', async(req,res)=>{
     const ordenes=await getOrdenes(['Informada','Esperando toma de muestra','Analitica']);
     res.render("administrativo/listaOrdenes",{ordenes})
 })
+
+
+
 
 
 

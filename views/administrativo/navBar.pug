@@ -50,5 +50,11 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
               hr.dropdown-divider
             li
               a.dropdown-item(href="/vistaTecBioq/activarRef") Activar/desactivar
-        li.nav-item.position-absolute.top-1.end-0
-           a.nav-link(href="/salir") cerrar sesión      
+        li.nav-item.dropdown.position-absolute.top-1.end-0
+          a.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false')
+           i(class="bi bi-list")
+          ul.dropdown-menu 
+            li 
+              a.dropdown-item(href="/cambiarPass?render=administrativo") Cambiar contraseña
+            li 
+              a.dropdown-item(href="/salir") Cerrar sesión     
