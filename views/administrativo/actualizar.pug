@@ -35,7 +35,8 @@ html
                     .row
                       .mb-3.col-lg-3.col-md-3.col-sm-3
                          label(for="estado", class="form-label") Estados:
-                         each estado in estados
+                         - var primerosEstados = estados.slice(0, 2);
+                         each estado in primerosEstados
                            .form-check
                              input.form-check-input(type="radio", id=`estado-${estado.id}`, name="estadoId", value=estado.id required, checked= orden && (parseInt(orden.estadoId) === estado.id) )
                              label.form-check-label(for=`estado-${estado.id}`)= estado.nombre

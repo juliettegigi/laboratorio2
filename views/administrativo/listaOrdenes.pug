@@ -35,7 +35,7 @@ html
                           input(type="hidden" name="ordenId" value=orden.id)
                           input(type="submit" value="Editar" class="btn btn-primary")
                   td
-                    form(action=`/examenes/eliminadoLogico/` method="post")
+                    form(action=`/examenes/eliminadoLogico/` method="post" onsubmit="return confirm('¿Realmente desea eliminar esta orden?')")
                           input(type="hidden" name="term" value=orden.id)
                           input(type="submit" value="Eliminar" class="btn btn-danger")
                   td
