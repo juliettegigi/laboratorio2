@@ -27,7 +27,7 @@ html
         br
 
         .custom-form-group
-          label(for="fecha_pedido")  Médico:
+          label(for="medico")  Médico:
           input(type="text", class="form-control", id="medico", name="medico", required)
         br
         br
@@ -71,7 +71,7 @@ html
         br
         br
         
-        button(type="submit", class="btn btn-primary", id="generar", style="display: none;") Generar Orden
+        button(type="button" class="btn btn-primary", id="generar", style="display: none;") Generar Orden
 
   script.
 
@@ -82,6 +82,8 @@ html
     let idDocumento;
     let idExamenes=[];
     let idMuestra;
+    let nombrePaciente;
+    let documentoP
     const checkboxesSeleccionados = [];
     const checkboxesNoSeleccionados = [];
     
@@ -131,7 +133,9 @@ html
         console.error('Error al obtener resultados: ', error);
       });
      });
-       const examenes = !{JSON.stringify(examen1)};
+       //const examenes = !{JSON.stringify(examen1)};
+       const examenes = examen1 ? JSON.stringify(examen1) : JSON.stringify([]);
+
         // Convierte las opciones de JSON del backend
     $(document).ready(function() {
        console.log(examenes[0]);
@@ -332,11 +336,15 @@ html
                   
                    
                    console.log(data,"quegue aca o no?");
-                   
+                     console.log(data,"tiene nombre y documento");
                  if (data.length > 2) {
-
+                     
                      const jsonData = JSON.parse(data);
+                     console.log(jsonData,"quegue");
                     idDocumento=jsonData.id;
+                    nombrePaciente=jsonData.nombre;
+                    documentoP=jsonData.documento;
+                    console.log(nombrePaciente,"mierda");
                     console.log(idDocumento,"que mierdam tiene el iddocumento");
                      document.getElementById('generar').style.display = 'inline-block';
                       resultadosDiv.innerHTML = "Paciente Registrado Correctamente";
@@ -404,6 +412,8 @@ html
              const formData = {
                 cedulaPaciente,
                 idDocumento,
+                nombrePaciente,
+                documentoP,
                 medico,
                 diagnostico,
                 examenes: examenesSeleccionados,
@@ -411,16 +421,34 @@ html
                 muestrasNoEntregada,
              
               };
-               fetch('/examenordenes/prueba', {
+               fetch('/orden/prueba', {
                  method: 'POST',
                  headers: {
                  'Content-Type': 'application/json',
                  },
                   body: JSON.stringify(formData)
                   })
-               .then(response => response.json())
-               .then(responseData => {
-                   console.log("porfin")
+                .then(response => {
+                  console.log("casa 1");
+                  if (!response.ok) {
+                    throw new Error('La solicitud no fue exitosa');
+                     }
+                   return response.json();
+                  })
+                .then(data => {
+                  console.log("casa 2");
+                  console.log(data,"vamos bien");
+                   window.location.href = '/etiqueta'; 
+                   console.log(data.codigoP,"vamos bien");
+                   
+                   
+                  
+                    
+                    if (data.etiquetas) {
+                       window.location.href = `/orden/etiqueta?orden=${data.orden}&codigoP=${data.codigoP}&nombreP=${data.nombreP}&documentoP=${data.documentoP}&fechaP=${data.fechaP}`;// Intenta redirigir a otra página
+                    } else {
+                    console.error('No se redirigió a /etiqueta');
+                    }
                   })
                 .catch(error => {
                    console.error('Error al enviar la orden: ', error);

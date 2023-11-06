@@ -4,7 +4,7 @@ const Sequelize = require('sequelize');
 const { detGet } = require('./determinaciones');
 const { tipoMuestrasGet } = require('./muestras');
 const { tipoExamenesGet } = require('./tipoexamen');
-const { getOrdenes } = require('../controllers/orden');
+
 
 
 const examenesGetTodos=async()=>{

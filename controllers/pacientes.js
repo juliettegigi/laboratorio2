@@ -171,10 +171,14 @@ const verificare = async (req, res) => {
 
     // Renderiza una vista llamada 'inicioAdmin' con los resultados de la búsqueda
     // y establece algunas variables de contexto como 'ok', 'pacientes', 'modal' y 'errors'
+    console.log(pacientes[0].id);
     const data={
       id:pacientes[0].id,
-      documento:pacientes[0].documento
+      documento:pacientes[0].documento,
+      nombre:pacientes[0].nombre
+
     };
+    console.log(data);
     return res.json(data);
   } catch (err) {
     // Si ocurre un error durante la búsqueda, renderiza la vista 'inicioAdmin' con un mensaje de error
