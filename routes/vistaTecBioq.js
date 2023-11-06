@@ -1,23 +1,22 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
+const bcryptjs=require('bcryptjs');
 
 const { detGet, detPost, detGetTodas, activarDeterminacion, desactivarDeterminacion } = require('../controllers/determinaciones');
 const { tipoMuestrasGet, postMuestra, getVistaMuestra, activarMuestra, desactivarMuestra, muestrasGetTodos } = require('../controllers/muestras');
 const router = Router();
-const { ValorReferencia } = require("../models");
+const { ValorReferencia,Usuario } = require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
 const { tieneOrden, examenesGet, examenPost, putExamen, activarExamen, examenesGetTodos } = require('../controllers/examenes');
 const { postValorRef, refGetTodos, activarRef, desactivarRef, crearArregloValorRefyId } = require('../controllers/valorreferencia');
-const { procesarBody, procesarBody2 } = require('../middlewares/formExamen');
+const {  procesarBody2 } = require('../middlewares/formExamen');
 const { validarCampos0 } = require('../middlewares/validar-campos');
-const { detValorRef } = require('../controllers/funciones/validaciones');
+const { detValorRef, nuevaPassCheck, compararPass } = require('../controllers/funciones/validaciones');
 
 
 router.get('/inicio', (req, res) => { 
-  console.log(req.usuario.Rols);
-  const soyPaciente=req.usuario.Rols.some(element => element.nombre==='Paciente')
-  console.log(soyPaciente);
-  res.render("tecnicoBioq/inicio", { modal: false ,soyPaciente}) })
+  const soyAdministrativo=req.usuario.Rols.some(element => element.nombre==='Administrativo')
+  res.render("tecnicoBioq/inicio", { modal: false ,soyAdministrativo}) })
 //router.get('/inicio',(req,res)=>{res.render("inicioAdmin2/inicioAdmin2")})
 
 router.get('/addet', async (req, res) => {
@@ -25,8 +24,30 @@ router.get('/addet', async (req, res) => {
 })
 
 
+router.get('/cambiarPass',
+   (req,res)=>{
+  return res.render('tecnicoBioq/cambiarPass')
+})
 
 
+router.put('/cambiarPass',[
+  check('passActual').notEmpty().withMessage('Valor requerido.').custom(compararPass),
+  check('nuevaPass').notEmpty().withMessage('Valor requerido.').custom(nuevaPassCheck),
+  check('nuevaPass2').notEmpty().withMessage('Valor requerido.'),
+  async (req, res, next) => {
+    req.renderizar = (errors) => {
+      res.render('tecnicoBioq/cambiarPass',{errors,opc:req.body})
+    }
+    next();
+  },
+validarCampos0],
+(req,res)=>{
+  const salt=bcryptjs.genSaltSync();
+  const contrasena=bcryptjs.hashSync(req.body.nuevaPass,salt);
+  Usuario.update({contrasena},{where:{id:req.usuario.id}})
+  res.redirect('/')
+}
+)
 
 router.get('/activarDeterminacion', async (req, res) => {
   const determinaciones = await detGetTodas()

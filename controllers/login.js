@@ -27,15 +27,13 @@ const login=async(req,res=response)=>{
                  }
                ]
              });
-         console.log(req.body);
          if(!usuario)return res.render("index",{email:"Usuario o rol incorrecto.",pass:"",passValue:contrasena,emailValue:email,rol:nombreRol})
-         console.log(usuario);
+        
         const passValida=await bcryptjs.compare(contrasena,usuario.contrasena);
         if(!passValida) return res.render("index",{email:"",pass:"Contraseña incorrecta.",passValue:contrasena,emailValue:email,rol:nombreRol});   
        
         const token=await generarJWT(usuario.id);
         req.session.token = token;
-        console.log(nombreRol);
         switch(nombreRol){
           case "Paciente": return res.redirect(`/pacientes`);
           case "Administrativo":return res.redirect(`/vistaAdmin/inicio`);
@@ -53,11 +51,12 @@ const login=async(req,res=response)=>{
 
 
    const salir=(req,res)=>{
-    console.log("hoi");
     req.session.token = null;
     res.render('index'); 
    }
    
+
+
 
 module.exports={login,salir} 
 

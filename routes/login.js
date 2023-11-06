@@ -11,4 +11,7 @@ router.post('/',login);
 router.get('/',login)
 
 router.get('/salir',salir)
+
+
+
 module.exports = router;

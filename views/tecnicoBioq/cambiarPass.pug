@@ -10,10 +10,5 @@ html
       if modal
           include ../modal.pug
       .container
-        include navBar.pug     
-    script.   
-         const modal1=("#{modal}"!=="false")
-         if(modal1){
-         const miModal = new bootstrap.Modal(document.getElementById('miModal'));
-           miModal.show();
-           }    
+        include navBar.pug 
+      include ../formPass.pug  

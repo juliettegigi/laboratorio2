@@ -1,4 +1,5 @@
 const { Usuario } = require('../../models');
+const bcryptjs=require('bcryptjs');
 
 const emailExiste = async (email = "") => {
     const existeEmail = await Usuario.findOne({
@@ -96,13 +97,25 @@ const usuarioExiste=async(usuario,{req})=>{
 }
 
 
+const nuevaPassCheck=(value, { req }) => {
+  if (value !== req.body.nuevaPass2) {
+    throw new Error('Las contraseñas no coinciden.');
+  }
+  return true;
+}
 
+const compararPass=async(value,{req})=>{
 
-
+  const passValida=await bcryptjs.compare(value,req.usuario.contrasena);
+  if(!passValida){
+    console.log("qq");
+    throw new Error('Contraseña incorrecta.');
+  }
+}
 
 
 module.exports = {
-    emailExiste, detValorRef,usuarioExiste
+    emailExiste, detValorRef,usuarioExiste,nuevaPassCheck,compararPass
 }
 
 
