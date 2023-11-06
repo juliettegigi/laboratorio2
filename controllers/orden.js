@@ -1,5 +1,7 @@
 const { Sequelize} = require('sequelize');
-const {OrdenTrabajo,Usuario,Estado}=require('../models');
+const {OrdenTrabajo,Usuario,Estado,Examen,ExamenOrden,Muestra}=require('../models');
+//const { examenesGet } = require('./examenes');
+
 
 const ordenPost = async (req, res) => {
     try {
@@ -67,9 +69,92 @@ const eliminarorden=async (req,res) => {
   res.render('inicioOrden',{k:false,j:true,ok:true});
 
   }  
+  const crearorden= async (req, res)=>{
+    try {
+        examen=await Examen.findAll();
+        res.render('inicioOrden',{ok:false,k:true,examen1:examen}); 
+    } catch (error) {
+        examen=[];
+        res.render('inicioOrden',{ok:false,k:true,examen1:examen}); 
+    }
+  
+
+}
+const prueba = async (req, res) => {
+  const para = req.body;
+  const muestraE = req.body.muestrasEntregada;
+  const muestraM = req.body.muestrasNoEntregada;
+  let contadorEntregada = 0;
+  let contadorNoEntregada = 0;
+
+  
+
+  try {
+    // Inicia la transacción
+
    
+    const orden = await ordenPostCris(req, res); // Pasa la transacción a la función ordenPost
+    //const examenes=await examenesGet();
+    const OrdenTrabajoId = orden.id;
+    
+
+    for (const examen of para.examenes) {
+      const ExamenId = examen.idExamen;
+
+      // Inserta el registro en ExamenOrden
+      await ExamenOrden.create({ OrdenTrabajoId:OrdenTrabajoId,ExamenId:ExamenId});
+
+     
+     
+      while (contadorEntregada < muestraE.length) {
+        await Muestra.create(
+          {
+            ordenTrabajoId: OrdenTrabajoId,
+            tipoMuestraId: req.body.muestrasEntregada[contadorEntregada].id,
+            entregada:1,
+          }
+          // Pasa la transacción
+        );
+        contadorEntregada++;
+      }
+      while (contadorNoEntregada < muestraM.length) {
+        await Muestra.create(
+          {
+            ordenTrabajoId: OrdenTrabajoId,
+            tipoMuestraId: req.body.muestrasNoEntregada[contadorNoEntregada].id,
+            entregada:0,
+          }
+          // Pasa la transacción
+        );
+        contadorNoEntregada++;
+      }
+    }
+    const data={
+      orden:orden.id,
+      codigoP:req.body.idDocumento,
+      nombreP:req.body.nombrePaciente,
+      documentoP:req.body.documentoP,
+      fechaP:orden.createdAt,
+      etiquetas:true,
+      ok:true
+    }
+    
+  
+   
+    return res.json(data);
+    //return res.redirect("/etiqueta");
+  
+    
+
+  } catch (error) {
+    console.error('Error en prueba:', error);
+  
+    return res.status(500).json({ error });
+  }
+};   
+
    module.exports={
-    ordenPost,ordenesGet,getOrdenes,ordenPostCris,eliminarorden ,getListaOrden
+    ordenPost,ordenesGet,getOrdenes,ordenPostCris,eliminarorden ,getListaOrden,crearorden,prueba
   }
   
   
