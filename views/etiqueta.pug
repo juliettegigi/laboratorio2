@@ -31,7 +31,7 @@ html(lang="en")
         p Fecha y Hora: #{fechaHora}
       .button-container
         button(id="imprimirButton") Imprimir
-        button(id="Cancelar") Cancelar 
+        button(id="cancelar") Cancelar 
       
  
   script.
@@ -49,6 +49,10 @@ html(lang="en")
     window.addEventListener("beforeprint", function() {
       hideButtons();
     });
+    document.getElementById("cancelar").addEventListener("click", function() {
+       window.location.href = '/orden'; 
+     
+     });
 
 
 
