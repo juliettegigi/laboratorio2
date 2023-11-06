@@ -71,10 +71,10 @@ const eliminarorden=async (req,res) => {
   }  
   const crearorden= async (req, res)=>{
     try {
-        examen=await Examen.findAll();
+        const examen=await Examen.findAll();
         res.render('inicioOrden',{ok:false,k:true,examen1:examen}); 
     } catch (error) {
-        examen=[];
+       const examen=[];
         res.render('inicioOrden',{ok:false,k:true,examen1:examen}); 
     }
   

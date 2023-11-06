@@ -1,18 +1,18 @@
 include navBar.pug   
-  .container
-    if ok
-      .contei
-      include search.pug
-    if k
-      .contein
-      include formularioOrden.pug
-    if j 
-      .contein 
-      include formularioEliminarOrden.pug
-  script.
-    let okas=#{ok}
-    if (okas) {
-      console.log(ok);
-    } else {
-      console.log("false");
-    }
+.container
+  if ok
+    .contei
+    include search.pug
+  if k
+    .contein
+    include formularioOrden.pug
+  if j 
+    .contein 
+    include formularioEliminarOrden.pug
+script.
+  let okas=#{ok};
+  if (okas) {
+    console.log(ok);
+  } else {
+    console.log("false");
+  }
