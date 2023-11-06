@@ -93,6 +93,8 @@ form(action= ruta?ruta:`/vistaGestionUsers/add` method="post" name= novalidate c
                         label(for="email") Rol:
                 .row
                     .col
+                        input(type='checkbox', id='paciente', name='rol', value='Paciente' , checked= form && form.rol && (form.rol==='Paciente' || form.rol.includes('Paciente')))
+                        label(for='paciente' ) Paciente
                         input(type='checkbox', id='tecnico', name='rol', value='Tecnico' , checked= form && form.rol && (form.rol==='Tecnico' || form.rol.includes('Tecnico')))
                         label(for='tecnico' ) Técnico
 

@@ -24,10 +24,10 @@ html
       br
       label(for="contrasena") Rol:
       select(id="opciones" name="nombreRol")
-        option(value="Paciente") Paciente
-        option(value="Administrativo") Administrativo
-        option(value="Tecnico") Tecnico
-        option(value="Bioquimico") Bioquimico
+        option(value="Paciente" selected=rol?rol==='Paciente':'') Paciente
+        option(value="Administrativo" selected=rol?rol==='Administrativo':'') Administrativo
+        option(value="Tecnico" selected=rol?rol==='Tecnico':'') Tecnico
+        option(value="Bioquimico" selected=rol?rol==='Bioquimico':'') Bioquimico
       input(type="submit")
       br
     script.

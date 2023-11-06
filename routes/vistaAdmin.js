@@ -38,7 +38,7 @@ router.get('/editar',async(req,res)=>{
 
 
 router.get('/inicio',async(req,res)=>{
-    res.render("inicioAdmin2/inicioAdmin2",{modal:false})
+    res.render("inicioAdmin2/inicioAdmin2",{modal:false,nombreUsuario:`${req.usuario.nombre} ${req.usuario.apellido}`})
 })
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////// PACIENTES

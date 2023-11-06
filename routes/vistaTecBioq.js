@@ -14,7 +14,10 @@ const { detValorRef } = require('../controllers/funciones/validaciones');
 
 
 router.get('/inicio', (req, res) => { 
-  res.render("tecnicoBioq/inicio", { modal: false }) })
+  console.log(req.usuario.Rols);
+  const soyPaciente=req.usuario.Rols.some(element => element.nombre==='Paciente')
+  console.log(soyPaciente);
+  res.render("tecnicoBioq/inicio", { modal: false ,soyPaciente}) })
 //router.get('/inicio',(req,res)=>{res.render("inicioAdmin2/inicioAdmin2")})
 
 router.get('/addet', async (req, res) => {

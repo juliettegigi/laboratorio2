@@ -33,8 +33,52 @@ router.get('/editar',async(req,res)=>{
 
 
 router.put('/editar',async(req,res)=>{
-            const {id,nombre,apellido,documento,matricula,fechaNacimiento,genero,telefono,direccion,email}=req.body
-            await Usuario.update({nombre,apellido,documento,matricula,fechaNacimiento,genero,telefono,direccion,email},{where:{id}})
+  
+  console.log("---------------------------------------------------");console.log(req.body);
+            const {id,nombre,apellido,documento,matricula,fechaNacimiento,genero,telefono,direccion,email,rol}=req.body
+            const usuario=await Usuario.findByPk(id)
+
+
+            let roles = await UsuarioRol.findAll({ where: { usuarioId:id },include:[ {model:Rol,attributes: ['nombre'] },
+                                                                                       {model:Usuario,attributes: ['nombre'] }
+                                                                                      ] 
+                                                   });
+            
+            roles=roles.map(elem=>elem.Rol.nombre)
+            if(rol && Array.isArray(rol)){
+              for(let r of rol){
+                if(!roles.includes(r)){
+                  const r2 = await Rol.findOne({ where: { nombre: r } });
+                  await usuario.addRol(r2);
+                }
+              }
+              for(let r of roles){            
+                   if(!rol.includes(r)){
+                      const r2 = await Rol.findOne({ where: { nombre: r } });
+                      await UsuarioRol.destroy({where:{usuarioId:id,rolId:r2.id}})
+                   }
+
+               }
+            }
+            else{
+              if(!roles.includes(rol)){
+                const r2 = await Rol.findOne({ where: { nombre: rol } });
+                await usuario.addRol(r2);
+              }
+              for(let r of roles){            
+                if(r!==rol){
+                   const r2 = await Rol.findOne({ where: { nombre: r } });
+                   await UsuarioRol.destroy({where:{usuarioId:id,rolId:r2.id}})
+                }
+
+            }
+            }
+
+          
+
+
+
+            await Usuario.update({nombre,apellido,documento,matricula,fechaNacimiento,genero,telefono,direccion,email},{where:{id}}) 
             return res.render("gestionUsers/inicio")
 })
 

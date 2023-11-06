@@ -1,14 +1,12 @@
 nav.navbar.navbar-expand-lg.navbar-light.bg-light
   .container
-    a.navbar-brand(href="#") Mi Sitio
+    a.navbar-brand(href="/vistaTecBioq/inicio") Mi Sitio
 
     button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
       span.navbar-toggler-icon
 
     #navbarNav.collapse.navbar-collapse
       ul.navbar-nav
-        li.nav-item
-          a.nav-link(href="/vistaTecBioq/inicio") Inicio
         li.nav-item.dropdown
           a.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false')
             | Examen
@@ -53,3 +51,9 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
               hr.dropdown-divider
             li
               a.dropdown-item(href="/vistaTecBioq/activarRef") Activar/desactivar
+        if soyPaciente 
+          li.nav-item.dropdown
+          a.nav-link.dropdown-toggle(href='#', role='button', data-bs-toggle='dropdown', aria-expanded='false')
+            | Ingresar como paciente
+        li.nav-item.position-absolute.top-1.end-0
+           a.nav-link(href="/salir") cerrar sesión
