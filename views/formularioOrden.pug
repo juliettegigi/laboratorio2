@@ -135,20 +135,21 @@ html
      });
        //const examenes = !{JSON.stringify(examen1)};
        const examenes = examen1 ? JSON.stringify(examen1) : JSON.stringify([]);
-
+      
         // Convierte las opciones de JSON del backend
     $(document).ready(function() {
-       console.log(examenes[0]);
+     
       $('#examen1').select2({
-       data: examenes,
+       data: examenes.nombre,
        placeholder: 'Selecciona un examen', // Mensaje para la opción por defecto
        allowClear: true, // Permite borrar la selección
-       width: '100%', // Ajusta el ancho del select
+       width: '100%',
+        // Ajusta el ancho del select
      });
      
      $('#examen1').select2({ 
       dropdownAutoWidth : true,
-      tags: true
+      tags: false
     });
     });
 
