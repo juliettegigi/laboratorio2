@@ -8,6 +8,7 @@ const { check } = require('express-validator');
 const { validarCampos0 } = require('../middlewares/validar-campos');
 const { usuarioExiste, emailExiste, compararPass, nuevaPassCheck } = require('../controllers/funciones/validaciones');
 const { listaDePacientes } = require('../controllers/pacientes');
+const {muestrasGetPorOrdenTrabajoId}=require('../controllers/muestras');
 
 
 
@@ -75,6 +76,21 @@ router.put('/editarPaciente',async(req,res)=>{
             await Usuario.update({nombre,apellido,documento,matricula,fechaNacimiento,genero,telefono,direccion,email,embarazo},{where:{id}})
             return res.render("gestionPacientes/inicio",{pacientes})
 })
+router.get('/editaras', async (req, res) => {
+    const { ordenId } = req.query;
+    const ordenTrabajoId = ordenId;  // Obtener ordenTrabajoId de req.query
+
+    if (ordenId) {
+        const orden = await OrdenTrabajo.findByPk(ordenId, { include: [{ model: Usuario, attributes: { exclude: ['contrasena'] } }, { model: Estado }] });
+
+        const estados = await getEstadoOrden();
+        const muestras = await muestrasGetPorOrdenTrabajoId(req,res,ordenTrabajoId);
+
+        return res.render("administrativo/actualizar", { orden, estados, muestras });
+    }
+    return res.json({ p: "" });
+});
+
 
 
 

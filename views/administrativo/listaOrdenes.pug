@@ -33,7 +33,7 @@ html
                   td= orden.medico
                   td= orden.diagnostico
                   td 
-                    form(action=`/vistaAdmin/editar` method="get")
+                    form(action=`/vistaAdmin/editaras` method="get")
                           input(type="hidden" name="ordenId" value=orden.id)
                           input(type="submit" value="Editar" class="btn btn-primary")
                   td
