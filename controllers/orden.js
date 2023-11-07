@@ -84,6 +84,7 @@ const eliminarorden=async (req,res) => {
 }
 const prueba = async (req, res) => {
   const para = req.body;
+  console.log(para);
   const muestraE = req.body.muestrasEntregada;
   const muestraM = req.body.muestrasNoEntregada;
   let contadorEntregada = 0;
@@ -116,7 +117,7 @@ const prueba = async (req, res) => {
             tipoMuestraId: req.body.muestrasEntregada[contadorEntregada].id,
             entregada:1,
           }
-          // Pasa la transacción
+          // Pasa la transacciónx
         );
         await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'muestras',operacion:'insert',detalleAnterior:JSON.stringify(m._previousDataValues),detalleNuevo:JSON.stringify(m.dataValues)})
         
