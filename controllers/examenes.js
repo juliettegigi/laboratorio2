@@ -131,7 +131,7 @@ const examenPost= async(req,res)=>{
 const cargarmuestras=async (req, res) => {
     const id=req.body.examen1;
    
-
+console.log("puto");
     
 try {
     const tipomues = await TipoMuestra.findOne({

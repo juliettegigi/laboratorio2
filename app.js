@@ -34,7 +34,7 @@ app.use(
 //app.use('', require('./routes/login'));
 
 
-
+app.use("/examenes", require('./routes/examenes'));
 app.use('/administradorDB',require('./routes/administradorDB'));// crea un usuario con su respectivo rol
 
 app.use('/pacientes',[validarJWT,tieneRole('Administrativo')],require('./routes/pacientes'));
