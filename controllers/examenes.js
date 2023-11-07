@@ -1,6 +1,6 @@
-const {Examen,OrdenTrabajo,TipoExamen,TipoMuestra,Determinacion,ValorReferencia,sequelize,ExamenDeterminacion}=require('../models');
+const {Examen,OrdenTrabajo,TipoExamen,TipoMuestra,Determinacion,ExamenOrden,sequelize,ExamenDeterminacion,Auditoria}=require('../models');
 
-const Sequelize = require('sequelize');
+
 
 const { detGet } = require('./determinaciones');
 const { tipoMuestrasGet } = require('./muestras');
@@ -18,7 +18,9 @@ const examenesGetTodos=async()=>{
 
 const activarExamen=async(req,res)=>{
   const{id}=req.body;
-  await Examen.restore({where:{id}}) 
+  await Examen.restore({where:{id}})
+  await ExamenOrden.restore({where:{examenId:id}})
+  await ExamenDeterminacion.restore({where:{examenId:id}}) 
   const examenes=await examenesGetTodos();
   res.render('tecnicoBioq/activarExamen',{examenes})
 }
@@ -26,6 +28,7 @@ const desactivarExamen=async(req,res)=>{
   const{id}=req.body;
 
   await ExamenOrden.destroy({where:{examenId:id}})
+  await ExamenDeterminacion.destroy({where:{examenId:id}})
   await Examen.destroy({where:{id}}) 
   const examenes=await examenesGetTodos();
   res.render('tecnicoBioq/activarExamen',{examenes})
@@ -79,7 +82,8 @@ const examenPost= async(req,res)=>{
     try{
      let {eNombre,demora,detalle,muestras,tipoExamen,detExistentes}=req.body
       const examen=await Examen.create({nombre:eNombre,detalle,demora}, { transaction: t });
-   
+      await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'examenes',operacion:'insert',detalleAnterior:JSON.stringify(examen._previousDataValues),detalleNuevo:JSON.stringify(examen.dataValues)})
+        
    
      for(let muestra of muestras){
                 const m=await TipoMuestra.findByPk(muestra)

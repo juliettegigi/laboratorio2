@@ -1,4 +1,4 @@
-const {TipoMuestra,Muestra,OrdenTrabajo}=require("../models");
+const {TipoMuestra,Muestra,OrdenTrabajo,Auditoria}=require("../models");
 const { ordenesGet, getListaOrden } = require("./orden");
 
 
@@ -21,7 +21,9 @@ const postMuestra=async(req,res)=>{
        console.log(req.body);
        const{ordenTrabajoId,tipoMuestraId}=req.body
        const entregada=req.body.entregada?true:false;
-       await Muestra.create({ordenTrabajoId,tipoMuestraId,entregada})
+       const m=await Muestra.create({ordenTrabajoId,tipoMuestraId,entregada})
+       await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'muestras',operacion:'insert',detalleAnterior:JSON.stringify(m._previousDataValues),detalleNuevo:JSON.stringify(m.dataValues)})
+        
        const tipoM= await tipoMuestrasGet();
         const ordenes= await getListaOrden();
        res.render('tecnicoBioq/addMuestra',{ordenes,tipoM,modal:"Muestra agregada."})

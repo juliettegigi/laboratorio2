@@ -6,7 +6,9 @@ const valorReferenciaPost=async(req,res)=>{
     try {
         const {determinacionId,edadMin,edadMax,sexo,embarazo,valorMinimo,valorMaximo}=req.body;
 
-        await ValorReferencia.create({determinacionId,edadMin,edadMax,sexo,embarazo,valorMinimo,valorMaximo});
+        const vrCreado=await ValorReferencia.create({determinacionId,edadMin,edadMax,sexo,embarazo,valorMinimo,valorMaximo});
+        console.log("//////////////////////////////////")
+        console.log(vrCreado);
         return res.json({msg:"valor de referencia insertada en la DB"})
     } catch (error) {
         console.log(error);
@@ -43,8 +45,12 @@ const postValorRef=async(req,res)=>{
     }
 
             
-    await ValorReferencia.create({determinacionId: parseInt(determinacionId, 10),edadMin,edadMax,sexo,embarazo,valorMinimo,valorMaximo})
+    const vrCreado=await ValorReferencia.create({determinacionId: parseInt(determinacionId, 10),edadMin,edadMax,sexo,embarazo,valorMinimo,valorMaximo})
+    console.log("//////////////////////////////////")
+        console.log(vrCreado);
     let arrDet= await detGet();
+
+    //await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'valorreferencias',operacion:'insert'})
     res.render('tecnicoBioq/addReferencia',{arrDet,modal:"Valor de referencia agregado."})
  }
 

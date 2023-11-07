@@ -1,5 +1,5 @@
 const { Sequelize} = require('sequelize');
-const {OrdenTrabajo,Usuario,Estado,Examen,ExamenOrden,Muestra}=require('../models');
+const {OrdenTrabajo,Usuario,Estado,Examen,ExamenOrden,Muestra,Auditoria}=require('../models');
 //const { examenesGet } = require('./examenes');
 
 
@@ -9,7 +9,8 @@ const ordenPost = async (req, res) => {
       const { usuarioId,medico, diagnostico,estadoId } = req.body;
 
       const ordenTrabajo = await OrdenTrabajo.create({ usuarioId,medico,diagnostico,estadoId});
-
+      await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'ordenTrabajo',operacion:'insert',detalleAnterior:JSON.stringify(ordenTrabajo._previousDataValues),detalleNuevo:JSON.stringify(ordenTrabajo.dataValues)})
+        
       return res.status(201).json(ordenTrabajo);
     } catch (error) {  
       console.error('Error al crear la orden de trabajo:', error);
@@ -57,7 +58,8 @@ const ordenPostCris = async (req, res) => {
       }
   
     );
-
+    await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'ordentrabajos',operacion:'insert',detalleAnterior:JSON.stringify(ordenTrabajo._previousDataValues),detalleNuevo:JSON.stringify(ordenTrabajo.dataValues)})
+       
     return ordenTrabajo;
   } catch (error) {
     console.error('Error al crear la orden de trabajo:', error);
@@ -102,12 +104,13 @@ const prueba = async (req, res) => {
       const ExamenId = examen.idExamen;
 
       // Inserta el registro en ExamenOrden
-      await ExamenOrden.create({ OrdenTrabajoId:OrdenTrabajoId,ExamenId:ExamenId});
-
+      const e=await ExamenOrden.create({ OrdenTrabajoId:OrdenTrabajoId,ExamenId:ExamenId});
+      await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'examenordenes',operacion:'insert',detalleAnterior:JSON.stringify(e._previousDataValues),detalleNuevo:JSON.stringify(e.dataValues)})
+        
      
      
       while (contadorEntregada < muestraE.length) {
-        await Muestra.create(
+        const m=await Muestra.create(
           {
             ordenTrabajoId: OrdenTrabajoId,
             tipoMuestraId: req.body.muestrasEntregada[contadorEntregada].id,
@@ -115,10 +118,12 @@ const prueba = async (req, res) => {
           }
           // Pasa la transacción
         );
+        await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'muestras',operacion:'insert',detalleAnterior:JSON.stringify(m._previousDataValues),detalleNuevo:JSON.stringify(m.dataValues)})
+        
         contadorEntregada++;
       }
       while (contadorNoEntregada < muestraM.length) {
-        await Muestra.create(
+        const m=await Muestra.create(
           {
             ordenTrabajoId: OrdenTrabajoId,
             tipoMuestraId: req.body.muestrasNoEntregada[contadorNoEntregada].id,
@@ -126,6 +131,8 @@ const prueba = async (req, res) => {
           }
           // Pasa la transacción
         );
+        await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'muestras',operacion:'insert',detalleAnterior:JSON.stringify(m._previousDataValues),detalleNuevo:JSON.stringify(m.dataValues)})
+       
         contadorNoEntregada++;
       }
     }

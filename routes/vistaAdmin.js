@@ -2,7 +2,7 @@ const{Router}=require('express');
 const { Sequelize} = require('sequelize');
 const bcryptjs=require('bcryptjs');
 const { getOrdenes } = require('../controllers/orden');
-const {OrdenTrabajo,Usuario,Estado,Rol}=require('../models');
+const {OrdenTrabajo,Usuario,Estado,Rol,Auditoria}=require('../models');
 const { getEstadoOrden } = require('../controllers/estadoOrden');
 const { check } = require('express-validator');
 const { validarCampos0 } = require('../middlewares/validar-campos');
@@ -113,7 +113,8 @@ async(req,res)=>{
       const { nombre, apellido, documento, fechaNacimiento, genero, telefono, direccion, email, matricula,embarazo, rol } = req.body;
       const contrasena = documento;
       const usuario = await Usuario.create({contrasena,email,nombre,apellido,documento,fechaNacimiento,genero,telefono,direccion,matricula,embarazo}, { transaction: t });
-   
+      await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'usuarios',operacion:'insert',detalleAnterior:JSON.stringify(usuario._previousDataValues),detalleNuevo:JSON.stringify(usuario.dataValues)})
+        
      
      
             const r = await Rol.findOne({ where: { nombre: 'Paciente' } });

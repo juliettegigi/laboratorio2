@@ -4,7 +4,7 @@ const { check } = require('express-validator');
 const { detGet, detPost, detGetTodas, activarDeterminacion, desactivarDeterminacion } = require('../controllers/determinaciones');
 const { tipoMuestrasGet, postMuestra, getVistaMuestra, activarMuestra, desactivarMuestra, muestrasGetTodos } = require('../controllers/muestras');
 const router = Router();
-const { ValorReferencia} = require("../models");
+const { ValorReferencia,Auditoria} = require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
 const { tieneOrden, examenesGet, examenPost, putExamen, activarExamen, examenesGetTodos, desactivarExamen } = require('../controllers/examenes');
 const { postValorRef, refGetTodos, activarRef, desactivarRef, crearArregloValorRefyId } = require('../controllers/valorreferencia');
@@ -145,7 +145,9 @@ router.post('/addValorRef2', [
     for(let elem of arr){
       if(req.obj1[elem]){      
         for(let valores of req.obj1[elem]){
-         await ValorReferencia.create({determinacionId,edadMin:valores[0],edadMax:valores[1],sexo:elem==='hombre'?'M':'F',embarazo:elem==='embarazada',valorMinimo:valores[2],valorMaximo:valores[3]});
+         const vrCreado=await ValorReferencia.create({determinacionId,edadMin:valores[0],edadMax:valores[1],sexo:elem==='hombre'?'M':'F',embarazo:elem==='embarazada',valorMinimo:valores[2],valorMaximo:valores[3]});
+         
+        await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'usuarios',operacion:'insert',detalleAnterior:JSON.stringify(vrCreado._previousDataValues),detalleNuevo:JSON.stringify(vrCreado.dataValues)})
         }
       }}
    

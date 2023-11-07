@@ -1,10 +1,8 @@
-const { Sequelize} = require('sequelize');
-const {Examen}=require('../models');
-//const {TipoMuestra}=require('../models');
+
 const { ordenPostCris } = require('./orden');
 
 
-const { Usuario, OrdenTrabajo, ExamenOrden,Muestra } = require('../models'); 
+const { ExamenOrden,Muestra,Auditoria } = require('../models'); 
 const examenOrdenPost = async (req, res) => {
 const { OrdenTrabajoId,ExamenId,tipoMuestraId,entregada }=req.body;
 /*
@@ -16,7 +14,9 @@ entregar en el caso que le falte entregar la variable entregada viene en falso .
 let ordenId=OrdenTrabajoId;
    
 try { 
-    await  ExamenOrden.create({OrdenTrabajoId,ExamenId});
+    const ex=await  ExamenOrden.create({OrdenTrabajoId,ExamenId});
+    await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'examenOrdenes',operacion:'insert',detalleAnterior:JSON.stringify(ex._previousDataValues),detalleNuevo:JSON.stringify(ex.dataValues)})
+      
     await Muestra.create({
     ordenId,
     tipoMuestraId,
@@ -34,8 +34,8 @@ try {
 
 const prueba = async (req, res) => {
   const para = req.body;
-  muestraE = req.body.muestrasEntregada;
-  muestraM = req.body.muestrasNoEntregada;
+  const muestraE = req.body.muestrasEntregada;
+  const muestraM = req.body.muestrasNoEntregada;
   let contadorEntregada = 0;
   let contadorNoEntregada = 0;
 

@@ -6,7 +6,7 @@ const { Sequelize} = require('sequelize');
 
 const { check } = require('express-validator');
 const { emailExiste, compararPass, nuevaPassCheck } = require('../controllers/funciones/validaciones');
-const {Usuario,Rol,UsuarioRol}=require('../models');
+const {Usuario,Rol,UsuarioRol,Auditoria}=require('../models');
 const { usersInternosGet } = require('../controllers/users');
 
 
@@ -140,7 +140,8 @@ async(req,res)=>{
       const { nombre, apellido, documento, fechaNacimiento, genero, telefono, direccion, email, matricula,embarazo, rol } = req.body;
       const contrasena = documento;
       const usuario = await Usuario.create({contrasena,email,nombre,apellido,documento,fechaNacimiento,genero,telefono,direccion,matricula,embarazo}, { transaction: t });
-   
+      
+      await Auditoria.create({usuarioId:req.usuario.id,tablaAfectada:'valorreferencias',operacion:'insert',detalleAnterior:JSON.stringify(usuario._previousDataValues),detalleNuevo:JSON.stringify(usuario.dataValues)},{transaccion:t})
      
      
   
