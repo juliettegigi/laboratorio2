@@ -9,7 +9,8 @@ const {getOrdenes}=require('./orden');
 
 
 const examenesGetTodos=async()=>{
-  return  await Examen.findAll({paranoid:false,include:[{model:OrdenTrabajo},{model:TipoMuestra}]})
+  return  await Examen.findAll({paranoid:false,include:[{model:OrdenTrabajo},{model:TipoMuestra},{model:TipoExamen}]})
+
 }
 
 
@@ -17,6 +18,12 @@ const examenesGetTodos=async()=>{
 const activarExamen=async(req,res)=>{
   const{id}=req.body;
   await Examen.restore({where:{id}}) 
+  const examenes=await examenesGetTodos();
+  res.render('tecnicoBioq/activarExamen',{examenes})
+}
+const desactivarExamen=async(req,res)=>{
+  const{id}=req.body;
+  await Examen.destroy({where:{id}}) 
   const examenes=await examenesGetTodos();
   res.render('tecnicoBioq/activarExamen',{examenes})
 }
@@ -35,7 +42,6 @@ try {
 
 const tieneOrden=async(req,res)=>{
     try{
-        console.log("holiiii")
         const{id}=req.params;
         const examen=await Examen.findByPk(id, 
             {include: [
@@ -244,5 +250,5 @@ const putExamen=async(req,res)=>{
   };
 
 module.exports={
-   examenesGet,examenPost,tieneOrden,crearorden,cargarmuestras,putExamen,eliminadoLogico,eliminarorden,activarExamen,examenesGetTodos
+   examenesGet,examenPost,tieneOrden,crearorden,cargarmuestras,putExamen,eliminadoLogico,eliminarorden,activarExamen,examenesGetTodos,desactivarExamen
   }

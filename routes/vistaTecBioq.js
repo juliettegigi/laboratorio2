@@ -1,17 +1,16 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const bcryptjs=require('bcryptjs');
 
 const { detGet, detPost, detGetTodas, activarDeterminacion, desactivarDeterminacion } = require('../controllers/determinaciones');
 const { tipoMuestrasGet, postMuestra, getVistaMuestra, activarMuestra, desactivarMuestra, muestrasGetTodos } = require('../controllers/muestras');
 const router = Router();
-const { ValorReferencia,Usuario } = require("../models");
+const { ValorReferencia} = require("../models");
 const { tipoExamenesGet } = require('../controllers/tipoexamen');
-const { tieneOrden, examenesGet, examenPost, putExamen, activarExamen, examenesGetTodos } = require('../controllers/examenes');
+const { tieneOrden, examenesGet, examenPost, putExamen, activarExamen, examenesGetTodos, desactivarExamen } = require('../controllers/examenes');
 const { postValorRef, refGetTodos, activarRef, desactivarRef, crearArregloValorRefyId } = require('../controllers/valorreferencia');
 const {  procesarBody2 } = require('../middlewares/formExamen');
 const { validarCampos0 } = require('../middlewares/validar-campos');
-const { detValorRef, nuevaPassCheck, compararPass } = require('../controllers/funciones/validaciones');
+const { detValorRef } = require('../controllers/funciones/validaciones');
 
 
 router.get('/inicio', (req, res) => { 
@@ -73,6 +72,7 @@ router.get('/activarExamen',async (req, res) => {
   res.render('tecnicoBioq/activarExamen', { examenes, modal: false })
 })
 router.post('/activarExamen', activarExamen)
+router.post('/desactivarExamen', desactivarExamen)
 router.post('/activarMuestra', activarMuestra)
 router.post('/desactivarMuestra', desactivarMuestra)
 router.post('/activarRef', activarRef)

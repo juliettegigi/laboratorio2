@@ -4,34 +4,35 @@ include navBar.pug
     thead
       tr
         th Nombre
-        th Valor mínimo
-        th Valor máximo
-        th Unidad
+        th Tipo examen
+        th Tipo muestra
         th 
-    - console.log({determinaciones})    
-    if determinaciones
+    - console.log(examenes)
+    - console.log("------------------------------------")
+    - console.log(examenes[0].TipoMuestra)    
+    if examenes
       tbody
-        each det in determinaciones
+        each e in examenes
+         if e
           tr
-            td= det.nombre 
-            td= det.valorMin 
-            td= det.valorMax 
-            td= det.unidadMedida
+            td= e.nombre 
+            td= e.TipoExamen?e.TipoExamen.nombre:'' 
+            td= e.TipoMuestra?e.TipoMuestra.nombre:''
             td 
-              if det.deletedAt
-                form(action=`/vistaTecBioq/activarDeterminacion` method="post")
-                      input(type="hidden" name="id" value=det.id)
+              if e.deletedAt
+                form(action=`/vistaTecBioq/activarExamen` method="post")
+                      input(type="hidden" name="id" value=e.id)
                       input(type="submit" value="Activar" class="btn btn-primary")
               else 
-                form(action=`/vistaTecBioq/desactivarDeterminacion` method="post")
-                      input(type="hidden" name="id" value=det.id)
+                form(action=`/vistaTecBioq/desactivarExamen` method="post")
+                      input(type="hidden" name="id" value=e.id)
                       input(type="submit" value="Desactivar" class="btn btn-primary")
     tfoot
       tr
         th Nombre
-        th Tipo de muestra
         th Tipo de examen
-        th Editar
+        th Tipo de muestra
+        th Activar / Desactivar
 
 script(src="https://code.jquery.com/jquery-3.7.0.js") 
 script(src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js")         
