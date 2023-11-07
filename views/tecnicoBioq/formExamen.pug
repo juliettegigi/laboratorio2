@@ -1,161 +1,147 @@
-html
-    head  
-          script(src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
-                 integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
-                 crossorigin="anonymous")
-          link(rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css")
-          link(href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous")
-          script(src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous")
-          title Alfgo 
-    body
-      if modal
-          include ../modal.pug
-      .container-fluid
-        include navBar.pug
-      .container.mt-4   
-              form(action=`/vistaTecBioq/${ruta}`, method="post" name="formu")
-                if form && form.id
-                 input(name="id" type="hidden" value=form.id)
-                .row
-                  .mb-5.col-3
-                    label(for="nombre", class="form-label ") Nombre:
-                    input#nombre.form-control(type="text", name="eNombre" required,value= form && form.eNombre ? form.eNombre: "")
-                    - if(form && form.nombreExiste)
-                     .row
-                      .alert.alert-danger
-                        p El examen ya está registrado.
-                  .mb-5.col-3
-                    label(for="demora", class="form-label ") Demora:
-                    input#demora.form-control(type="number", name="demora" required,value= form && form.demora ? form.demora: "")
-                          
-                .row
-                  .mb-3.col-lg-3.col-md-3.col-sm-3
-                     label(for="muestras", class="form-label") Muestras:
-                     each muestra in arrMuestras
-                       .form-check
-                         input.form-check-input(type="radio", id=`muestra-${muestra.id}`, name="muestras", value=muestra.id required, checked= form && (parseInt(form.muestras) === muestra.id) )
-                         label.form-check-label(for=`muestra-${muestra.id}`)= muestra.nombre
-                  .mb-3.col-3
-                     label(for="tipoExamen", class="form-label") Tipo examen:
-                     each te in arrTe
-                       .form-check
-                         input.form-check-input(type="radio", id=`te-${te.id}`, name="tipoExamen", value=te.id required, checked= form && (parseInt(form.tipoExamen) === te.id))
-                         label.form-check-label(for=`te-${te.id}`)= te.nombre             
-                  .mb-3.col-lg-4.col-md-6.col-sm-12
-                    label(for="detalle", class="form-label") Detalle:
-                    textarea#detalle.form-control(name="detalle", rows="3")= form && form.detalle ?form.detalle:"" 
-                .container.mt-4
-                    .row.mt-5 
-                      .col-lg-4.col-md-6.col-sm-12
-                        .row
-                          label(for="determinacion", class="form-label") Determinaciones existentes:
-                        .row  
-                          .col-lg-8.col-md-8.col-sm-12
-                            input#determinacion.form-control(list="datalistOptions", name="determinacion", placeholder="Type to search...")
-                            datalist(id="datalistOptions")
-                              each det in arrDet
-                                option(id=det.id)= det.nombre   
-                            div#listaDets
-                              ul
-                                if form && form.detExistentes
-                                  - let li=0
-                                  each detId in form.detExistentes
-                                    - const det=arrDet.find(elem=>elem.id==detId)
-                                    li(id=`lili-${li}`)
-                                      = det.nombre
-                                      input(name="detExistentes" type="hidden" value=detId)
-                                      button(class="btn btn-close danger btn-sm btnLili" type="button" id=`btnLili-${li}`)   
-                          .col-lg-1.col-md-2.col-sm-2    
-                            button.btn.btn-primary(type="submit") Enviar
-    script.
-         const btnsLili=document.querySelectorAll('.btnLili')
-         for(btn of btnsLili){          
-           btn.addEventListener('click', (e) => {
-                           const[,b]=e.target.id.split("-"); 
-                           const li=document.getElementById(`lili-${b}`)
-                           li.remove();
-                         });
-         }
-         const modal1=("#{modal}"!=="false")
-         if(modal1){
-         const miModal = new bootstrap.Modal(document.getElementById('miModal'));
-           miModal.show();
-           }
-            const eventoBtnMas=(id,m,n)=>{
-                         let clicksCantidad=0;
-                        return (e)=>{
-                          let u=e.currentTarget.getAttribute("ultimafila");
-                          if(u===null)
-                            u=0
-                               inputs(`${id}-${u}`,m,n)                               
-                               let id2=id.slice(0,-1)
-                               const input= document.querySelector(`[name="${id2}${u}filay${n}"]`)
-                               if(input)input.focus()
-                               e.currentTarget.setAttribute("ultimafila",++u)
-                         } 
-                        }           
-           var determinaciones = !{form !== null ? JSON.stringify(form) : 'null'};
-             const listaDets = document.getElementById('listaDets').querySelector('ul');
-             const inputDet = document.getElementById('determinacion');
-             const datalistOptions = document.getElementById('datalistOptions').querySelectorAll('option');      
-                 inputDet.addEventListener('input', () => {
-                     const valorSeleccionado = inputDet.value;
-                     if (valorSeleccionado.trim() !== '') { 
-                       const option = Array.from(datalistOptions).find(option => option.value === valorSeleccionado);
-                       if (option) {
-                         const li = document.createElement('li');
-                         const i = document.createElement('input');
-                         i.name = 'detExistentes';
-                         i.value = option.id;
-                         i.type = 'hidden';
-                         li.textContent = valorSeleccionado;
-                         li.appendChild(i);
-                         const cruz = document.createElement('button');
-                         cruz.className = 'btn btn-close danger btn-sm';
-                         cruz.addEventListener('click', () => {
-                           li.remove();
-                         });
-                         li.appendChild(cruz);
-                         listaDets.appendChild(li);
-                         inputDet.value = '';
-                       }
-                     }
-                   });
-
-             const addBtn= document.getElementById('addFieldsButton');
-             const acordeon=document.getElementById("acordeon");
-             let i=0;
-                //////////////////////////////////////
-           
-                   function eliminarItem(itemId) {
-                       const item = document.getElementById(itemId);
-                      if (item) {
-                           item.remove();
-                       }
-                   }
-              const btnEliminarItem=(i)=>{
-                const eliminarBtn=document.createElement('button')
-                   eliminarBtn.id=`eliminarBtn-${i}`
-                   eliminarBtn.classList.add("btn", "btn-close" ,"danger", "btn-sm")                
-                  eliminarBtn.addEventListener('click', e=>{
-                       eliminarItem(`item-${i}`);
+include navBar.pug
+if modal
+    include ../modal.pug
+.container.mt-4   
+        form(action=`/vistaTecBioq/${ruta}`, method="post" name="formu")
+          if form && form.id
+           input(name="id" type="hidden" value=form.id)
+          .row
+            .mb-5.col-3
+              label(for="nombre", class="form-label ") Nombre:
+              input#nombre.form-control(type="text", name="eNombre" required,value= form && form.eNombre ? form.eNombre: "")
+              - if(form && form.nombreExiste)
+               .row
+                .alert.alert-danger
+                  p El examen ya está registrado.
+            .mb-5.col-3
+              label(for="demora", class="form-label ") Demora:
+              input#demora.form-control(type="number", name="demora" required,value= form && form.demora ? form.demora: "")
+                    
+          .row
+            .mb-3.col-lg-3.col-md-3.col-sm-3
+               label(for="muestras", class="form-label") Muestras:
+               each muestra in arrMuestras
+                 .form-check
+                   input.form-check-input(type="radio", id=`muestra-${muestra.id}`, name="muestras", value=muestra.id required, checked= form && (parseInt(form.muestras) === muestra.id) )
+                   label.form-check-label(for=`muestra-${muestra.id}`)= muestra.nombre
+            .mb-3.col-3
+               label(for="tipoExamen", class="form-label") Tipo examen:
+               each te in arrTe
+                 .form-check
+                   input.form-check-input(type="radio", id=`te-${te.id}`, name="tipoExamen", value=te.id required, checked= form && (parseInt(form.tipoExamen) === te.id))
+                   label.form-check-label(for=`te-${te.id}`)= te.nombre             
+            .mb-3.col-lg-4.col-md-6.col-sm-12
+              label(for="detalle", class="form-label") Detalle:
+              textarea#detalle.form-control(name="detalle", rows="3")= form && form.detalle ?form.detalle:"" 
+          .container.mt-4
+              .row.mt-5 
+                .col-lg-4.col-md-6.col-sm-12
+                  .row
+                    label(for="determinacion", class="form-label") Determinaciones existentes:
+                  .row  
+                    .col-lg-8.col-md-8.col-sm-12
+                      input#determinacion.form-control(list="datalistOptions", name="determinacion", placeholder="Type to search...")
+                      datalist(id="datalistOptions")
+                        each det in arrDet
+                          option(id=det.id)= det.nombre   
+                      div#listaDets
+                        ul
+                          if form && form.detExistentes
+                            - let li=0
+                            each detId in form.detExistentes
+                              - const det=arrDet.find(elem=>elem.id==detId)
+                              li(id=`lili-${li}`)
+                                = det.nombre
+                                input(name="detExistentes" type="hidden" value=detId)
+                                button(class="btn btn-close danger btn-sm btnLili" type="button" id=`btnLili-${li}`)   
+                    .col-lg-1.col-md-2.col-sm-2    
+                      button.btn.btn-primary(type="submit") Enviar
+script.
+     const btnsLili=document.querySelectorAll('.btnLili')
+     for(btn of btnsLili){          
+       btn.addEventListener('click', (e) => {
+                       const[,b]=e.target.id.split("-"); 
+                       const li=document.getElementById(`lili-${b}`)
+                       li.remove();
                      });
-                     return eliminarBtn
-              }
-
-             if(determinaciones && determinaciones.determinaciones){
-              for(i=0; i<determinaciones.determinaciones.length;i++){   
-                 const item=document.getElementById(`header-${i}`)
-                 
-                   item.appendChild(btnEliminarItem(i))
-                 const btn=document.getElementById(`btnHombre${i}`)
-                 btn.addEventListener('click',eventoBtnMas(`Hombre${i}`,`ac2-0`,i)) 
-                 const btn2=document.getElementById(`btnMujer${i}`)
-                 btn2.addEventListener('click',eventoBtnMas(`Mujer${i}`,`ac2-1`,i))
-                 const btn3=document.getElementById(`btnEmbarazada${i}`)
-                 btn3.addEventListener('click',eventoBtnMas(`Embarazada${i}`,`ac2-2`,i))
-
-              }
-               i=determinaciones.determinaciones.length===0?0:determinaciones.determinaciones.length
-               
-             }
+     }
+     const modal1=("#{modal}"!=="false")
+     if(modal1){
+     const miModal = new bootstrap.Modal(document.getElementById('miModal'));
+       miModal.show();
+       }
+        const eventoBtnMas=(id,m,n)=>{
+                     let clicksCantidad=0;
+                    return (e)=>{
+                      let u=e.currentTarget.getAttribute("ultimafila");
+                      if(u===null)
+                        u=0
+                           inputs(`${id}-${u}`,m,n)                               
+                           let id2=id.slice(0,-1)
+                           const input= document.querySelector(`[name="${id2}${u}filay${n}"]`)
+                           if(input)input.focus()
+                           e.currentTarget.setAttribute("ultimafila",++u)
+                     } 
+                    }           
+       var determinaciones = !{form !== null ? JSON.stringify(form) : 'null'};
+         const listaDets = document.getElementById('listaDets').querySelector('ul');
+         const inputDet = document.getElementById('determinacion');
+         const datalistOptions = document.getElementById('datalistOptions').querySelectorAll('option');      
+             inputDet.addEventListener('input', () => {
+                 const valorSeleccionado = inputDet.value;
+                 if (valorSeleccionado.trim() !== '') { 
+                   const option = Array.from(datalistOptions).find(option => option.value === valorSeleccionado);
+                   if (option) {
+                     const li = document.createElement('li');
+                     const i = document.createElement('input');
+                     i.name = 'detExistentes';
+                     i.value = option.id;
+                     i.type = 'hidden';
+                     li.textContent = valorSeleccionado;
+                     li.appendChild(i);
+                     const cruz = document.createElement('button');
+                     cruz.className = 'btn btn-close danger btn-sm';
+                     cruz.addEventListener('click', () => {
+                       li.remove();
+                     });
+                     li.appendChild(cruz);
+                     listaDets.appendChild(li);
+                     inputDet.value = '';
+                   }
+                 }
+               });
+         const addBtn= document.getElementById('addFieldsButton');
+         const acordeon=document.getElementById("acordeon");
+         let i=0;
+            //////////////////////////////////////
+       
+               function eliminarItem(itemId) {
+                   const item = document.getElementById(itemId);
+                  if (item) {
+                       item.remove();
+                   }
+               }
+          const btnEliminarItem=(i)=>{
+            const eliminarBtn=document.createElement('button')
+               eliminarBtn.id=`eliminarBtn-${i}`
+               eliminarBtn.classList.add("btn", "btn-close" ,"danger", "btn-sm")                
+              eliminarBtn.addEventListener('click', e=>{
+                   eliminarItem(`item-${i}`);
+                 });
+                 return eliminarBtn
+          }
+         if(determinaciones && determinaciones.determinaciones){
+          for(i=0; i<determinaciones.determinaciones.length;i++){   
+             const item=document.getElementById(`header-${i}`)
+             
+               item.appendChild(btnEliminarItem(i))
+             const btn=document.getElementById(`btnHombre${i}`)
+             btn.addEventListener('click',eventoBtnMas(`Hombre${i}`,`ac2-0`,i)) 
+             const btn2=document.getElementById(`btnMujer${i}`)
+             btn2.addEventListener('click',eventoBtnMas(`Mujer${i}`,`ac2-1`,i))
+             const btn3=document.getElementById(`btnEmbarazada${i}`)
+             btn3.addEventListener('click',eventoBtnMas(`Embarazada${i}`,`ac2-2`,i))
+          }
+           i=determinaciones.determinaciones.length===0?0:determinaciones.determinaciones.length
+           
+         }
