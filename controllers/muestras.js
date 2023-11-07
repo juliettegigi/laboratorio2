@@ -53,7 +53,7 @@ const desactivarMuestra=async(req,res)=>{
 
     await Muestra.destroy({ where: { id } });
     
-    let muestras=await muestrasGetTodos();
+    let muestras=await muestrasGetTodos();      
     res.render('tecnicoBioq/activarMuestra',{muestras})
 }
 
