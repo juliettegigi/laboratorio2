@@ -34,16 +34,9 @@ app.use(
 //app.use('', require('./routes/login'));
 
 
-app.use('/users', require('./routes/users'));
-app.use('/pacientes',require('./routes/pacientes'));
-app.use('/admins',require('./routes/admins'));
+
 app.use('/administradorDB',require('./routes/administradorDB'));// crea un usuario con su respectivo rol
-app.use('/examenes',require('./routes/examenes'));//devuelve Examenes
-app.use('/orden',require('./routes/orden'));// crea una orden
-app.use('/muestra',require('./routes/muestra'));// une orden con muestra
-app.use('/examenordenes',require('./routes/examenordenes'));// Ingresa un Examen  y Unda Orden a Examen Orden tambien crea la muestra 
-app.use('/determinaciones',require('./routes/determinaciones')); //aca esta el post y el get de Determinacion
-app.use('/valorReferencia',require('./routes/valorreferencia'));
+
 
 app.use('/',require('./routes/login'))
 app.use('/vistaTecBioq',[validarJWT,tieneRole('Tecnico','Bioquimico')],require('./routes/vistaTecBioq'));
