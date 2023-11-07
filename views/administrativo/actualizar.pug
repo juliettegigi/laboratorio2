@@ -40,7 +40,7 @@ html
                          - var primerosEstados = estados.slice(0, 2);
                          each estado in primerosEstados
                            .form-check
-                             input.form-check-input(type="radio", id=`estado-${estado.id}`, name="estadoId", value=estado.id required, checked= orden && (parseInt(orden.estadoId) === estado.id) )
+                             input.form-check-input(type="radio", id=`estado-${estado.id}`, name="estadoId", value=estado.id required, checked= orden && (parseInt(orden.estadoId) === estado.id), disabled )
                              label.form-check-label(for=`estado-${estado.id}`)= estado.nombre
                          if errors
                             - e=errors.find(e=>e.path==='estado') 
