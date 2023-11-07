@@ -1,6 +1,7 @@
 const {Examen,OrdenTrabajo,TipoExamen,TipoMuestra,Determinacion,ValorReferencia,sequelize,ExamenDeterminacion}=require('../models');
 
 const Sequelize = require('sequelize');
+
 const { detGet } = require('./determinaciones');
 const { tipoMuestrasGet } = require('./muestras');
 const { tipoExamenesGet } = require('./tipoexamen');
@@ -23,6 +24,8 @@ const activarExamen=async(req,res)=>{
 }
 const desactivarExamen=async(req,res)=>{
   const{id}=req.body;
+
+  await ExamenOrden.destroy({where:{examenId:id}})
   await Examen.destroy({where:{id}}) 
   const examenes=await examenesGetTodos();
   res.render('tecnicoBioq/activarExamen',{examenes})
