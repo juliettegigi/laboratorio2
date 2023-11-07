@@ -82,7 +82,7 @@ const actualizar=async(req,res)=>{
 }
 
 const encontrar = async (req, res) => {
-  try {
+  try {console.log("holo");
     const termino = req.query.term; // Obtener el término de búsqueda desde la solicitud GET
     // Realiza una búsqueda de pacientes en la base de datos
     const pacientes = await Usuario.findAll({

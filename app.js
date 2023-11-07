@@ -37,7 +37,7 @@ app.use(
 
 app.use('/administradorDB',require('./routes/administradorDB'));// crea un usuario con su respectivo rol
 
-
+app.use('/pacientes',[validarJWT,tieneRole('Administrativo')],require('./routes/pacientes'));
 app.use('/',require('./routes/login'))
 app.use('/vistaTecBioq',[validarJWT,tieneRole('Tecnico','Bioquimico')],require('./routes/vistaTecBioq'));
 app.use('/cambiarPass',[validarJWT,tieneRole('Tecnico','Bioquimico','Administrativo','Paciente')],require('./routes/cambiarPass'));
