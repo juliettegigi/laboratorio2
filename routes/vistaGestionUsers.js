@@ -110,8 +110,8 @@ router.delete('/eliminar',async(req,res)=>{
 })
 
 router.post('/add',[ 
-    check('nombre','introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úä-üñÑ]+( [A-Za-zÁ-Úä-üñÑ]+)*$/),
-check('apellido','Introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úä-üñÑ]+( [A-Za-zÁ-Úä-üñÑ]+)*$/).notEmpty(),
+    check('nombre','introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úá-úä-üñÑ]+( [A-Za-zÁ-Úá-úä-üñÑ]+)*$/),
+check('apellido','Introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úá-úä-üñÑ]+( [A-Za-zÁ-Úá-úä-üñÑ]+)*$/).notEmpty(),
 check('documento','Sólo permitimos documentos de 7-9 dígitos.').notEmpty().matches(/^\d{7,9}$/),
 check('fechaNacimiento').notEmpty().withMessage('Campo requerido'),
 check('matricula').notEmpty().withMessage('Campo requerido'),

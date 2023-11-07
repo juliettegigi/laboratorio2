@@ -40,8 +40,12 @@ router.get('/editar',async(req,res)=>{
 })
 
 
-router.get('/inicio',async(req,res)=>{
-    res.render("inicioAdmin2/inicioAdmin2",{modal:false,nombreUsuario:`${req.usuario.nombre} ${req.usuario.apellido}`})
+router.get('/inicio',async(req,res)=>{ 
+
+
+    
+    const soyBioquimico=req.usuario.Rols.some(element => element.nombre==='Bioquimico')
+    res.render("inicioAdmin2/inicioAdmin2",{soyBioquimico,modal:false,nombreUsuario:`${req.usuario.nombre} ${req.usuario.apellido}`})
 })
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////// PACIENTES
@@ -82,8 +86,8 @@ router.get('/add',(req,res)=>{
 })
 
 router.post('/add',[ 
-    check('nombre','introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úä-üñÑ]+( [A-Za-zÁ-Úä-üñÑ]+)*$/),
-check('apellido','Introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úä-üñÑ]+( [A-Za-zÁ-Úä-üñÑ]+)*$/).notEmpty(),
+    check('nombre','introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úá-úä-üñÑ]+( [A-Za-zÁ-Úá-úä-üñÑ]+)*$/),
+check('apellido','Introduzca caracteres válidos , por favor').matches(/^[A-Za-zÁ-Úá-úä-üñÑ]+( [A-Za-zÁ-Úá-úä-üñÑ]+)*$/).notEmpty(),
 check('documento','Sólo permitimos documentos de 7-9 dígitos.').notEmpty().matches(/^\d{7,9}$/),
 check('fechaNacimiento').notEmpty().withMessage('Campo requerido'),
 check('embarazo').notEmpty().withMessage('Campo requerido'),

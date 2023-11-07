@@ -26,6 +26,9 @@ html(lang='en')
               a.nav-link(href='/orden') Gestión de Órdenes
             li.nav-item
               a.nav-link(href='/vistaGestionUsers/inicio') Gestión de Usuarios
+            if soyBioquimico  
+              li.nav-item
+                a.nav-link(href='/vistaTecBioq/inicio') Ingresar como bioquímico 
         .main-content
           div#contenido
            img(src='/img/hola.gif', alt='Titulo', style='width: 200px; height: auto; border-radius: 50%;')
